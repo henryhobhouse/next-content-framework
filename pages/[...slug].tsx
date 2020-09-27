@@ -201,7 +201,6 @@ export async function getStaticPaths() {
  * much much easier.
  */
 export async function getStaticProps({ params: { slug } }: StaticPathParams) {
-  console.log('back in the game');
   const {
     contentNavStructure,
     currentPagesContent,
