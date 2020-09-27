@@ -11,5 +11,13 @@ module.exports = withPlugins([
       cssModules: true,
     },
   ],
-  [optimizedImages, {}],
+  [
+    optimizedImages,
+    {
+      handleImages: ['jpeg', 'png', 'svg', 'gif'],
+      mozjpeg: {
+        quality: 50,
+      },
+    },
+  ],
 ]);

@@ -1,48 +1,38 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
+import Img from 'react-optimized-image';
 import styled from 'styled-components';
+
+import GifPlayer from '../GifPlayer';
+
+import StaticImage from './StaticImage';
 
 interface Props {
   alt?: string;
   src: string;
 }
 
-const BlurredImage = styled.img`
+export const FullImage = styled(Img)`
   position: absolute;
   top: 0;
   left: 0;
-  width: 600px;
-  transition: opacity 500ms ease-in;
 `;
 
-const FullImage = styled.img`
-  width: 100%;
+export const ImageContainer = styled.span`
+  position: relative;
+  width: 600px;
 `;
 
 const OptimisedImage: FC<Props> = ({ alt, src }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  const styles = {
-    lqip: {
-      filter: 'blur(10px)',
-    },
-  };
+  const isGif = src.endsWith('.gif');
 
   return (
-    <div>
-      {!imageLoaded && (
-        <BlurredImage
-          src={require(`../../content/platform/10.top-two/05.mid-one/${src}?lqip?resize&size=600`)}
-          alt={alt}
-          style={styles.lqip}
-        />
+    <ImageContainer>
+      {isGif ? (
+        <GifPlayer gifUrl={src} alt={alt} />
+      ) : (
+        <StaticImage imgUrl={src} alt={alt} />
       )}
-
-      <FullImage
-        src={require(`../../content/platform/10.top-two/05.mid-one/${src}?resize&size=600`)}
-        alt={alt}
-        onLoad={() => setImageLoaded(true)}
-      />
-    </div>
+    </ImageContainer>
   );
 };
 

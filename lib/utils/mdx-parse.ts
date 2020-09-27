@@ -3,6 +3,7 @@ export const isPostFileRegex = /docs\.(mdx|md)$/g;
 export const pathRegex = /([^\/]*)(.*)\/docs\.(mdx|md)$/g;
 export const orderRegex = /.*\/([0-9+]+)\.[^\/]*\/docs\.(mdx|md)$/g;
 export const orderPartRefex = /\/([0-9+]+)\./g;
+export const imageUrls = /(\!\[.*?\]\()(\S*?)(?=\))/g;
 
 export interface BaseNavigationArticle {
   level: number;
@@ -53,3 +54,28 @@ export const getNavigationItems = (
     });
   });
 };
+
+// export const addRelativeImageLinks = (
+//   content: string,
+//   relativePath: string,
+// ) => {
+//   const filesToUpdate: string[] = [];
+//   let result;
+//   let newContent = '';
+//   console.log('here');
+//   const regCheck = new RegExp(imageUrls);
+//   while ((result = regCheck.exec(content)) !== null) {
+//     console.log(result[2]);
+//     if (filesToUpdate.includes(result[2])) break;
+//     if (result[2]) filesToUpdate.push(result[2]);
+//   }
+//   filesToUpdate.forEach((fileName) => {
+//     if (fileName.startsWith('/')) fileName.replace('/', '');
+//     newContent = content.replace(
+//       fileName,
+//       `content/${relativePath}${fileName}`,
+//     );
+//   });
+//   console.log(newContent);
+//   return content;
+// };
