@@ -9,25 +9,18 @@ import React, { FC } from 'react';
 import OptimisedImage from '../components/OptimisedImage';
 import SectionNavigation from '../components/SectionNavigation';
 import {
+  addRelativeImageLinks,
   documentFilesBasePath,
+  DocumentPostProps,
   getNavigationItems,
   isPostFileRegex,
+  MdxRenderedToString,
   NavigationArticle,
   orderPartRefex,
   orderRegex,
   pathRegex,
+  StaticPathParams,
 } from '../lib/utils/mdx-parse';
-
-interface MdxRenderedToString {
-  compiledSource: string;
-  renderedOutput: string;
-  scope: Record<string, unknown>;
-}
-
-interface DocumentPostProps {
-  contentNavStructure: NavigationArticle[];
-  currentPagesContent?: MdxRenderedToString;
-}
 
 const DocumentPost: FC<DocumentPostProps> = ({
   currentPagesContent,
@@ -45,14 +38,8 @@ const DocumentPost: FC<DocumentPostProps> = ({
   );
 };
 
-interface StaticPathParams {
-  params: {
-    slug: string[];
-  };
-}
-
 const getSlugs = (directory: string) => {
-  const paths: any[] = [];
+  const paths: StaticPathParams[] = [];
 
   const parseDirectories = (directory: string) => {
     const dirents = readdirSync(directory, {
@@ -92,6 +79,12 @@ const getSlugs = (directory: string) => {
   return paths;
 };
 
+/**
+ * Recurrively iterate through all markdown files in the in the content folder and parse the data
+ * To include meta data in both frontmatter but equally ordering for the side navigation. As you cannot
+ * use 'fs' outside of the same module as getStaticProps function call this, unfortunately, cannot be easily refactored
+ * to smaller chucks. It definitely has room for improvement but will do in the future.
+ */
 const getNavigationArticles = async (
   currentSlugSections: string[],
 ): Promise<{
@@ -136,7 +129,15 @@ const getNavigationArticles = async (
           parentSlug,
         });
         if (slug === `/${currentSlugSections.join('/')}/`) {
-          currentPagesContent = await renderToString(content);
+          const relativePathToImages = relativePath.replace(
+            /\/docs.(mdx|md)/,
+            '',
+          );
+          const transformedContent = addRelativeImageLinks(
+            content,
+            relativePathToImages,
+          );
+          currentPagesContent = await renderToString(transformedContent);
         }
       }
     }
@@ -154,6 +155,9 @@ const getNavigationArticles = async (
   return { contentNavStructure, currentPagesContent };
 };
 
+/**
+ * Create all the slugs (paths) for this page
+ */
 export async function getStaticPaths() {
   const paths = getSlugs(documentFilesBasePath);
 
@@ -163,6 +167,11 @@ export async function getStaticPaths() {
   };
 }
 
+/**
+ * Source all content on build (via either SSR or SSG). Powerful as agnostic to source. We
+ * Could source from multiple data sources easily which will makes transitioning in the future
+ * much much easier.
+ */
 export async function getStaticProps({ params: { slug } }: StaticPathParams) {
   const {
     contentNavStructure,

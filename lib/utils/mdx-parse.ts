@@ -21,6 +21,23 @@ export interface NavigationArticle extends BaseNavigationArticle {
   children: SecondTierNavigationArticle[];
 }
 
+export interface StaticPathParams {
+  params: {
+    slug: string[];
+  };
+}
+
+export interface MdxRenderedToString {
+  compiledSource: string;
+  renderedOutput: string;
+  scope: Record<string, unknown>;
+}
+
+export interface DocumentPostProps {
+  contentNavStructure: NavigationArticle[];
+  currentPagesContent?: MdxRenderedToString;
+}
+
 export const getNavigationItems = (
   allItems: Omit<NavigationArticle, 'children'>[],
 ): NavigationArticle[] => {
@@ -55,27 +72,39 @@ export const getNavigationItems = (
   });
 };
 
-// export const addRelativeImageLinks = (
-//   content: string,
-//   relativePath: string,
-// ) => {
-//   const filesToUpdate: string[] = [];
-//   let result;
-//   let newContent = '';
-//   console.log('here');
-//   const regCheck = new RegExp(imageUrls);
-//   while ((result = regCheck.exec(content)) !== null) {
-//     console.log(result[2]);
-//     if (filesToUpdate.includes(result[2])) break;
-//     if (result[2]) filesToUpdate.push(result[2]);
-//   }
-//   filesToUpdate.forEach((fileName) => {
-//     if (fileName.startsWith('/')) fileName.replace('/', '');
-//     newContent = content.replace(
-//       fileName,
-//       `content/${relativePath}${fileName}`,
-//     );
-//   });
-//   console.log(newContent);
-//   return content;
-// };
+export const addRelativeImageLinks = (
+  content: string,
+  relativePath: string,
+) => {
+  const fileNamesToUpdate: string[] = [];
+  let result;
+  let newContent = content;
+  const regCheck = new RegExp(imageUrls);
+  while ((result = regCheck.exec(content)) !== null) {
+    if (result[2]) fileNamesToUpdate.push(result[2]);
+  }
+  fileNamesToUpdate.forEach((fileName) => {
+    const relativePathLinks = relativePath.split('/');
+    let revisedFileName = fileName;
+    fileName.split('/').some((link) => {
+      if (link === '..') {
+        if (relativePathLinks.length < 1) {
+          throw new Error(
+            `relative path from docs link in ${relativePath} is outside the content directory`,
+          );
+        }
+        // remove last path from prefix
+        relativePathLinks.pop();
+        revisedFileName = revisedFileName.substring(3);
+        return false;
+      }
+      return true;
+    });
+    const revisedRelativeFilePath = [
+      ...relativePathLinks,
+      revisedFileName,
+    ].join('/');
+    newContent = content.replace(fileName, `${revisedRelativeFilePath}`);
+  });
+  return newContent;
+};
