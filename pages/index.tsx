@@ -1,32 +1,26 @@
+import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
 
-import NavHeader from '../components/NavHeader';
-
-const Wrapper = styled.div`
-  box-sizing: border-box;
-  min-height: 100vh;
-  min-width: 768px;
-  position: relative;
-  padding-top: 90px;
+const LinkWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  > * {
+    padding-bottom: 30px;
+  }
 `;
 
-const HeaderElement = styled.div`
-  left: 0;
-  right: 0;
-  top: 0;
-  position: fixed;
-`;
-
-const Home = () => (
-  <Wrapper>
-    <HeaderElement>
-      <NavHeader />
-    </HeaderElement>
-    Hello World
-  </Wrapper>
-);
+const Home = () => {
+  return (
+    <LinkWrapper>
+      <Link href="/platform/top-two/mid-one">
+        <a>Platform</a>
+      </Link>
+      <Link href="/platform/top-two/mid-one">
+        <a>Embedded</a>
+      </Link>
+    </LinkWrapper>
+  );
+};
 
 export default Home;

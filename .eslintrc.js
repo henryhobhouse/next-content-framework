@@ -19,6 +19,14 @@ module.exports = {
     },
   },
   plugins: ['react-hooks', '@typescript-eslint', 'eslint-plugin-react'],
+  overrides: [
+    {
+      files: ['*.js'],
+      rules: {
+        '@typescript-eslint/no-var-requires': 0,
+      },
+    },
+  ],
   rules: {
     'react/prop-types': 0,
     'react/display-name': 0,

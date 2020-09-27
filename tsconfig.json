@@ -21,7 +21,8 @@
     "noEmit": true
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.mdx"
   ],
   "include": [
     "next-env.d.ts",

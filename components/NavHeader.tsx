@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
@@ -17,6 +18,7 @@ const ContentContainer = styled.div`
   justify-content: space-between;
   max-width: 1170px;
   width: 100%;
+  padding-left: 30px;
 `;
 
 /**
@@ -25,7 +27,11 @@ const ContentContainer = styled.div`
 const NavHeader: FC = () => (
   <Header>
     <ContentContainer>
-      <h1>Test Markdown Build</h1>
+      <Link href="/">
+        <a>
+          <h1>Test Markdown Build</h1>
+        </a>
+      </Link>
     </ContentContainer>
   </Header>
 );
