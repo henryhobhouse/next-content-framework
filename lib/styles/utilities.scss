@@ -1,0 +1,152 @@
+@import "breakpoint-sass/stylesheets/_breakpoint.scss";
+
+.desktop-up\:p-t-24 {
+	@include breakpoint($desktopBreakpoint) {
+		padding-top: 24px;
+	}
+}
+
+.desktop-below\:m-t-32 {
+	@include breakpoint(max-width $desktopBreakpoint) {
+		margin-top: 32px;
+	}
+}
+
+.desktop-below\:m-r-32 {
+	@include breakpoint(max-width $desktopBreakpoint) {
+		margin-right: 32px;
+	}
+}
+
+.sticky {
+	position: sticky;
+	top: 0;
+}
+
+.flex {
+	display: flex;
+
+	.flex-1 {
+		flex: 1 1 0%;
+	}
+
+	.flex-no-grow {
+		flex-grow: 0;
+	}
+	
+	.flex-initial {
+		flex: 0 1 auto;
+	}
+}
+
+.mx-auto {
+	margin: 0 auto;
+}
+
+.w-full {
+	width: 100%;
+}
+
+.w-272 {
+	width: 272px;
+}
+
+.p-r-32 {
+	padding-right: 32px;
+}
+
+.max-h-screen {
+	max-height: 100vh;
+}
+
+.overflow-y-auto {
+	overflow-y: auto;
+}
+
+.overflow-x-hidden {
+	overflow-x: hidden;
+}
+
+.desktop-up\:hidden {
+	@include breakpoint($desktopBreakpoint) {
+		display: none;
+	}
+}
+
+.desktop-below\:hidden-lg {
+	@include breakpoint(max-width $largeDesktopBreakpoint) {
+		display: none !important;
+	}
+}
+
+.desktop-below\:hidden {
+	@include breakpoint(max-width $desktopBreakpoint) {
+		display: none !important;
+	}
+}
+
+.p-t-46 {
+	padding-top: 46px;
+}
+
+.p-b-46 {
+	margin-bottom: 46px;
+}
+
+.p-x-30 {
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+.p-b-150 {
+	padding-bottom: 150px;
+}
+
+.m-t-8 {
+	margin-top: 16px;
+}
+
+.m-r-8 {
+	margin-right: 8px;
+}
+
+.p-4 {
+	padding: 4px;
+}
+
+.w-16 {
+	width: 16px !important;
+}
+
+.min-w-0 {
+	min-width: 0;
+}
+
+.w-200 {
+	width: 200px;
+}
+
+.rounded-t-4 {
+	border-top-right-radius: 4px;
+	border-top-left-radius: 4px;
+}
+
+.rounded-b-4 {
+	border-bottom-right-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+
+.truncate {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.bg-neutral-50 {
+	background-color: $colLightneutralSuperlight;
+}
+
+.bg-neutral-100 {
+	background-color: $colLightneutralLight;
+}
+

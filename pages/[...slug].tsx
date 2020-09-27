@@ -1,11 +1,16 @@
 import { readdirSync, readFileSync } from 'fs';
 import { resolve } from 'path';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import matter from 'gray-matter';
 import hydrate from 'next-mdx-remote/hydrate';
 import renderToString from 'next-mdx-remote/render-to-string';
+import Link from 'next/link';
 import React, { FC } from 'react';
 
+import Code from '../components/Code';
+import DynamicBlock from '../components/DynamicBlock';
+import Highlight from '../components/Highlight';
 import OptimisedImage from '../components/OptimisedImage';
 import SectionNavigation from '../components/SectionNavigation';
 import {
@@ -19,6 +24,7 @@ import {
   orderPartRefex,
   orderRegex,
   pathRegex,
+  preToCodeBlock,
   StaticPathParams,
 } from '../lib/utils/mdx-parse';
 
@@ -79,6 +85,20 @@ const getSlugs = (directory: string) => {
   return paths;
 };
 
+// components is its own object outside of render so that the references to
+// components are stable
+const components = {
+  pre: (preProps: any) => {
+    const props = preToCodeBlock(preProps);
+    // if there's a codeString and some props, we passed the test
+    if (props) {
+      return <Code {...props} />;
+    }
+    // it's possible to have a pre without a code in it
+    return <pre {...preProps} />;
+  },
+};
+
 /**
  * Recurrively iterate through all markdown files in the in the content folder and parse the data
  * To include meta data in both frontmatter but equally ordering for the side navigation. As you cannot
@@ -137,7 +157,15 @@ const getNavigationArticles = async (
             content,
             relativePathToImages,
           );
-          currentPagesContent = await renderToString(transformedContent);
+          currentPagesContent = await renderToString(transformedContent, {
+            components: {
+              DynamicBlock,
+              Highlight,
+              FontAwesomeIcon,
+              Link,
+              ...components,
+            },
+          });
         }
       }
     }
@@ -173,6 +201,7 @@ export async function getStaticPaths() {
  * much much easier.
  */
 export async function getStaticProps({ params: { slug } }: StaticPathParams) {
+  console.log('back in the game');
   const {
     contentNavStructure,
     currentPagesContent,

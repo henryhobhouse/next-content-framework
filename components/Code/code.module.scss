@@ -1,0 +1,28 @@
+@import '../../lib/styles/variables.scss';
+
+
+.code {
+
+position: relative;
+
+}
+  
+.copy {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      width: 32px;
+      height: 32px;
+      background-color: $colLightneutralMedium;
+      border-radius: 2px;
+      z-index: 1;
+      cursor: pointer;
+      text-align: center;
+      line-height: 32px;
+      color: $colNeutralMediumdark;
+  
+      &:hover {
+        background-color: $colLightneutralLight;
+        color: $colNeutralDark;
+      }
+  }

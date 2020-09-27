@@ -1,0 +1,91 @@
+// Colours
+
+$colPrimaryWhite: #ffffff;
+$colPrimaryDarkblue: #0a0d36;
+$colPrimaryBlue: #0d66e5;
+$colPrimaryGreen: #0dbf73;
+$colPrimaryYellow: #ffb229;
+$colPrimaryPink: #fc4aba;
+
+$colNeutralSuperdark: #1a1a3b;
+$colNeutralDark: #292945;
+$colNeutralMediumdark: #404057;
+$colNeutralMediumlight: #5c5c70;
+$colNeutralLight: #878796;
+$colNeutralSuperlight: #b8b8c7;
+
+$colLightneutralMedium: #d3d3dc;
+$colLightneutralLight: #e7e7eb;
+$colLightneutralSuperlight: #f6f6f6;
+
+$colSecondaryBlueLight: #d1f2f5;
+$colSecondaryBlueMediumlight: #5ccfe8;
+$colSecondaryBlueMedium: #5ca1f7;
+$colSecondaryBlueDark: #143861;
+
+$colSecondaryGreenLight: #d1fae3;
+$colSecondaryGreenMediumlight: #87f2bf;
+$colSecondaryGreenMedium: #4acc94;
+$colSecondaryGreenDark: #054d2b;
+
+$colSecondaryPinkLight: #fcedf7;
+$colSecondaryPinkMediumlight: #ffc7eb;
+$colSecondaryPinkMedium: #f785e3;
+
+$colSecondaryYellowLight: #fff5e5;
+$colSecondaryYellowYellow: #ffcf82;
+$colSecondaryRed: #d33f3f;
+$colSecondaryBrown: #66420a;
+
+$brandGray: #f8f8f8;
+
+$primaryD10: #0A50B2;
+$warningD10: #D07D00;
+
+
+// Grid sizes
+
+$maxPageWidth: 100%;
+$tabletBreakpoint: 768px;
+$desktopBreakpoint: 1024px;
+$largeDesktopBreakpoint: 1280px;
+$smallPhoneBreakpoint: 370px;
+
+$gridMargin: 16px;
+$gridGutter: 32px;
+
+
+// Design system variables
+
+/* ------- Layout --------*/
+// includes max-width and margin
+$layoutWidth: 79rem;
+
+
+/* ---- Font weight ---- */
+$bold: 600;
+$normal: 300;
+
+
+/* --- Gray --- */
+$neutral: #B8B8C7;
+
+$neutralD10: #878796;
+$neutralD30: #404057;
+$neutralD20: #5C5C70;
+
+$neutralL30: #F6F6F6;
+$neutralL20: #E7E7E7;
+  
+
+/* --- Blue --- */
+$blue: #0D66E5;
+
+$blueD10: #0A50B2;
+$blueD20: #0A0D36;
+
+/* --- Pink --- */
+$pink: #FC4ABA;
+
+
+$primaryD20: #0A0D36;

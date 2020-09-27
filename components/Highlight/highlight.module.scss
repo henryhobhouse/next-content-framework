@@ -1,0 +1,43 @@
+@import '../../lib/styles/variables.scss';
+
+.blockWrapper {
+    background: linear-gradient(0deg, rgba(92, 161, 247, 0.08), rgba(92, 161, 247, 0.08)), #FFFFFF;
+    color: $primaryD10;
+    font-size: 0.89em;
+    line-height: 1.571em;
+    font-weight: $bold;
+    padding: 0.5em 0.750em;
+    border-radius: 0.286em;
+    margin: 2.071em 0;
+    display: flex;
+
+    & svg {
+        width: 0.750em !important;
+        height: 0.750em !important;
+        margin: 0.250em 0.750em auto 0;
+    }
+
+    & p {
+        margin: 0;
+    }
+
+    & a {
+        color: $primaryD10;
+        font-weight: $bold;
+    }
+
+    & ul {
+        margin: 0 0 0 1.3em;
+        & li {
+            margin: .8em 0 0;
+        }
+    }
+
+    &[data-warning=true] {
+        background: linear-gradient(0deg, rgba(240, 155, 3, 0.08), rgba(240, 155, 3, 0.08)), #FFFFFF;
+        color: $warningD10;
+        & a {
+            color: $warningD10;
+        }
+    }
+} 
