@@ -13,7 +13,6 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",
-    "@types/lodash-es": "^4.17.3",
     "@zeit/next-sass": "^1.0.1",
     "framer-motion": "^2.7.5",
     "gray-matter": "^4.0.2",
@@ -40,6 +39,8 @@
     "styled-components": "^5.2.0"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.10",
+    "@types/lodash-es": "^4.17.3",
     "@types/node": "^14.6.4",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",

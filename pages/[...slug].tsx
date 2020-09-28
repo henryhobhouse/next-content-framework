@@ -5,12 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import matter from 'gray-matter';
 import hydrate from 'next-mdx-remote/hydrate';
 import renderToString from 'next-mdx-remote/render-to-string';
-import Link from 'next/link';
 import React, { FC } from 'react';
 
 import Code from '../components/Code';
 import DynamicBlock from '../components/DynamicBlock';
 import Highlight from '../components/Highlight';
+import MdxAnchor from '../components/MdxAnchor';
 import OptimisedImage from '../components/OptimisedImage';
 import SectionNavigation from '../components/SectionNavigation';
 import {
@@ -28,13 +28,36 @@ import {
   StaticPathParams,
 } from '../lib/utils/mdx-parse';
 
+// components is its own object outside of render so that the references to
+// components are stable
+const components = {
+  pre: (preProps: any) => {
+    const props = preToCodeBlock(preProps);
+    // if there's a codeString and some props, we passed the test
+    if (props) {
+      return <Code {...props} />;
+    }
+    // it's possible to have a pre without a code in it
+    return <pre {...preProps} />;
+  },
+};
+
 const DocumentPost: FC<DocumentPostProps> = ({
   currentPagesContent,
   contentNavStructure,
 }) => {
   const content =
     currentPagesContent &&
-    hydrate(currentPagesContent, { components: { img: OptimisedImage } });
+    hydrate(currentPagesContent, {
+      components: {
+        img: OptimisedImage,
+        a: MdxAnchor,
+        DynamicBlock,
+        Highlight,
+        FontAwesomeIcon,
+        ...components,
+      },
+    });
 
   return (
     <>
@@ -83,20 +106,6 @@ const getSlugs = (directory: string) => {
   };
   parseDirectories(directory);
   return paths;
-};
-
-// components is its own object outside of render so that the references to
-// components are stable
-const components = {
-  pre: (preProps: any) => {
-    const props = preToCodeBlock(preProps);
-    // if there's a codeString and some props, we passed the test
-    if (props) {
-      return <Code {...props} />;
-    }
-    // it's possible to have a pre without a code in it
-    return <pre {...preProps} />;
-  },
 };
 
 /**
@@ -159,10 +168,11 @@ const getNavigationArticles = async (
           );
           currentPagesContent = await renderToString(transformedContent, {
             components: {
+              img: OptimisedImage,
+              a: MdxAnchor,
               DynamicBlock,
               Highlight,
               FontAwesomeIcon,
-              Link,
               ...components,
             },
           });
