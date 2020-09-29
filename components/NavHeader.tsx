@@ -16,8 +16,27 @@ const Header = styled.div`
 const ContentContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  align-content: center;
+  align-items: center;
   max-width: 1170px;
   width: 100%;
+  padding-right: 30px;
+`;
+
+const ContentLinks = styled.a`
+  padding-left: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 18px;
+  color: darkslategray;
+  user-select: none;
+
+  &:hover {
+    color: black;
+  }
+`;
+
+const HeaderLink = styled.a`
   padding-left: 30px;
 `;
 
@@ -28,10 +47,18 @@ const NavHeader: FC = () => (
   <Header>
     <ContentContainer>
       <Link href="/">
-        <a>
+        <HeaderLink>
           <h1>Test Markdown Build</h1>
-        </a>
+        </HeaderLink>
       </Link>
+      <div>
+        <Link href="/platform/top-two/mid-one" passHref>
+          <ContentLinks>Platform</ContentLinks>
+        </Link>
+        <Link href="/platform/top-one" passHref>
+          <ContentLinks>Embedded</ContentLinks>
+        </Link>
+      </div>
     </ContentContainer>
   </Header>
 );

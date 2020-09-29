@@ -7,6 +7,7 @@ import hydrate from 'next-mdx-remote/hydrate';
 import renderToString from 'next-mdx-remote/render-to-string';
 import React, { FC } from 'react';
 
+import ArticleWrapper from '../components/ArticleWrapper';
 import Code from '../components/Code';
 import DynamicBlock from '../components/DynamicBlock';
 import Highlight from '../components/Highlight';
@@ -46,6 +47,7 @@ const DocumentPost: FC<DocumentPostProps> = ({
   currentPagesContent,
   contentNavStructure,
 }) => {
+  // for client side rendering
   const content =
     currentPagesContent &&
     hydrate(currentPagesContent, {
@@ -62,7 +64,7 @@ const DocumentPost: FC<DocumentPostProps> = ({
   return (
     <>
       <SectionNavigation items={contentNavStructure} />
-      <article>{content}</article>
+      <ArticleWrapper>{content}</ArticleWrapper>
     </>
   );
 };
@@ -122,6 +124,7 @@ const getNavigationArticles = async (
 }> => {
   const flatArticles: Omit<NavigationArticle, 'children'>[] = [];
   let currentPagesContent: MdxRenderedToString | undefined;
+  let relativePath = '';
 
   const parseDirectories = async (directory: string) => {
     const dirents = readdirSync(directory, {
@@ -133,7 +136,7 @@ const getNavigationArticles = async (
     );
     if (postFile) {
       const markdownPath = resolve(directory, postFile.name);
-      const relativePath = markdownPath.replace(documentFilesBasePath, '');
+      relativePath = markdownPath.replace(documentFilesBasePath, '');
       pathRegex.lastIndex = 0;
       orderRegex.lastIndex = 0;
       const pathComponents = pathRegex.exec(relativePath);
@@ -143,11 +146,10 @@ const getNavigationArticles = async (
         const section = pathComponents[1];
         const path = pathComponents[2];
         const localPath = path.replace(orderPartRefex, '/');
-        const slug = `/${section}${localPath}/`;
+        const slug = `/${section}${localPath}`;
         const level = (localPath && localPath.match(/\//g)?.length) || 1;
-
         const order = orderComponents ? parseInt(orderComponents[1]) : 0;
-        const parentSlug = slug.replace(/\/[^/]+\/$/, '/');
+        const parentSlug = slug.replace(/\/[a-zA-Z0-9-]+$/, '');
         const markdownData = readFileSync(markdownPath, 'utf8');
         const { data, content } = matter(markdownData);
         flatArticles.push({
@@ -157,7 +159,7 @@ const getNavigationArticles = async (
           order,
           parentSlug,
         });
-        if (slug === `/${currentSlugSections.join('/')}/`) {
+        if (slug === `/${currentSlugSections.join('/')}`) {
           const relativePathToImages = relativePath.replace(
             /\/docs.(mdx|md)/,
             '',
@@ -166,6 +168,7 @@ const getNavigationArticles = async (
             content,
             relativePathToImages,
           );
+          // for server side rendering
           currentPagesContent = await renderToString(transformedContent, {
             components: {
               img: OptimisedImage,

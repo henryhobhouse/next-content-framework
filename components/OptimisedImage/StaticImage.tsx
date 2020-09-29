@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 
 import { ImageContainer } from '.';
 
-const BlurredImage = styled.img<{ $imageLoaded: boolean }>`
+const BlurredImage = styled(Img)<{ $imageLoaded: boolean }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -33,19 +33,14 @@ interface StaticImageProps {
 const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt }) => {
   const [imageLoading, setImageLoading] = useState(true);
 
-  const styles = {
-    lqip: {
-      filter: 'blur(10px)',
-    },
-  };
-
   return (
     <ImageContainer>
       <BlurredImage
-        src={require(`../../content/${imgUrl}?lqip?resize&size=600`)}
+        src={require(`../../content/${imgUrl}`)}
         alt={alt}
-        style={styles.lqip}
-        $imageLoaded={!imageLoading}
+        sizes={[20]}
+        $imageLoaded={imageLoading}
+        webp
       />
 
       <FullImage
@@ -53,6 +48,7 @@ const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt }) => {
         alt={alt}
         sizes={[600]}
         onLoad={() => setImageLoading(false)}
+        webp
       />
     </ImageContainer>
   );

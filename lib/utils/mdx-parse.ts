@@ -72,43 +72,91 @@ export const getNavigationItems = (
   });
 };
 
+const parseRelativeLinks = (relativePathLinks: string[], imageLink: string) => {
+  let revisedImageLink = imageLink;
+  // check and handle relative links
+  imageLink.split('/').some((link, index) => {
+    // if the first link is a .. then path is relative
+    if (index === 0 || link === '..') {
+      // if relative path is at root then image link is invalid
+      if (relativePathLinks.length === 0) {
+        throw new Error(
+          `relative path from image link in docs markdown in ${relativePathLinks.join(
+            '/',
+          )} is outside the content directory`,
+        );
+      }
+      // remove last path from prefix
+      relativePathLinks.pop();
+      // remove relative path "../"
+      revisedImageLink = revisedImageLink.substring(3);
+      // return false to iterator continues to next directory in link
+      return false;
+    }
+    return true;
+  });
+
+  return revisedImageLink;
+};
+
+const replaceLinkInContent = (
+  imageLink: string,
+  revisedImageLink: string,
+  relativePathLinks: string[],
+  content: string,
+) => {
+  const revisedRelativeFilePath = [...relativePathLinks, revisedImageLink].join(
+    '/',
+  );
+  return content.replace(imageLink, `${revisedRelativeFilePath}`);
+};
+
 export const addRelativeImageLinks = (
   content: string,
   relativePath: string,
 ) => {
-  const fileNamesToUpdate: string[] = [];
-  let result;
+  const imageLinksToUpdate: string[] = [];
+  let result: RegExpExecArray | null;
+
+  // default newContent is just the content. i.e. all the links are absolute and don't need updating
   let newContent = content;
   const regCheck = new RegExp(imageUrls);
-  while ((result = regCheck.exec(content)) !== null) {
-    if (result[2]) fileNamesToUpdate.push(result[2]);
-  }
-  fileNamesToUpdate.forEach((fileName) => {
-    const relativePathLinks = relativePath.split('/');
-    if (fileName[0] === '/') fileName.substring(1);
-    if (fileName.startsWith('./')) fileName.substring(2);
 
-    let revisedFileName = fileName;
-    fileName.split('/').some((link) => {
-      if (link === '..') {
-        if (relativePathLinks.length < 1) {
-          throw new Error(
-            `relative path from docs link in ${relativePath} is outside the content directory`,
-          );
-        }
-        // remove last path from prefix
-        relativePathLinks.pop();
-        revisedFileName = revisedFileName.substring(3);
-        return false;
-      }
-      return true;
-    });
-    const revisedRelativeFilePath = [
-      ...relativePathLinks,
-      revisedFileName,
-    ].join('/');
-    newContent = content.replace(fileName, `${revisedRelativeFilePath}`);
+  // look for image links in content and each time find one add to fileNamesToUpdate
+  while ((result = regCheck.exec(content)) !== null) {
+    if (result[2]) imageLinksToUpdate.push(result[2]);
+  }
+
+  // iterate through image links to parse relative path
+  imageLinksToUpdate.forEach((imageLink) => {
+    // remove any path prefixes (./ or /) from beginning of link
+    imageLink.replace(/^(.\/|\/)/, '');
+    const imageLinkDirectories = imageLink.split('/');
+    const pathIsRelative = imageLinkDirectories.some((link) => link === '..');
+
+    if (pathIsRelative) {
+      const relativePathLinks = relativePath.split('/');
+      const revisedImageLink = parseRelativeLinks(relativePathLinks, imageLink);
+      newContent = replaceLinkInContent(
+        imageLink,
+        revisedImageLink,
+        relativePathLinks,
+        content,
+      );
+    }
+
+    const imageLinkIsFile =
+      !pathIsRelative && imageLinkDirectories.length === 1;
+    if (imageLinkIsFile) {
+      newContent = replaceLinkInContent(
+        imageLink,
+        `${relativePath}/${imageLink}`,
+        [],
+        content,
+      );
+    }
   });
+
   return newContent;
 };
 
