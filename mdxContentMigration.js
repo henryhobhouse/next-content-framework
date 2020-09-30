@@ -7,6 +7,7 @@ const documentFilesBasePath = `${process.cwd()}/content/`;
 const isPostFileRegex = /docs\.(mdx|md)$/g;
 const orderPartRegex = /^([0-9+]+)\./g;
 const imageUrls = /(\!\[.*?\]\()(\S*?)(?=\))/g;
+const isUrlRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/g;
 
 const getLinksWithPaths = (markdownTextBuffer) => {
   const links = [];
@@ -15,11 +16,17 @@ const getLinksWithPaths = (markdownTextBuffer) => {
   while ((result = regCheck.exec(markdownTextBuffer.toString()))) {
     if (result[2]) links.push(result[2]);
   }
-  return links.filter((link) => {
-    // remove any relative path prefix (./ or /)
-    link.replace(/^(.\/|\/)/, '');
-    return link.split('/').length > 1;
-  });
+  const filteredLinks = links
+    .map((link) => {
+      // remove any relative path prefix (./ or /)
+      const updatedLink = link.replace(/^(.\/|\/)/, '');
+      const hasPath = updatedLink.split('/').length > 1;
+      const isExternal = !!updatedLink.match(isUrlRegex);
+      return !isExternal && hasPath ? updatedLink : false;
+    })
+    .filter(Boolean);
+  if (!filteredLinks.length) return [];
+  return filteredLinks;
 };
 
 const findDirectory = (dirName, dirStructure) => {
@@ -40,8 +47,10 @@ const findDirectory = (dirName, dirStructure) => {
   return foundChildDirectory;
 };
 
-const getParsedLink = (link, currentDirectory, contentDirStructure) => {
-  const linkDirectories = link.split('/');
+const getParsedLink = (link, contentDirStructure, markdownFileLocation) => {
+  const linkDirectories = link
+    .split('/')
+    .filter((dir) => dir !== '.' && dir !== '');
   const parsedLinkDirectories = [];
   const fileName = linkDirectories.pop();
   linkDirectories.forEach((directory) => {
@@ -50,6 +59,9 @@ const getParsedLink = (link, currentDirectory, contentDirStructure) => {
       return;
     }
     const correctDirectoryName = findDirectory(directory, contentDirStructure);
+    if (!correctDirectoryName) {
+      throw new Error(`${link} in ${markdownFileLocation} does not exist`);
+    }
     parsedLinkDirectories.push(correctDirectoryName);
   });
   return [...parsedLinkDirectories, fileName].join('/');
@@ -58,20 +70,26 @@ const getParsedLink = (link, currentDirectory, contentDirStructure) => {
 const updateLinks = async (
   linksWithPaths,
   markdownText,
-  dir,
   contentDirStructure,
   markdownFileLocation,
 ) => {
   let updatedContent = markdownText;
-  Promise.all(
+  let hasBeenUpdated = false;
+  await Promise.all(
     linksWithPaths.map(async (link) => {
-      const parsedLink = getParsedLink(link, dir, contentDirStructure);
+      const parsedLink = getParsedLink(
+        link,
+        contentDirStructure,
+        markdownFileLocation,
+      );
       if (link === parsedLink) return;
+      hasBeenUpdated = true;
       updatedContent = markdownText.replace(link, parsedLink);
     }),
   );
-  if (updatedContent === markdownText) return;
-  await writeFile(markdownFileLocation, updatedContent);
+  if (hasBeenUpdated) {
+    await writeFile(markdownFileLocation, updatedContent);
+  }
 };
 
 const updateImageLinks = async (dir, contentDirStructure) => {
@@ -89,7 +107,6 @@ const updateImageLinks = async (dir, contentDirStructure) => {
       await updateLinks(
         linksWithPaths,
         markdownText,
-        dir,
         contentDirStructure,
         markdownFileLocation,
       );
