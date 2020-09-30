@@ -17,22 +17,17 @@ export const FullImage = styled(Img)`
   left: 0;
 `;
 
-export const ImageContainer = styled.span`
-  position: relative;
-  width: 600px;
-`;
-
 const OptimisedImage: FC<Props> = ({ alt, src }) => {
   const isGif = src.endsWith('.gif');
 
   return (
-    <ImageContainer>
+    <>
       {isGif ? (
         <GifPlayer gifUrl={src} alt={alt} />
       ) : (
         <StaticImage imgUrl={src} alt={alt} />
       )}
-    </ImageContainer>
+    </>
   );
 };
 

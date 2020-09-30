@@ -1,18 +1,16 @@
 import React, { useState, FC, HTMLAttributes, useCallback } from 'react';
 import Img from 'react-optimized-image';
 
-import withStyles, { CNFunction } from '../../lib/hocs/with-styles';
 import useGifFirstFrame from '../../lib/hooks/use-gif-first-frame';
 
-import styles from './style.module.scss';
+import { GifWrapper, PlayButton } from './gif-player.sc';
 
 interface Props extends HTMLAttributes<HTMLImageElement> {
   gifUrl: string;
-  cn: CNFunction;
   alt?: string;
 }
 
-const GifPlayerContainer: FC<Props> = ({ gifUrl, cn, alt, ...other }) => {
+const GifPlayerContainer: FC<Props> = ({ gifUrl, alt }) => {
   const [playing, setPlaying] = useState(false);
 
   const { firstFrameImage } = useGifFirstFrame(
@@ -25,20 +23,15 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, cn, alt, ...other }) => {
   }, [setPlaying]);
 
   return (
-    <span className={cn('gif_player', { playing })} onClick={togglePlay}>
-      <span className={cn('play_button')} />
+    <GifWrapper onClick={togglePlay}>
+      <PlayButton $playing={playing}>GIF</PlayButton>
       {playing ? (
-        <Img
-          sizes={[600]}
-          src={require(`../../content/${gifUrl}`)}
-          alt={alt}
-          {...other}
-        />
+        <Img src={require(`../../content/${gifUrl}`)} sizes={[600]} alt={alt} />
       ) : (
         <img src={firstFrameImage} alt={alt} />
       )}
-    </span>
+    </GifWrapper>
   );
 };
 
-export default withStyles(styles)(GifPlayerContainer);
+export default GifPlayerContainer;

@@ -2,8 +2,6 @@ import React, { FC, useState } from 'react';
 import Img from 'react-optimized-image';
 import styled, { css } from 'styled-components';
 
-import { ImageContainer } from '.';
-
 const BlurredImage = styled(Img)<{ $imageLoaded: boolean }>`
   position: absolute;
   top: 0;
@@ -23,6 +21,12 @@ const FullImage = styled(Img)`
   top: 0;
   left: 0;
   width: 600px;
+`;
+
+const ImageContainer = styled.figure`
+  position: relative;
+  width: 600px;
+  margin: 0;
 `;
 
 interface StaticImageProps {
