@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, existsSync } from 'fs';
+import { existsSync, promises } from 'fs';
 import { resolve } from 'path';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -71,11 +71,11 @@ const DocumentPost: FC<DocumentPostProps> = ({
   );
 };
 
-const getSlugs = (directory: string) => {
+const getSlugs = async (directory: string) => {
   const paths: StaticPathParams[] = [];
 
-  const parseDirectories = (directory: string) => {
-    const dirents = readdirSync(directory, {
+  const parseDirectories = async (directory: string) => {
+    const dirents = await promises.readdir(directory, {
       withFileTypes: true,
     });
     // assume only one post file per directory
@@ -101,14 +101,16 @@ const getSlugs = (directory: string) => {
         });
       }
     }
-    dirents.forEach((dirent) => {
-      if (dirent.isDirectory()) {
-        const directoryPath = resolve(directory, dirent.name);
-        parseDirectories(directoryPath);
-      }
-    });
+    await Promise.all(
+      dirents.map(async (dirent) => {
+        if (dirent.isDirectory()) {
+          const directoryPath = resolve(directory, dirent.name);
+          await parseDirectories(directoryPath);
+        }
+      }),
+    );
   };
-  parseDirectories(directory);
+  await parseDirectories(directory);
   return paths;
 };
 
@@ -206,7 +208,7 @@ const getNavigationArticles = async (
   let relativePath = '';
 
   const parseDirectories = async (directory: string) => {
-    const dirents = readdirSync(directory, {
+    const dirents = await await promises.readdir(directory, {
       withFileTypes: true,
     });
     // assume only one post file per directory
@@ -229,7 +231,7 @@ const getNavigationArticles = async (
         const level = (localPath && localPath.match(/\//g)?.length) || 1;
         const order = orderComponents ? parseInt(orderComponents[1]) : 0;
         const parentSlug = slug.replace(/\/[a-zA-Z0-9-]+$/, '');
-        const markdownData = readFileSync(markdownPath, 'utf8');
+        const markdownData = await promises.readFile(markdownPath, 'utf8');
         const { data, content } = matter(markdownData);
         flatArticles.push({
           title: data.menu_title || data.title,
@@ -280,7 +282,7 @@ const getNavigationArticles = async (
  * Create all the slugs (paths) for this page
  */
 export async function getStaticPaths() {
-  const paths = getSlugs(documentFilesBasePath);
+  const paths = await getSlugs(documentFilesBasePath);
 
   return {
     paths,
