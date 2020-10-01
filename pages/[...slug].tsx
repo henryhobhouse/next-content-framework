@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from 'fs';
+import { readdirSync, readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,17 +15,19 @@ import MdxAnchor from '../components/MdxAnchor';
 import OptimisedImage from '../components/OptimisedImage';
 import SectionNavigation from '../components/SectionNavigation';
 import {
-  addRelativeImageLinks,
   documentFilesBasePath,
   DocumentPostProps,
   getNavigationItems,
+  imageUrls,
   isPostFileRegex,
   MdxRenderedToString,
   NavigationArticle,
   orderPartRefex,
   orderRegex,
+  parseRelativeLinks,
   pathRegex,
   preToCodeBlock,
+  replaceLinkInContent,
   StaticPathParams,
 } from '../lib/utils/mdx-parse';
 
@@ -110,6 +112,83 @@ const getSlugs = (directory: string) => {
   return paths;
 };
 
+const checkValidLink = (
+  imageLink: string,
+  relativePath: string,
+  imageLinkIsFile: boolean,
+  linkPathIsRelative: boolean,
+) => {
+  if (linkPathIsRelative || imageLinkIsFile) {
+    return existsSync(`${process.cwd()}/content/${relativePath}/${imageLink}`);
+  }
+  return existsSync(`${process.cwd()}/content/${imageLink}`);
+};
+
+const addRelativeImageLinks = (content: string, relativePath: string) => {
+  const imageLinksToUpdate: string[] = [];
+  let result: RegExpExecArray | null;
+
+  // default newContent is just the content. i.e. all the links are absolute and don't need updating
+  let newContent = content;
+  const regCheck = new RegExp(imageUrls);
+
+  // look for image links in content and each time find one add to fileNamesToUpdate
+  while ((result = regCheck.exec(content)) !== null) {
+    if (result[2]) imageLinksToUpdate.push(result[2]);
+  }
+
+  // iterate through image links to parse relative path
+  imageLinksToUpdate.forEach((imageLink) => {
+    // remove any path prefixes (./ or /) from beginning of link
+    const nonRelativeLink = imageLink.replace(/^(.\/|\/)/, '');
+    const imageLinkDirectories = nonRelativeLink.split('/');
+    const linkPathIsRelative = imageLinkDirectories.some(
+      (link) => link === '..',
+    );
+    const imageLinkIsFile =
+      !linkPathIsRelative && imageLinkDirectories.length === 1;
+
+    const isValidLink = checkValidLink(
+      imageLink,
+      relativePath,
+      imageLinkIsFile,
+      linkPathIsRelative,
+    );
+
+    if (linkPathIsRelative && isValidLink) {
+      const relativePathLinks = relativePath.split('/');
+      const revisedImageLink = parseRelativeLinks(relativePathLinks, imageLink);
+      newContent = replaceLinkInContent(
+        imageLink,
+        revisedImageLink,
+        relativePathLinks,
+        newContent,
+      );
+    }
+
+    if (imageLinkIsFile && isValidLink) {
+      newContent = replaceLinkInContent(
+        imageLink,
+        `${relativePath}/${nonRelativeLink}`,
+        [],
+        newContent,
+      );
+    }
+
+    if (!isValidLink) {
+      // eslint-disable-next-line no-console
+      console.warn(`${imageLink} in ${relativePath} does not exist`);
+      const links = newContent.match(imageUrls);
+      const badLink = links?.find((link) => link.includes(imageLink));
+      if (badLink) {
+        newContent = newContent.replace(badLink, '');
+      }
+    }
+  });
+
+  return newContent;
+};
+
 /**
  * Recurrively iterate through all markdown files in the in the content folder and parse the data
  * To include meta data in both frontmatter but equally ordering for the side navigation. As you cannot
@@ -168,6 +247,7 @@ const getNavigationArticles = async (
             content,
             relativePathToImages,
           );
+
           // for server side rendering
           currentPagesContent = await renderToString(transformedContent, {
             components: {

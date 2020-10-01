@@ -43,7 +43,7 @@ const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt }) => {
         src={require(`../../content/${imgUrl}`)}
         alt={alt}
         sizes={[20]}
-        $imageLoaded={imageLoading}
+        $imageLoaded={!imageLoading}
         webp
       />
 

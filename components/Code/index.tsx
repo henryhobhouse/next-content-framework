@@ -1,3 +1,4 @@
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Highlight, { defaultProps, Language } from 'prism-react-renderer';
 import React, { FC } from 'react';
@@ -19,7 +20,7 @@ const Code: FC<CodeProps> = ({ cn, codeString, language }) => {
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <div className={cn('code')}>
           <Clipboard data-clipboard-text={codeString} className={cn('copy')}>
-            <FontAwesomeIcon icon={['far', 'copy']} />
+            <FontAwesomeIcon icon={faCopy} />
           </Clipboard>
           <pre className={className} style={style}>
             {tokens.map((line, i) => (

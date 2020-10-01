@@ -8,6 +8,7 @@ const isPostFileRegex = /docs\.(mdx|md)$/g;
 const orderPartRegex = /^([0-9+]+)\./g;
 const imageUrls = /(\!\[.*?\]\()(\S*?)(?=\))/g;
 const isUrlRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/g;
+const isGifPlayerRegex = /(<GifPlayer)(.*)(\/>)/g;
 
 const getLinksWithPaths = (markdownTextBuffer) => {
   const links = [];
@@ -22,11 +23,21 @@ const getLinksWithPaths = (markdownTextBuffer) => {
       const updatedLink = link.replace(/^(.\/|\/)/, '');
       const hasPath = updatedLink.split('/').length > 1;
       const isExternal = !!updatedLink.match(isUrlRegex);
-      return !isExternal && hasPath ? updatedLink : false;
+      return !isExternal && hasPath ? link : false;
     })
     .filter(Boolean);
   if (!filteredLinks.length) return [];
   return filteredLinks;
+};
+
+const getGifPlayers = (markdownTextBuffer) => {
+  const gifPlayers = [];
+  let result;
+  const regCheck = new RegExp(isGifPlayerRegex);
+  while ((result = regCheck.exec(markdownTextBuffer.toString()))) {
+    if (result[0]) gifPlayers.push(result[0]);
+  }
+  return gifPlayers;
 };
 
 const findDirectory = (dirName, dirStructure) => {
@@ -48,9 +59,10 @@ const findDirectory = (dirName, dirStructure) => {
 };
 
 const getParsedLink = (link, contentDirStructure, markdownFileLocation) => {
-  const linkDirectories = link
+  const updatedLink = link.replace(/^(.\/|\/)/, '');
+  const linkDirectories = updatedLink
     .split('/')
-    .filter((dir) => dir !== '.' && dir !== '');
+    .filter((dir) => dir !== '.' && dir !== '' && dir !== 'content');
   const parsedLinkDirectories = [];
   const fileName = linkDirectories.pop();
   linkDirectories.forEach((directory) => {
@@ -67,6 +79,19 @@ const getParsedLink = (link, contentDirStructure, markdownFileLocation) => {
   return [...parsedLinkDirectories, fileName].join('/');
 };
 
+const replaceGifPlayers = async (
+  gifPlayers,
+  markdownText,
+  markdownFileLocation,
+) => {
+  let updatedContent = markdownText;
+  gifPlayers.forEach((player) => {
+    const link = player.match(/(?<=gif=")(.*)(?=")/);
+    updatedContent = updatedContent.replace(player, `![Gif](${link[0]})`);
+  });
+  await writeFile(markdownFileLocation, updatedContent);
+};
+
 const updateLinks = async (
   linksWithPaths,
   markdownText,
@@ -75,19 +100,19 @@ const updateLinks = async (
 ) => {
   let updatedContent = markdownText;
   let hasBeenUpdated = false;
-  await Promise.all(
-    linksWithPaths.map(async (link) => {
-      const parsedLink = getParsedLink(
-        link,
-        contentDirStructure,
-        markdownFileLocation,
-      );
-      if (link === parsedLink) return;
-      hasBeenUpdated = true;
-      updatedContent = markdownText.replace(link, parsedLink);
-    }),
-  );
+  linksWithPaths.forEach((link) => {
+    const parsedLink = getParsedLink(
+      link,
+      contentDirStructure,
+      markdownFileLocation,
+    );
+    if (link === parsedLink) return;
+    hasBeenUpdated = true;
+    updatedContent = updatedContent.replace(link, parsedLink);
+  });
   if (hasBeenUpdated) {
+    if (!updatedContent)
+      throw new Error('no content has been updated', markdownFileLocation);
     await writeFile(markdownFileLocation, updatedContent);
   }
 };
@@ -110,6 +135,10 @@ const updateImageLinks = async (dir, contentDirStructure) => {
         contentDirStructure,
         markdownFileLocation,
       );
+    }
+    const gifPlayers = getGifPlayers(markdownText);
+    if (gifPlayers.length) {
+      await replaceGifPlayers(gifPlayers, markdownText, markdownFileLocation);
     }
   }
   await Promise.all(

@@ -72,7 +72,10 @@ export const getNavigationItems = (
   });
 };
 
-const parseRelativeLinks = (relativePathLinks: string[], imageLink: string) => {
+export const parseRelativeLinks = (
+  relativePathLinks: string[],
+  imageLink: string,
+) => {
   let revisedImageLink = imageLink;
   // check and handle relative links
   imageLink.split('/').some((link, index) => {
@@ -99,7 +102,7 @@ const parseRelativeLinks = (relativePathLinks: string[], imageLink: string) => {
   return revisedImageLink;
 };
 
-const replaceLinkInContent = (
+export const replaceLinkInContent = (
   imageLink: string,
   revisedImageLink: string,
   relativePathLinks: string[],
@@ -109,55 +112,6 @@ const replaceLinkInContent = (
     '/',
   );
   return content.replace(imageLink, `${revisedRelativeFilePath}`);
-};
-
-export const addRelativeImageLinks = (
-  content: string,
-  relativePath: string,
-) => {
-  const imageLinksToUpdate: string[] = [];
-  let result: RegExpExecArray | null;
-
-  // default newContent is just the content. i.e. all the links are absolute and don't need updating
-  let newContent = content;
-  const regCheck = new RegExp(imageUrls);
-
-  // look for image links in content and each time find one add to fileNamesToUpdate
-  while ((result = regCheck.exec(content)) !== null) {
-    if (result[2]) imageLinksToUpdate.push(result[2]);
-  }
-
-  // iterate through image links to parse relative path
-  imageLinksToUpdate.forEach((imageLink) => {
-    // remove any path prefixes (./ or /) from beginning of link
-    imageLink.replace(/^(.\/|\/)/, '');
-    const imageLinkDirectories = imageLink.split('/');
-    const pathIsRelative = imageLinkDirectories.some((link) => link === '..');
-
-    if (pathIsRelative) {
-      const relativePathLinks = relativePath.split('/');
-      const revisedImageLink = parseRelativeLinks(relativePathLinks, imageLink);
-      newContent = replaceLinkInContent(
-        imageLink,
-        revisedImageLink,
-        relativePathLinks,
-        content,
-      );
-    }
-
-    const imageLinkIsFile =
-      !pathIsRelative && imageLinkDirectories.length === 1;
-    if (imageLinkIsFile) {
-      newContent = replaceLinkInContent(
-        imageLink,
-        `${relativePath}/${imageLink}`,
-        [],
-        content,
-      );
-    }
-  });
-
-  return newContent;
 };
 
 export const preToCodeBlock = (preProps: any) => {
