@@ -13,6 +13,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",
+    "@mdx-js/loader": "^1.6.18",
+    "@next/mdx": "^9.5.3",
     "@zeit/next-sass": "^1.0.1",
     "framer-motion": "^2.7.5",
     "gray-matter": "^4.0.2",

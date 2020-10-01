@@ -1100,7 +1100,16 @@
   dependencies:
     prop-types "^15.7.2"
 
-"@mdx-js/mdx@^1.6.16":
+"@mdx-js/loader@^1.6.18":
+  version "1.6.18"
+  resolved "https://registry.yarnpkg.com/@mdx-js/loader/-/loader-1.6.18.tgz#8d63fcc029573b3a33968c78d1c5e927ad8e497d"
+  integrity sha512-mCIt3dFc4p7y3ZqVda07grZDWgMcwSePT3k9vQfgfUcGWLeTFhp46fTbzagXVR/izldFSBLVYkouuH2PaI7Ecw==
+  dependencies:
+    "@mdx-js/mdx" "1.6.18"
+    "@mdx-js/react" "1.6.18"
+    loader-utils "2.0.0"
+
+"@mdx-js/mdx@1.6.18", "@mdx-js/mdx@^1.6.16":
   version "1.6.18"
   resolved "https://registry.yarnpkg.com/@mdx-js/mdx/-/mdx-1.6.18.tgz#c73345ef75be0ec303c5d87f3b95cbe55c192742"
   integrity sha512-RXtdFBP3cnf/RILx/ipp5TsSY1k75bYYmjorv7jTaPcHPQwhQdI6K4TrVUed/GL4f8zX5TN2QwO5g+3E/8RsXA==
@@ -1125,7 +1134,7 @@
     unist-builder "2.0.3"
     unist-util-visit "2.0.3"
 
-"@mdx-js/react@^1.6.16":
+"@mdx-js/react@1.6.18", "@mdx-js/react@^1.6.16":
   version "1.6.18"
   resolved "https://registry.yarnpkg.com/@mdx-js/react/-/react-1.6.18.tgz#f83cbb2355de9cf36a213140ce21647da1e34fa7"
   integrity sha512-aFHsZVu7r9WamlP+WO/lyvHHZAubkQjkcRYlvS7fQElypfJvjKdHevjC3xiqlsQpasx/4KqRMoEIb++wNtd+6w==
@@ -1139,6 +1148,11 @@
   version "9.5.4-canary.22"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-9.5.4-canary.22.tgz#9c807248ac0cf3431d24b73c7344519c6996055e"
   integrity sha512-qq7Ec4Ab4fdlJ92B/zAvJMsbJ5wt4uruqPJpXgYy5pEZiJ/ZsSF2wkwlMcHhRFmz+DyozRJgcYa2GWy/5FBA/Q==
+
+"@next/mdx@^9.5.3":
+  version "9.5.3"
+  resolved "https://registry.yarnpkg.com/@next/mdx/-/mdx-9.5.3.tgz#246fd65b2f0854894d7d80b27a7af1708ccceb49"
+  integrity sha512-r4C5bFG6bQ1WfCR8re/GUFgw2CmpMByOILMYAqKhrHE/Ota2mloxdqLQOR/fBMy3f3wvEMFvl7YdEtQPPA9oLg==
 
 "@next/polyfill-module@9.5.4-canary.22":
   version "9.5.4-canary.22"

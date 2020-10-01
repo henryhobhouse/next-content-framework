@@ -1,3 +1,6 @@
+const withMDX = require('@next/mdx')({
+  extension: /\.mdx?$/,
+});
 const sass = require('@zeit/next-sass');
 const withPlugins = require('next-compose-plugins');
 const optimizedImages = require('next-optimized-images');
@@ -13,7 +16,8 @@ module.exports = withPlugins([
       },
     },
   ],
-  [transpileModules],
+  withMDX,
+  transpileModules,
   [
     sass,
     {
