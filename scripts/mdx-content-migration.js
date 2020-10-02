@@ -72,6 +72,7 @@ const getParsedLink = (link, contentDirStructure, markdownFileLocation) => {
     }
     const correctDirectoryName = findDirectory(directory, contentDirStructure);
     if (!correctDirectoryName) {
+      // eslint-disable-next-line no-console
       console.error(`${link} in ${markdownFileLocation} does not exist`);
     }
     parsedLinkDirectories.push(correctDirectoryName);
@@ -151,7 +152,7 @@ const updateImageLinks = async (dir, contentDirStructure) => {
 };
 
 (async () => {
-  const contentDirStructure = dirTree('./content/', {
+  const contentDirStructure = dirTree('../content/', {
     extensions: /\.fake$/,
   });
   await updateImageLinks(documentFilesBasePath, contentDirStructure);

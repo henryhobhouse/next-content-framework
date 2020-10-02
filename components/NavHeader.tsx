@@ -37,6 +37,7 @@ const ContentLinks = styled.a`
 
 const HeaderLink = styled.a`
   padding-left: 30px;
+  cursor: pointer;
 
   h1 {
     margin: 0;

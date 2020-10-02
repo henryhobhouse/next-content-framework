@@ -11,6 +11,7 @@ const BlurredImage = styled.img<{ $imageLoaded: boolean }>`
   left: 0;
   opacity: 1;
   width: 600px;
+  z-index: 1;
   transition: opacity 500ms ease-in;
   ${({ $imageLoaded }) =>
     $imageLoaded &&
@@ -24,6 +25,7 @@ const FullImage = styled.img`
   top: 0;
   left: 0;
   width: 600px;
+  z-index: 0;
   min-width: 600px;
 `;
 
