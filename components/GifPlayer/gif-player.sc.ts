@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-export const GifWrapper = styled.span`
+export const GifWrapper = styled.div<{ $height?: number }>`
   display: inline-block;
   position: relative;
   user-select: none;
@@ -10,9 +10,15 @@ export const GifWrapper = styled.span`
   img {
     width: 600px;
   }
+
+  ${({ $height }) =>
+    $height &&
+    css`
+      height: ${$height}px;
+    `}
 `;
 
-export const PlayButton = styled.span<{ $playing: boolean }>`
+export const PlayButton = styled.div<{ $playing: boolean }>`
   background-color: rgba(0, 0, 0, 0.5);
   border: 2px dashed #fff;
   border-radius: 50%;
