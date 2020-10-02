@@ -17,6 +17,9 @@ module.exports = {
     react: {
       version: 'detect',
     },
+    'import/resolver': {
+      typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
+    },
   },
   plugins: ['react-hooks', '@typescript-eslint', 'eslint-plugin-react'],
   overrides: [

@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React, { FC, useState } from 'react';
-import Img from 'react-optimized-image';
 import styled, { css } from 'styled-components';
 
-const BlurredImage = styled(Img)<{ $imageLoaded: boolean }>`
+const BlurredImage = styled.img<{ $imageLoaded: boolean }>`
   position: relative;
   display: flex;
   flex-direction: row;
@@ -19,17 +19,19 @@ const BlurredImage = styled(Img)<{ $imageLoaded: boolean }>`
     `}
 `;
 
-const FullImage = styled(Img)`
+const FullImage = styled.img`
   display: flex;
   top: 0;
   left: 0;
   width: 600px;
+  min-width: 600px;
 `;
 
 const ImageContainer = styled.div`
   display: flex;
   width: 600px;
   margin: 0;
+  min-width: 600px;
 `;
 
 interface StaticImageProps {
@@ -40,19 +42,17 @@ interface StaticImageProps {
 const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt }) => {
   const [imageLoading, setImageLoading] = useState(true);
 
+  // TODO: add BlurrImage back once image optimisation script is done.
   return (
     <ImageContainer>
-      <BlurredImage
-        src={require(`../../content/${imgUrl}`)}
+      {/* <BlurredImage
+        src={require(`../../content/${imgUrl}`).default}
         alt={alt}
-        sizes={[20]}
         $imageLoaded={!imageLoading}
-      />
-
+      /> */}
       <FullImage
-        src={require(`../../content/${imgUrl}`)}
+        src={require(`../../content/${imgUrl}`).default}
         alt={alt}
-        sizes={[600]}
         onLoad={() => setImageLoading(false)}
       />
     </ImageContainer>

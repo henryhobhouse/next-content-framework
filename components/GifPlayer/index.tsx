@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React, {
   useState,
   FC,
@@ -5,7 +6,6 @@ import React, {
   useCallback,
   useEffect,
 } from 'react';
-import Img from 'react-optimized-image';
 
 import useGifFirstFrame from '../../lib/hooks/use-gif-first-frame';
 
@@ -30,7 +30,7 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt }) => {
 
   const { firstFrameImage } = useGifFirstFrame(
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    require(`../../content/${gifUrl}`),
+    require(`../../content/${gifUrl}`).default,
   );
 
   const togglePlay = useCallback(() => {
@@ -41,7 +41,7 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt }) => {
     <GifWrapper onClick={togglePlay} $height={imageHeight}>
       <PlayButton $playing={playing}>GIF</PlayButton>
       {playing ? (
-        <Img src={require(`../../content/${gifUrl}`)} sizes={[600]} alt={alt} />
+        <img src={require(`../../content/${gifUrl}`).default} alt={alt} />
       ) : (
         <img src={firstFrameImage} alt={alt} ref={setImageRef} />
       )}

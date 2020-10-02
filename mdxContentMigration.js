@@ -72,7 +72,7 @@ const getParsedLink = (link, contentDirStructure, markdownFileLocation) => {
     }
     const correctDirectoryName = findDirectory(directory, contentDirStructure);
     if (!correctDirectoryName) {
-      throw new Error(`${link} in ${markdownFileLocation} does not exist`);
+      console.error(`${link} in ${markdownFileLocation} does not exist`);
     }
     parsedLinkDirectories.push(correctDirectoryName);
   });

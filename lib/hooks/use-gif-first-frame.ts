@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-const useGifFirstFrame = (gifUrl: ImgSrc) => {
+const useGifFirstFrame = (gifUrl: string) => {
   const [firstFrameImage, setFirstFrameImage] = useState<string>();
 
   const getGifFirstFrameUrl = useCallback((img: HTMLImageElement) => {
@@ -28,7 +28,7 @@ const useGifFirstFrame = (gifUrl: ImgSrc) => {
   );
 
   useEffect(() => {
-    preloadGif(gifUrl.src, (img: HTMLImageElement) => {
+    preloadGif(gifUrl, (img: HTMLImageElement) => {
       const actualStill = getGifFirstFrameUrl(img);
       if (actualStill) {
         setFirstFrameImage(actualStill);

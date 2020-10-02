@@ -37,6 +37,10 @@ const ContentLinks = styled.a`
 
 const HeaderLink = styled.a`
   padding-left: 30px;
+
+  h1 {
+    margin: 0;
+  }
 `;
 
 /**
@@ -51,10 +55,10 @@ const NavHeader: FC = () => (
         </HeaderLink>
       </Link>
       <div>
-        <Link href="/platform/top-two/mid-one" passHref>
+        <Link href="/platform/getting-started/overview" passHref>
           <ContentLinks>Platform</ContentLinks>
         </Link>
-        <Link href="/platform/top-one" passHref>
+        <Link href="/embedded/getting-started/overview" passHref>
           <ContentLinks>Embedded</ContentLinks>
         </Link>
       </div>
