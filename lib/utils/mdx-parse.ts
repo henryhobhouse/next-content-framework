@@ -111,7 +111,8 @@ export const replaceLinkInContent = (
   const revisedRelativeFilePath = [...relativePathLinks, revisedImageLink].join(
     '/',
   );
-  return content.replace(imageLink, `${revisedRelativeFilePath}`);
+  const imageRegex = new RegExp(imageLink, 'g');
+  return content.replace(imageRegex, `${revisedRelativeFilePath}`);
 };
 
 export const preToCodeBlock = (preProps: any) => {

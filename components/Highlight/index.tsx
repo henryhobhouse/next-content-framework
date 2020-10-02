@@ -1,3 +1,7 @@
+import {
+  faInfoCircle,
+  faExclamationCircle,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { FC } from 'react';
 
@@ -12,9 +16,7 @@ interface Props {
 
 const Highlight: FC<Props> = ({ cn, children, warning = false }) => (
   <div className={cn('blockWrapper')} data-warning={warning}>
-    <FontAwesomeIcon
-      icon={['fas', warning ? 'exclamation-circle' : 'info-circle']}
-    />
+    <FontAwesomeIcon icon={warning ? faExclamationCircle : faInfoCircle} />
     <div>{children}</div>
   </div>
 );

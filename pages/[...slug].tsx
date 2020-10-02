@@ -74,7 +74,7 @@ const DocumentPost: FC<DocumentPostProps> = ({
 
 const checkFileExists = async (filePath: string) => {
   try {
-    promises.access(filePath);
+    await promises.access(filePath);
     return true;
   } catch {
     return false;
@@ -151,9 +151,13 @@ const addRelativeImageLinks = async (content: string, relativePath: string) => {
     if (result[2]) imageLinksToUpdate.push(result[2]);
   }
 
+  const nonDupedImageLinks = imageLinksToUpdate.filter((value, index, self) => {
+    return self.indexOf(value) === index;
+  });
+
   // iterate through image links to parse relative path
   await Promise.all(
-    imageLinksToUpdate.map(async (imageLink) => {
+    nonDupedImageLinks.map(async (imageLink) => {
       // remove any path prefixes (./ or /) from beginning of link
       const nonRelativeLink = imageLink.replace(/^(.\/|\/)/, '');
       const imageLinkDirectories = nonRelativeLink.split('/');
@@ -195,7 +199,9 @@ const addRelativeImageLinks = async (content: string, relativePath: string) => {
 
       if (!isValidLink) {
         // eslint-disable-next-line no-console
-        console.warn(`${imageLink} in ${relativePath} does not exist`);
+        console.warn(
+          `WARNING: The image "${imageLink}" referenced in "${relativePath}/docs.mdx|md" does not exist.`,
+        );
         const links = newContent.match(imageUrls);
         const badLink = links?.find((link) => link.includes(imageLink));
         if (badLink) {
@@ -204,6 +210,9 @@ const addRelativeImageLinks = async (content: string, relativePath: string) => {
       }
     }),
   );
+
+  // remove all comments
+  newContent = newContent.replace(/\<\!\-\-.*\-\-\>/g, '');
 
   return newContent;
 };
