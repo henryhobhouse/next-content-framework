@@ -3,7 +3,10 @@ import Img from 'react-optimized-image';
 import styled, { css } from 'styled-components';
 
 const BlurredImage = styled(Img)<{ $imageLoaded: boolean }>`
-  position: absolute;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
   top: 0;
   left: 0;
   opacity: 1;
@@ -17,14 +20,14 @@ const BlurredImage = styled(Img)<{ $imageLoaded: boolean }>`
 `;
 
 const FullImage = styled(Img)`
-  position: absolute;
+  display: flex;
   top: 0;
   left: 0;
   width: 600px;
 `;
 
-const ImageContainer = styled.figure`
-  position: relative;
+const ImageContainer = styled.div`
+  display: flex;
   width: 600px;
   margin: 0;
 `;
@@ -44,7 +47,6 @@ const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt }) => {
         alt={alt}
         sizes={[20]}
         $imageLoaded={!imageLoading}
-        webp
       />
 
       <FullImage
@@ -52,7 +54,6 @@ const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt }) => {
         alt={alt}
         sizes={[600]}
         onLoad={() => setImageLoading(false)}
-        webp
       />
     </ImageContainer>
   );
