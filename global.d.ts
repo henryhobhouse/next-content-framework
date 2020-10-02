@@ -1,3 +1,4 @@
+declare module 'remark-unwrap-images';
 declare module 'next-mdx-remote/render-to-string' {
   function renderToString(
     source: string,

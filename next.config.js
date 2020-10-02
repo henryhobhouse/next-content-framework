@@ -11,9 +11,6 @@ module.exports = withPlugins([
     optimizedImages,
     {
       handleImages: ['jpeg', 'png', 'svg', 'gif'],
-      mozjpeg: {
-        quality: 50,
-      },
     },
   ],
   withMDX,

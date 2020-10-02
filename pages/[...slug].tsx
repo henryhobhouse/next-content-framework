@@ -1,11 +1,12 @@
-import { existsSync, promises } from 'fs';
+import { promises } from 'fs';
 import { resolve } from 'path';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import matter from 'gray-matter';
 import hydrate from 'next-mdx-remote/hydrate';
 import renderToString from 'next-mdx-remote/render-to-string';
-import React, { FC } from 'react';
+import React, { FC, HTMLAttributes } from 'react';
+import remarkUnwrapImages from 'remark-unwrap-images';
 
 import ArticleWrapper from '../components/ArticleWrapper';
 import Code from '../components/Code';
@@ -34,7 +35,7 @@ import {
 // components is its own object outside of render so that the references to
 // components are stable
 const components = {
-  pre: (preProps: any) => {
+  pre: (preProps: HTMLAttributes<HTMLPreElement>) => {
     const props = preToCodeBlock(preProps);
     // if there's a codeString and some props, we passed the test
     if (props) {
@@ -69,6 +70,15 @@ const DocumentPost: FC<DocumentPostProps> = ({
       <ArticleWrapper>{content}</ArticleWrapper>
     </>
   );
+};
+
+const checkFileExists = async (filePath: string) => {
+  try {
+    promises.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
 };
 
 const getSlugs = async (directory: string) => {
@@ -114,19 +124,21 @@ const getSlugs = async (directory: string) => {
   return paths;
 };
 
-const checkValidLink = (
+const checkValidLink = async (
   imageLink: string,
   relativePath: string,
   imageLinkIsFile: boolean,
   linkPathIsRelative: boolean,
 ) => {
   if (linkPathIsRelative || imageLinkIsFile) {
-    return existsSync(`${process.cwd()}/content/${relativePath}/${imageLink}`);
+    return checkFileExists(
+      `${process.cwd()}/content/${relativePath}/${imageLink}`,
+    );
   }
-  return existsSync(`${process.cwd()}/content/${imageLink}`);
+  return checkFileExists(`${process.cwd()}/content/${imageLink}`);
 };
 
-const addRelativeImageLinks = (content: string, relativePath: string) => {
+const addRelativeImageLinks = async (content: string, relativePath: string) => {
   const imageLinksToUpdate: string[] = [];
   let result: RegExpExecArray | null;
 
@@ -140,53 +152,58 @@ const addRelativeImageLinks = (content: string, relativePath: string) => {
   }
 
   // iterate through image links to parse relative path
-  imageLinksToUpdate.forEach((imageLink) => {
-    // remove any path prefixes (./ or /) from beginning of link
-    const nonRelativeLink = imageLink.replace(/^(.\/|\/)/, '');
-    const imageLinkDirectories = nonRelativeLink.split('/');
-    const linkPathIsRelative = imageLinkDirectories.some(
-      (link) => link === '..',
-    );
-    const imageLinkIsFile =
-      !linkPathIsRelative && imageLinkDirectories.length === 1;
-
-    const isValidLink = checkValidLink(
-      imageLink,
-      relativePath,
-      imageLinkIsFile,
-      linkPathIsRelative,
-    );
-
-    if (linkPathIsRelative && isValidLink) {
-      const relativePathLinks = relativePath.split('/');
-      const revisedImageLink = parseRelativeLinks(relativePathLinks, imageLink);
-      newContent = replaceLinkInContent(
-        imageLink,
-        revisedImageLink,
-        relativePathLinks,
-        newContent,
+  await Promise.all(
+    imageLinksToUpdate.map(async (imageLink) => {
+      // remove any path prefixes (./ or /) from beginning of link
+      const nonRelativeLink = imageLink.replace(/^(.\/|\/)/, '');
+      const imageLinkDirectories = nonRelativeLink.split('/');
+      const linkPathIsRelative = imageLinkDirectories.some(
+        (link) => link === '..',
       );
-    }
+      const imageLinkIsFile =
+        !linkPathIsRelative && imageLinkDirectories.length === 1;
 
-    if (imageLinkIsFile && isValidLink) {
-      newContent = replaceLinkInContent(
+      const isValidLink = await checkValidLink(
         imageLink,
-        `${relativePath}/${nonRelativeLink}`,
-        [],
-        newContent,
+        relativePath,
+        imageLinkIsFile,
+        linkPathIsRelative,
       );
-    }
 
-    if (!isValidLink) {
-      // eslint-disable-next-line no-console
-      console.warn(`${imageLink} in ${relativePath} does not exist`);
-      const links = newContent.match(imageUrls);
-      const badLink = links?.find((link) => link.includes(imageLink));
-      if (badLink) {
-        newContent = newContent.replace(badLink, '');
+      if (linkPathIsRelative && isValidLink) {
+        const relativePathLinks = relativePath.split('/');
+        const revisedImageLink = parseRelativeLinks(
+          relativePathLinks,
+          imageLink,
+        );
+        newContent = replaceLinkInContent(
+          imageLink,
+          revisedImageLink,
+          relativePathLinks,
+          newContent,
+        );
       }
-    }
-  });
+
+      if (imageLinkIsFile && isValidLink) {
+        newContent = replaceLinkInContent(
+          imageLink,
+          `${relativePath}/${nonRelativeLink}`,
+          [],
+          newContent,
+        );
+      }
+
+      if (!isValidLink) {
+        // eslint-disable-next-line no-console
+        console.warn(`${imageLink} in ${relativePath} does not exist`);
+        const links = newContent.match(imageUrls);
+        const badLink = links?.find((link) => link.includes(imageLink));
+        if (badLink) {
+          newContent = newContent.replace(badLink, '');
+        }
+      }
+    }),
+  );
 
   return newContent;
 };
@@ -205,7 +222,6 @@ const getNavigationArticles = async (
 }> => {
   const flatArticles: Omit<NavigationArticle, 'children'>[] = [];
   let currentPagesContent: MdxRenderedToString | undefined;
-  let relativePath = '';
 
   const parseDirectories = async (directory: string) => {
     const dirents = await await promises.readdir(directory, {
@@ -217,7 +233,7 @@ const getNavigationArticles = async (
     );
     if (postFile) {
       const markdownPath = resolve(directory, postFile.name);
-      relativePath = markdownPath.replace(documentFilesBasePath, '');
+      const relativePath = markdownPath.replace(documentFilesBasePath, '');
       pathRegex.lastIndex = 0;
       orderRegex.lastIndex = 0;
       const pathComponents = pathRegex.exec(relativePath);
@@ -233,6 +249,7 @@ const getNavigationArticles = async (
         const parentSlug = slug.replace(/\/[a-zA-Z0-9-]+$/, '');
         const markdownData = await promises.readFile(markdownPath, 'utf8');
         const { data, content } = matter(markdownData);
+
         flatArticles.push({
           title: data.menu_title || data.title,
           slug,
@@ -240,12 +257,14 @@ const getNavigationArticles = async (
           order,
           parentSlug,
         });
+
         if (slug === `/${currentSlugSections.join('/')}`) {
           const relativePathToImages = relativePath.replace(
             /\/docs.(mdx|md)/,
             '',
           );
-          const transformedContent = addRelativeImageLinks(
+
+          const transformedContent = await addRelativeImageLinks(
             content,
             relativePathToImages,
           );
@@ -259,6 +278,9 @@ const getNavigationArticles = async (
               Highlight,
               FontAwesomeIcon,
               ...components,
+            },
+            mdxOptions: {
+              remarkPlugins: [remarkUnwrapImages],
             },
           });
         }
