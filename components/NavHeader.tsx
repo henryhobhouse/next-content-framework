@@ -7,7 +7,6 @@ const Header = styled.div`
   align-items: center;
   min-width: 480px;
   height: 90px;
-  z-index: 100;
   background: #fff;
   box-shadow: 0 4px 8px 0 rgba(33, 43, 54, 0.1);
   display: flex;

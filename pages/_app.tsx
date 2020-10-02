@@ -17,6 +17,7 @@ const Wrapper = styled.div`
 `;
 
 const HeaderElement = styled.div`
+  z-index: 500;
   left: 0;
   right: 0;
   top: 0;
