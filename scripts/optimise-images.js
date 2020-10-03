@@ -1,8 +1,9 @@
-const { readdir, readFile, writeFile } = require('fs').promises;
+const { readdir, readFile, writeFile, unlink } = require('fs').promises;
 const { resolve } = require('path');
 
 const gifResize = require('@gumlet/gif-resize');
-const cliSpinners = require('cli-spinners');
+const cliProgress = require('cli-progress');
+const _colors = require('colors');
 const imagemin = require('imagemin');
 const imageminGifsicle = require('imagemin-gifsicle');
 const imageminPngquant = require('imagemin-pngquant');
@@ -18,10 +19,20 @@ const lazyLoadedPlaceholderWidth = 20; // pixels
 const imageSizes = [1200, 600]; // high quality and article size
 const staticImageSizes = [...imageSizes, lazyLoadedPlaceholderWidth];
 
-const spinner = ora({ spinner: cliSpinners.material });
+const spinner = ora();
 
 const imagesPathsToOptimise = [];
 let numberOfImagesOptimised = 0;
+const progressBar = new cliProgress.SingleBar({
+  format:
+    '|' +
+    _colors.magenta('{bar}') +
+    '| {percentage}% || {value}/{total} Images || ETA: {eta}s',
+  barCompleteChar: '\u2588',
+  barIncompleteChar: '\u2591',
+  hideCursor: true,
+  etaBuffer: 30,
+});
 
 const getImagesToOptimise = async (dir) => {
   const dirents = await readdir(dir, { withFileTypes: true });
@@ -151,19 +162,38 @@ const optimiseImages = async () => {
       }
 
       numberOfImagesOptimised += 1;
+      progressBar.increment();
+    }),
+  );
+};
+
+removeOriginals = async () => {
+  await Promise.all(
+    imagesPathsToOptimise.map(async (imageConfig) => {
+      const fileDirectoryArray = imageConfig.filePath.split('/');
+      const fileName = fileDirectoryArray.pop();
+      const relativePath = fileDirectoryArray.join('/');
+      await unlink(imageConfig.filePath);
+      await writeFile(`${relativePath}/${fileName}.optimised`, '');
     }),
   );
 };
 
 (async () => {
   try {
-    spinner.start('Optimising newly added images...');
+    spinner.info('Optimising newly added images...');
     await getImagesToOptimise(documentFilesBasePath);
+    progressBar.start(imagesPathsToOptimise.length, 0, {
+      speed: 'N/A',
+    });
     await optimiseImages();
+    await removeOriginals();
+    progressBar.stop();
     spinner.succeed(
       `${numberOfImagesOptimised} Images successively optimised.`,
     );
   } catch (error) {
+    progressBar.stop();
     spinner.fail(`oh dear. Image optimisation failed. ${error.message}`);
   }
 })();
