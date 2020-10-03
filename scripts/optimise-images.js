@@ -6,7 +6,9 @@ const cliProgress = require('cli-progress');
 const _colors = require('colors');
 const imagemin = require('imagemin');
 const imageminGifsicle = require('imagemin-gifsicle');
+const imageminMozjpeg = require('imagemin-mozjpeg');
 const imageminPngquant = require('imagemin-pngquant');
+const imageminSvgo = require('imagemin-svgo');
 const ora = require('ora');
 const sharp = require('sharp');
 
@@ -73,8 +75,10 @@ const writeOptimisedImage = async (imageConfig, optimisedImage, size) => {
     imagePathDirectories.length - 2
   ].replace(orderPartRegex, '');
 
+  const sizePrefix = size ? `${size}-` : '';
+
   await writeFile(
-    `${optimisedImageDirectory}/${size}-${parentDirectoryName}-${imageConfig.name}`,
+    `${optimisedImageDirectory}/${sizePrefix}${parentDirectoryName}-${imageConfig.name}`,
     optimisedImage,
   );
 };
@@ -100,22 +104,6 @@ const optimiseGif = async (imageConfig) => {
   );
 };
 
-const optimisePng = async (imageConfig, pipeline, size) => {
-  const optimisedPng = await pipeline.toBuffer().then((sharpBuffer) => {
-    imagemin.buffer(sharpBuffer, {
-      plugins: [
-        imageminPngquant({
-          quality: [0.8],
-          speed: 2,
-          strip: false,
-        }),
-      ],
-    });
-  });
-
-  await writeOptimisedImage(imageConfig, optimisedPng, size);
-};
-
 const processImagePipeline = async (imageConfig, clonedPipeline, size) => {
   const imagePathDirectories = imageConfig.filePath.split('/');
   const parentDirectoryName = imagePathDirectories[
@@ -127,12 +115,49 @@ const processImagePipeline = async (imageConfig, clonedPipeline, size) => {
   );
 };
 
+const optimisePng = async (imageConfig, pipeline, size) => {
+  const optimisedPng = await pipeline.toBuffer().then((sharpBuffer) => {
+    return imagemin.buffer(sharpBuffer, {
+      plugins: [
+        imageminPngquant({
+          speed: 2,
+          strip: false,
+        }),
+      ],
+    });
+  });
+
+  await writeOptimisedImage(imageConfig, optimisedPng, size);
+};
+
+const optimiseJpeg = async (imageConfig, pipeline, size) => {
+  const optimisedJpeg = await pipeline.toBuffer().then((sharpBuffer) => {
+    return imagemin.buffer(sharpBuffer, {
+      plugins: [
+        imageminMozjpeg({
+          quality: 80,
+        }),
+      ],
+    });
+  });
+
+  await writeOptimisedImage(imageConfig, optimisedJpeg, size);
+};
+
+const optimiseSvg = async (imageConfig) => {
+  const svgDataBuffer = await readFile(imageConfig.filePath);
+  const optimiseSvg = await imageminSvgo({})(svgDataBuffer);
+  await writeOptimisedImage(imageConfig, optimiseSvg, null);
+};
+
 const optimiseImages = async () => {
   await Promise.all(
     imagesPathsToOptimise.map(async (imageConfig) => {
       const pipeline = sharp(imageConfig.filePath);
       if (imageConfig.fileType === 'gif') {
         await optimiseGif(imageConfig);
+      } else if (imageConfig.fileType === 'svg') {
+        await optimiseSvg(imageConfig);
       } else {
         // handle all static images
         await Promise.all(
@@ -142,21 +167,20 @@ const optimiseImages = async () => {
               .resize({ width: size })
               .png({
                 compressionLevel: 9,
-                progressive: true,
                 force: imageConfig.fileType === `png`,
               })
               .webp({
                 quality: 80,
                 force: imageConfig.fileType === `webp`,
-              })
-              .jpeg({
-                quality: 80,
-                progressive: true,
-                force: imageConfig.fileType === `jpg`,
               });
 
             if (imageConfig.fileType === `png`) {
               await optimisePng(imageConfig, clonedPipeline, size);
+              return;
+            }
+
+            if (imageConfig.fileType === `jpeg`) {
+              await optimiseJpeg(imageConfig, clonedPipeline, size);
               return;
             }
 

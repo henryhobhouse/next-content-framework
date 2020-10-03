@@ -152,7 +152,7 @@ const updateImageLinks = async (dir, contentDirStructure) => {
 };
 
 (async () => {
-  const contentDirStructure = dirTree('../content/', {
+  const contentDirStructure = dirTree('content/', {
     extensions: /\.fake$/,
   });
   await updateImageLinks(documentFilesBasePath, contentDirStructure);

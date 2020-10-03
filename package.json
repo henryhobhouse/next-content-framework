@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS='--max-old-space-size=8192' next dev",
+    "dev": "NODE_OPTIONS='--max-old-space-size=8192' yarn optimise-images && next dev",
     "build-static": "next build && next export",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --format=codeframe",
     "type-check": "tsc --noEmit",
-    "migrate": "node ./scripts/mdxContentMigration.js",
+    "migrate": "node ./scripts/mdx-content-migration.js",
     "optimise-images": "node ./scripts/optimise-images.js"
   },
   "dependencies": {
@@ -59,7 +59,9 @@
     "eslint-plugin-react-hooks": "^4.1.0",
     "imagemin": "^7.0.1",
     "imagemin-gifsicle": "^7.0.0",
+    "imagemin-mozjpeg": "^9.0.0",
     "imagemin-pngquant": "^9.0.1",
+    "imagemin-svgo": "^8.0.0",
     "ora": "^5.1.0",
     "prettier": "^2.1.1",
     "sharp": "^0.26.1",
