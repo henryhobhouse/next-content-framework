@@ -18,7 +18,7 @@ const checkFileExists = async (filePath: string, promises: FsPromises) => {
 
 const checkValidLink = async (imageLink: string, promises: FsPromises) => {
   return checkFileExists(
-    `${process.cwd()}/${rootImageDirectory}/${referenceImageSize}-${imageLink}`,
+    `${process.cwd()}/${rootImageDirectory}/originals/${imageLink}`,
     promises,
   );
 };

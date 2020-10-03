@@ -2,6 +2,8 @@
 import React, { FC, useState } from 'react';
 import styled, { css } from 'styled-components';
 
+import { articleImageSize } from 'lib/mdx/mdx-parse';
+
 const BlurredImage = styled.img<{ $imageLoaded: boolean }>`
   width: 600px;
   position: relative;
@@ -43,12 +45,12 @@ const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt }) => {
   return (
     <ImageContainer>
       <BlurredImage
-        src={require(`../../images/20-${imgUrl}`).default}
+        src={require(`../../images/20/${imgUrl}`).default}
         $imageLoaded={!imageLoading}
       />
 
       <FullImage
-        src={require(`../../images/600-${imgUrl}`).default}
+        src={`/${articleImageSize}/${imgUrl}`}
         alt={alt}
         onLoad={() => setImageLoading(false)}
       />

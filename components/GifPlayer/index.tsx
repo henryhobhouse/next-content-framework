@@ -11,6 +11,8 @@ import useGifFirstFrame from '../../lib/hooks/use-gif-first-frame';
 
 import { GifWrapper, PlayButton } from './gif-player.sc';
 
+import { articleImageSize } from 'lib/mdx/mdx-parse';
+
 interface Props extends HTMLAttributes<HTMLImageElement> {
   gifUrl: string;
   alt?: string;
@@ -28,10 +30,9 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt }) => {
     }
   }, [imageRef?.height]);
 
-  const { firstFrameImage } = useGifFirstFrame(
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    require(`../../images/600-${gifUrl}`).default,
-  );
+  const gifRelativePath = `/${articleImageSize}/${gifUrl}`;
+
+  const { firstFrameImage } = useGifFirstFrame(gifRelativePath);
 
   const togglePlay = useCallback(() => {
     setPlaying((prevPlaying) => !prevPlaying);
@@ -41,7 +42,7 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt }) => {
     <GifWrapper onClick={togglePlay} $height={imageHeight}>
       <PlayButton $playing={playing}>GIF</PlayButton>
       {playing ? (
-        <img src={require(`../../images/600-${gifUrl}`).default} alt={alt} />
+        <img src={gifRelativePath} alt={alt} />
       ) : (
         <img src={firstFrameImage} alt={alt} ref={setImageRef} />
       )}

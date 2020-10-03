@@ -6,6 +6,7 @@ export const orderPartRegex = /\/([0-9+]+)\./g;
 export const imageUrls = /(\!\[.*?\]\()(\S*?)(?=\))\)/g;
 
 export const rootImageDirectory = 'images';
+export const staticImageDirectory = 'public';
 export const referenceImageSize = 1200; //px
 export const articleImageSize = 600; // px
 export const lazyLoadImageSize = 20; // px
@@ -49,7 +50,9 @@ export type Resolve = (...pathSegment: string[]) => string;
 export const getNavigationItems = (
   allItems: Omit<NavigationArticle, 'children'>[],
 ): NavigationArticle[] => {
-  const topLevelArticles = allItems.filter((article) => article.level === 1);
+  const topLevelArticles = allItems
+    .filter((article) => article.level === 1)
+    .sort((art1, art2) => art1.order - art2.order);
   const secondLevelArticles = allItems.filter((article) => article.level === 2);
   const thirdLevelArticles = allItems.filter((article) => article.level === 3);
 
