@@ -30,7 +30,7 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt }) => {
 
   const { firstFrameImage } = useGifFirstFrame(
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    require(`../../content/${gifUrl}`).default,
+    require(`../../images/600-${gifUrl}`).default,
   );
 
   const togglePlay = useCallback(() => {
@@ -41,7 +41,7 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt }) => {
     <GifWrapper onClick={togglePlay} $height={imageHeight}>
       <PlayButton $playing={playing}>GIF</PlayButton>
       {playing ? (
-        <img src={require(`../../content/${gifUrl}`).default} alt={alt} />
+        <img src={require(`../../images/600-${gifUrl}`).default} alt={alt} />
       ) : (
         <img src={firstFrameImage} alt={alt} ref={setImageRef} />
       )}

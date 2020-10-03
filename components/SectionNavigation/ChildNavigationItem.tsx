@@ -5,7 +5,7 @@ import Link from 'next/link';
 import React, { FC, memo, useContext, useEffect, useState } from 'react';
 
 import { CurrentRouteContext } from '../../lib/context/current-route';
-import { SecondTierNavigationArticle } from '../../lib/utils/mdx-parse';
+import { SecondTierNavigationArticle } from '../../lib/mdx/mdx-parse';
 
 import {
   IconWrapper,

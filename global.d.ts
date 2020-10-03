@@ -30,6 +30,6 @@ declare module 'next-mdx-remote/hydrate' {
     }?: {
       components?: Record<string, unknown>;
     },
-  ): any;
+  ): string;
   export default hydrate;
 }

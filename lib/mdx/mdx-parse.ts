@@ -2,8 +2,13 @@ export const documentFilesBasePath = `${process.cwd()}/content/`;
 export const isPostFileRegex = /docs\.(mdx|md)$/g;
 export const pathRegex = /([^\/]*)(.*)\/docs\.(mdx|md)$/g;
 export const orderRegex = /.*\/([0-9+]+)\.[^\/]*\/docs\.(mdx|md)$/g;
-export const orderPartRefex = /\/([0-9+]+)\./g;
-export const imageUrls = /(\!\[.*?\]\()(\S*?)(?=\))/g;
+export const orderPartRegex = /\/([0-9+]+)\./g;
+export const imageUrls = /(\!\[.*?\]\()(\S*?)(?=\))\)/g;
+
+export const rootImageDirectory = 'images';
+export const referenceImageSize = 1200; //px
+export const articleImageSize = 600; // px
+export const lazyLoadImageSize = 20; // px
 
 export interface BaseNavigationArticle {
   level: number;
@@ -34,9 +39,12 @@ export interface MdxRenderedToString {
 }
 
 export interface DocumentPostProps {
-  contentNavStructure: NavigationArticle[];
-  currentPagesContent?: MdxRenderedToString;
+  navigationStructure: NavigationArticle[];
+  content?: MdxRenderedToString;
+  frontmatter?: Record<string, unknown>;
 }
+
+export type Resolve = (...pathSegment: string[]) => string;
 
 export const getNavigationItems = (
   allItems: Omit<NavigationArticle, 'children'>[],
@@ -72,47 +80,13 @@ export const getNavigationItems = (
   });
 };
 
-export const parseRelativeLinks = (
-  relativePathLinks: string[],
-  imageLink: string,
-) => {
-  let revisedImageLink = imageLink;
-  // check and handle relative links
-  imageLink.split('/').some((link, index) => {
-    // if the first link is a .. then path is relative
-    if (index === 0 || link === '..') {
-      // if relative path is at root then image link is invalid
-      if (relativePathLinks.length === 0) {
-        throw new Error(
-          `relative path from image link in docs markdown in ${relativePathLinks.join(
-            '/',
-          )} is outside the content directory`,
-        );
-      }
-      // remove last path from prefix
-      relativePathLinks.pop();
-      // remove relative path "../"
-      revisedImageLink = revisedImageLink.substring(3);
-      // return false to iterator continues to next directory in link
-      return false;
-    }
-    return true;
-  });
-
-  return revisedImageLink;
-};
-
 export const replaceLinkInContent = (
   imageLink: string,
-  revisedImageLink: string,
-  relativePathLinks: string[],
+  revisedImageName: string,
   content: string,
 ) => {
-  const revisedRelativeFilePath = [...relativePathLinks, revisedImageLink].join(
-    '/',
-  );
   const imageRegex = new RegExp(imageLink, 'g');
-  return content.replace(imageRegex, `${revisedRelativeFilePath}`);
+  return content.replace(imageRegex, revisedImageName);
 };
 
 export const preToCodeBlock = (preProps: any) => {

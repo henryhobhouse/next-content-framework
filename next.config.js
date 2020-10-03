@@ -11,9 +11,10 @@ module.exports = withPlugins(
     [
       withImages,
       {
+        esModule: true,
         webpack(config) {
           config.module.rules.push({
-            test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+            test: /\.(png|jpe?g|gif|svg)$/i,
             use: [
               {
                 loader: 'url-loader',
@@ -41,7 +42,7 @@ module.exports = withPlugins(
   {
     webpack(config) {
       config.module.rules.push({
-        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+        test: /\.(png|jpe?g|gif|svg)$/i,
         use: [
           {
             loader: 'url-loader',

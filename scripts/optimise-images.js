@@ -16,7 +16,11 @@ const imageFileType = /(?<=\.)(gif|png|svg|jpe?g)$/i;
 const optimisedImageDirectory = './images';
 const orderPartRegex = /^([0-9+]+)\./i;
 const lazyLoadedPlaceholderWidth = 20; // pixels
-const imageSizes = [1200, 600]; // high quality and article size
+// DO NOT CHANGE THIS WITHOUT UPDATING THE SAME VALUE IN MDX PARSE VARIABLES
+const referenceImageSize = 1200;
+// DO NOT CHANGE THIS WITHOUT UPDATE THE SAME VALUE IN THE OPTIMISED IMAGE COMPONENT
+const articleImageSize = 600;
+const imageSizes = [referenceImageSize, articleImageSize]; // Add to this if we need more options
 const staticImageSizes = [...imageSizes, lazyLoadedPlaceholderWidth];
 
 const spinner = ora();

@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash-es';
 import React, { FC } from 'react';
 
-import { NavigationArticle } from '../../lib/utils/mdx-parse';
+import { NavigationArticle } from '../../lib/mdx/mdx-parse';
 
 import ChildNavigationArticle from './ChildNavigationItem';
 import {
