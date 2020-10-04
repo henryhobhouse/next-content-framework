@@ -106,7 +106,9 @@ getWriteFilePath = (size, imageConfig) => {
   const imagePathDirectories = imageConfig.filePath.split('/');
   const parentDirectoryName = imagePathDirectories[
     imagePathDirectories.length - 2
-  ].replace(orderPartRegex, '');
+  ]
+    .replace(orderPartRegex, '')
+    .toLowerCase();
   let writePath;
   if (size === referenceImageSize) {
     writePath = `${optimisedImageDirectory}/${originalFileDirectory}/${parentDirectoryName}`;
@@ -128,7 +130,7 @@ const writeOptimisedImage = (imageConfig, optimisedImage, size) => {
   try {
     // Done syncronously as async can cause memory heap errors at scale
     writeFileSync(
-      `${process.cwd()}/${relateiveWritePath}-${imageConfig.name}`,
+      `${process.cwd()}/${relateiveWritePath}-${imageConfig.name.toLowerCase()}`,
       optimisedImage,
     );
 
@@ -192,7 +194,9 @@ const optimiseGif = async (imageConfig) => {
 const writeFromPipeline = async (imageConfig, clonedPipeline, size) => {
   try {
     const relateiveWritePath = getWriteFilePath(size, imageConfig);
-    await clonedPipeline.toFile(`./${relateiveWritePath}-${imageConfig.name}`);
+    await clonedPipeline.toFile(
+      `./${relateiveWritePath}-${imageConfig.name.toLowerCase()}`,
+    );
     logSuccess(imageConfig.filePath);
   } catch (err) {
     spinner.warn(`Error processing image pipeline ${err.message}`);

@@ -54,7 +54,9 @@ export const addRelativeImageLinks = async (
       // remove any path prefixes (./ or /) from beginning of link
       const nonRelativeLink = imageLink.replace(/^(.\/|\/)/, '');
       const imageLinkDirectories = nonRelativeLink.split('/');
-      const fileName = imageLinkDirectories[imageLinkDirectories.length - 1];
+      const fileName = imageLinkDirectories[
+        imageLinkDirectories.length - 1
+      ].toLowerCase();
       const relativePathSegments = relativePath.split('/');
       const imageLinkSegments = imageLink.split('/');
       // get parent from link structure (when relative link) otherwise directory of docs file
@@ -62,7 +64,9 @@ export const addRelativeImageLinks = async (
         imageLinkSegments.length > 1
           ? imageLinkSegments[relativePathSegments.length - 2]
           : relativePathSegments[relativePathSegments.length - 1];
-      const parentSlug = parentDirectory?.replace(/([0-9+]+)\./, '');
+      const parentSlug = parentDirectory
+        ?.replace(/([0-9+]+)\./, '')
+        .toLowerCase();
       const optimisedFileName = `${parentSlug}-${fileName}`;
 
       const isValidLink = await checkValidLink(optimisedFileName, promises);
