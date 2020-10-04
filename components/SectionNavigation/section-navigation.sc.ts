@@ -13,6 +13,7 @@ export const SectionWrapper = styled.ul`
   list-style: none;
   margin: 0;
   overflow: hidden;
+  padding-right: 2rem;
   width: 15rem;
 `;
 

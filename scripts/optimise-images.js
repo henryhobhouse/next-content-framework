@@ -1,5 +1,5 @@
-const { readdir, readFile, unlink } = require('fs').promises;
-const { writeFileSync } = require('fs');
+const { readdir, readFile, writeFile, unlink } = require('fs').promises;
+const { writeFileSync, existsSync } = require('fs');
 const { resolve } = require('path');
 
 const gifResize = require('@gumlet/gif-resize');
@@ -10,6 +10,7 @@ const imageminGifsicle = require('imagemin-gifsicle');
 const imageminMozjpeg = require('imagemin-mozjpeg');
 const imageminPngquant = require('imagemin-pngquant');
 const imageminSvgo = require('imagemin-svgo');
+const mkdirp = require('mkdirp');
 const ora = require('ora');
 const sharp = require('sharp');
 
@@ -18,6 +19,8 @@ const imageFilesPostfixes = /(gif|png|svg|jpe?g)$/i;
 const imageFileType = /(?<=\.)(gif|png|svg|jpe?g)$/i;
 const optimisedImageDirectory = 'images';
 const staticImageDirectory = 'public';
+const originalFileDirectory = 'originals';
+const svgFileDirectory = 'svg';
 const orderPartRegex = /^([0-9+]+)\./i;
 const lazyLoadedPlaceholderWidth = 20; // pixels
 // DO NOT CHANGE THIS WITHOUT UPDATING THE SAME VALUE IN MDX PARSE VARIABLES
@@ -36,13 +39,17 @@ const progressBar = new cliProgress.SingleBar({
   format:
     '|' +
     _colors.magenta('{bar}') +
-    '| {percentage}% || {value}/{total} Image variants optimised || ETA: {eta}s',
+    '| {percentage}% || {value}/{total} Image variants || ETA: {eta}s',
   barCompleteChar: '\u2588',
   barIncompleteChar: '\u2591',
   hideCursor: true,
   etaBuffer: 300,
 });
 
+/**
+ * Recurrisively iterate through all content directories and add any accepted image files
+ * to a list.
+ */
 const getImagesToOptimise = async (dir) => {
   const dirents = await readdir(dir, { withFileTypes: true });
   const imageDirents = dirents.filter((dirent) =>
@@ -79,7 +86,11 @@ const getImagesToOptimise = async (dir) => {
   );
 };
 
+/**
+ * Update progress bar and update list of successfully optimised images.
+ */
 const logSuccess = (imagePath) => {
+  // add image, if not already done, to the list of successfully optimised images
   if (!imagesSuccessfullyOptimised.includes(imagePath)) {
     imagesSuccessfullyOptimised.push(imagePath);
   }
@@ -98,90 +109,145 @@ getWriteFilePath = (size, imageConfig) => {
   ].replace(orderPartRegex, '');
   let writePath;
   if (size === referenceImageSize) {
-    writePath = `${optimisedImageDirectory}/originals/${parentDirectoryName}`;
+    writePath = `${optimisedImageDirectory}/${originalFileDirectory}/${parentDirectoryName}`;
   } else if (size === lazyLoadedPlaceholderWidth) {
     writePath = `${optimisedImageDirectory}/${size}/${parentDirectoryName}`;
   } else if (imageConfig.fileType === 'svg') {
-    writePath = `${optimisedImageDirectory}/svg/${parentDirectoryName}`;
+    writePath = `${optimisedImageDirectory}/${svgFileDirectory}/${parentDirectoryName}`;
   } else {
     writePath = `${staticImageDirectory}/${size}/${parentDirectoryName}`;
   }
   return writePath;
 };
 
+/**
+ * Write to file system
+ */
 const writeOptimisedImage = (imageConfig, optimisedImage, size) => {
   const relateiveWritePath = getWriteFilePath(size, imageConfig);
+  try {
+    // Done syncronously as async can cause memory heap errors at scale
+    writeFileSync(
+      `${process.cwd()}/${relateiveWritePath}-${imageConfig.name}`,
+      optimisedImage,
+    );
 
-  // Done syncronously as async can cause memory heap errors
-  writeFileSync(
-    `${process.cwd()}/${relateiveWritePath}-${imageConfig.name}`,
-    optimisedImage,
-  );
-
-  logSuccess(imageConfig.filePath);
+    logSuccess(imageConfig.filePath);
+  } catch (err) {
+    spinner.warn(
+      `Fail at write to system with ${imageConfig.name} at ${size} with ${err.message}`,
+    );
+    throw new Error(err.message);
+  }
 };
 
+/**
+ * Resize and optimised GIF images
+ */
 const optimiseGif = async (imageConfig) => {
-  const gifDataBuffer = await readFile(imageConfig.filePath);
-
   await Promise.all(
     imageSizes.map(async (size) => {
-      // resize image
-      const resizedOptimisedGif = await gifResize({
-        width: size,
-      })(gifDataBuffer);
+      try {
+        const gifDataBuffer = await readFile(imageConfig.filePath);
 
-      // optimize image
-      const optimisedGif = await imageminGifsicle({
-        interlaced: true,
-        optimizationLevel: 3,
-      })(resizedOptimisedGif);
-
-      writeOptimisedImage(imageConfig, optimisedGif, size);
+        // resize image
+        const resizedOptimisedGif = await gifResize({
+          width: size,
+        })(gifDataBuffer);
+        try {
+          // optimize image
+          const optimisedGif = await imageminGifsicle({
+            interlaced: true,
+            optimizationLevel: 3,
+          })(resizedOptimisedGif);
+          writeOptimisedImage(imageConfig, optimisedGif, size);
+        } catch (err) {
+          // error optimising the resized gif. Used resized image instead and inform console.
+          spinner.warn(
+            `Error optimising ${imageConfig.filePath.replace(
+              process.cwd(),
+              '',
+            )}, will use resized image only. ${err.message}`,
+            err,
+          );
+          writeOptimisedImage(imageConfig, resizedOptimisedGif, size);
+        }
+      } catch (err) {
+        // error with initial resizing of the image. Escalate the error and inform console.
+        spinner.info(
+          `Error resizing gif ${imageConfig.filePath.replace(
+            process.cwd(),
+            '',
+          )}. Please check it. ${err.message}`,
+        );
+        throw new Error(err);
+      }
     }),
   );
 };
 
-const processImagePipeline = async (imageConfig, clonedPipeline, size) => {
-  const relateiveWritePath = getWriteFilePath(size, imageConfig);
-
-  logSuccess(imageConfig.filePath);
-
-  await clonedPipeline.toFile(`./${relateiveWritePath}-${imageConfig.name}`);
+/**
+ * Write to file system using sharps image pipeline
+ */
+const writeFromPipeline = async (imageConfig, clonedPipeline, size) => {
+  try {
+    const relateiveWritePath = getWriteFilePath(size, imageConfig);
+    await clonedPipeline.toFile(`./${relateiveWritePath}-${imageConfig.name}`);
+    logSuccess(imageConfig.filePath);
+  } catch (err) {
+    spinner.warn(`Error processing image pipeline ${err.message}`);
+    throw new Error(err.message);
+  }
 };
 
 const optimisePng = async (imageConfig, pipeline, size) => {
   try {
-    const optimisedPng = await pipeline.toBuffer().then((sharpBuffer) => {
-      return imagemin.buffer(sharpBuffer, {
-        plugins: [
-          imageminPngquant({
-            speed: 2,
-            strip: false,
-          }),
-        ],
-      });
+    const unoptimisedImage = await pipeline.toBuffer();
+    const optimisedPng = await imagemin.buffer(unoptimisedImage, {
+      plugins: [
+        imageminPngquant({
+          speed: 2,
+          strip: false,
+        }),
+      ],
     });
 
     writeOptimisedImage(imageConfig, optimisedPng, size);
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.error(`Error optimising ${imageConfig.name}`, err);
+    spinner.warn(
+      `Error optimising ${imageConfig.filePath.replace(
+        process.cwd(),
+        '',
+      )}, will use resized image only. ${err.message}`,
+      err,
+    );
+    writeFromPipeline(imageConfig, pipeline, size);
   }
 };
 
 const optimiseJpeg = async (imageConfig, pipeline, size) => {
-  const optimisedJpeg = await pipeline.toBuffer().then((sharpBuffer) => {
-    return imagemin.buffer(sharpBuffer, {
+  try {
+    const unoptimisedImage = await pipeline.toBuffer();
+
+    const optimisedJpeg = await imagemin.buffer(unoptimisedImage, {
       plugins: [
         imageminMozjpeg({
           quality: 80,
         }),
       ],
     });
-  });
 
-  writeOptimisedImage(imageConfig, optimisedJpeg, size);
+    writeOptimisedImage(imageConfig, optimisedJpeg, size);
+  } catch (err) {
+    spinner.warn(
+      `Error optimising ${imageConfig.filePath.replace(
+        process.cwd(),
+        '',
+      )}, will use resized image only. ${err.message}`,
+      err,
+    );
+    writeFromPipeline(imageConfig, pipeline, size);
+  }
 };
 
 const optimiseSvg = async (imageConfig) => {
@@ -190,14 +256,32 @@ const optimiseSvg = async (imageConfig) => {
   writeOptimisedImage(imageConfig, optimiseSvg, null);
 };
 
+const checkImageDirectories = () => {
+  dirsToCheck = [
+    `${staticImageDirectory}/${articleImageSize}`,
+    `${optimisedImageDirectory}/${originalFileDirectory}`,
+    `${optimisedImageDirectory}/${svgFileDirectory}`,
+    `${optimisedImageDirectory}/${lazyLoadedPlaceholderWidth}`,
+  ];
+  dirsToCheck.forEach((dir) => {
+    const fullDirPath = `${process.cwd()}/${dir}`;
+    if (!existsSync(fullDirPath)) {
+      mkdirp.sync(fullDirPath);
+    }
+  });
+};
+
 const optimiseImages = async () => {
+  checkImageDirectories();
   await Promise.all(
     imagesPathsToOptimise.map(async (imageConfig) => {
       const pipeline = sharp(imageConfig.filePath);
       if (imageConfig.fileType === 'gif') {
         await optimiseGif(imageConfig);
+        return;
       } else if (imageConfig.fileType === 'svg') {
         await optimiseSvg(imageConfig);
+        return;
       } else {
         // handle all static images
         await Promise.all(
@@ -215,16 +299,32 @@ const optimiseImages = async () => {
               });
 
             if (imageConfig.fileType === `png`) {
-              await optimisePng(imageConfig, clonedPipeline, size);
+              try {
+                await optimisePng(imageConfig, clonedPipeline, size);
+              } catch {
+                spinner.info(
+                  'As image cannot be optimised and/or resized. Use the orginal instead. PLEASE check if original works to avoid issues in the app',
+                );
+                const originalFile = await readFile(imageConfig.filePath);
+                await writeOptimisedImage(imageConfig, originalFile, size);
+              }
               return;
             }
 
             if (imageConfig.fileType === `jpeg`) {
-              await optimiseJpeg(imageConfig, clonedPipeline, size);
+              try {
+                await optimiseJpeg(imageConfig, clonedPipeline, size);
+              } catch {
+                spinner.info(
+                  'As image cannot be optimised and/or resized. Use the orginal instead. PLEASE check if original works to avoid issues in the app',
+                );
+                const originalFile = await readFile(imageConfig.filePath);
+                await writeOptimisedImage(imageConfig, originalFile, size);
+              }
               return;
             }
 
-            await processImagePipeline(imageConfig, clonedPipeline, size);
+            await writeFromPipeline(imageConfig, clonedPipeline, size);
           }),
         );
       }
@@ -233,9 +333,9 @@ const optimiseImages = async () => {
 };
 
 removeOriginals = async () => {
-  await Promise.all(
+  Promise.all(
     imagesSuccessfullyOptimised.map(async (filePath) => {
-      await unlink(imageConfig.filePath);
+      await unlink(filePath);
       await writeFile(`${filePath}.optimised`, '');
     }),
   );
@@ -245,17 +345,21 @@ removeOriginals = async () => {
   try {
     spinner.info('Optimising newly added images...');
     await getImagesToOptimise(documentFilesBasePath);
+    spinner.info(`${imagesPathsToOptimise.length} total images to optimise`);
     progressBar.start(totalImagesToOptimise, 0, {
       speed: 'N/A',
     });
     await optimiseImages();
-    // await removeOriginals();
+    spinner.info(
+      'Original images are in the images directory. Adding placeholders in content directory...',
+    );
+    await removeOriginals();
     progressBar.stop();
     spinner.succeed(
       `${imagesSuccessfullyOptimised.length} images successively optimised.`,
     );
   } catch (error) {
     progressBar.stop();
-    spinner.fail(`oh dear. Image optimisation failed. ${error.message}`);
+    spinner.fail(`ERROR: Image optimisation failed. ${error.message}`);
   }
 })();

@@ -1,6 +1,5 @@
 import {
   imageUrls,
-  referenceImageSize,
   replaceLinkInContent,
   rootImageDirectory,
 } from './mdx-parse';

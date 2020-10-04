@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS='--max-old-space-size=8192' yarn optimise-images && next dev",
+    "dev": "next dev",
     "build-static": "next build && next export",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --format=codeframe",
     "type-check": "tsc --noEmit",
     "migrate": "node ./scripts/mdx-content-migration.js",
-    "optimise-images": "node ./scripts/optimise-images.js"
+    "optimise-images": "NODE_OPTIONS='--max-old-space-size=16384' node ./scripts/optimise-images.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
@@ -62,6 +62,7 @@
     "imagemin-mozjpeg": "^9.0.0",
     "imagemin-pngquant": "^9.0.1",
     "imagemin-svgo": "^8.0.0",
+    "mkdirp": "^1.0.4",
     "ora": "^5.1.0",
     "prettier": "^2.1.1",
     "sharp": "^0.26.1",

@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 const ArticleWrapper = styled.div`
   padding-bottom: 150px;
-  padding-top: 2.5rem;
   display: flex;
   flex-direction: column;
   align-self: flex-start;

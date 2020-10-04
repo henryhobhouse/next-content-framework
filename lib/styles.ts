@@ -32,6 +32,7 @@ export default createGlobalStyle`
     font-weight: 300;
     margin-bottom: 1rem;
     color: #0a0d36;
+    margin-top: 0;
 
     & strong {
       color: #0a0d36;
