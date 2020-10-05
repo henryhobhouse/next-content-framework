@@ -6,8 +6,8 @@ import React, { FC } from 'react';
 
 import ArticleWrapper from 'components/ArticleWrapper';
 import SectionNavigation from 'components/SectionNavigation';
+import getArticleSlugs from 'lib/mdx/get-article-slugs';
 import getArticles from 'lib/mdx/get-articles';
-import getSlugs from 'lib/mdx/get-slugs';
 import mdxComponents from 'lib/mdx/mdx-components';
 import { DocumentPostProps, StaticPathParams } from 'lib/mdx/mdx-parse';
 
@@ -37,7 +37,7 @@ const EmbeddedPosts: FC<DocumentPostProps> = ({
  * Create all the slugs (paths) for this page
  */
 export async function getStaticPaths() {
-  const paths = await getSlugs(contentPagedir, promises, resolve);
+  const paths = await getArticleSlugs(contentPagedir, promises, resolve);
 
   return {
     paths,

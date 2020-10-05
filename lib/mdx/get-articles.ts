@@ -32,12 +32,15 @@ const getArticles = async (
   currentPagesContent?: MdxRenderedToString;
   frontMatterData?: Record<string, unknown>;
 }> => {
+  // as articles is only 3 layers deep then only retrieve those. (connectors being level 4 and 5 and dealt
+  // with in the connectors-list and connectors pages
+  const maxDepthToTraverse = 3;
   const flatArticles: Omit<NavigationArticle, 'children'>[] = [];
   let currentPagesContent: MdxRenderedToString | undefined;
   let frontMatterData: Record<string, unknown> | undefined;
   const platformDocumentsPath = `${documentFilesBasePath}/${contentPagedir}`;
 
-  const parseDirectories = async (directory: string) => {
+  const parseDirectories = async (directory: string, currentDepth: number) => {
     const dirents = await await promises.readdir(directory, {
       withFileTypes: true,
     });
@@ -107,14 +110,14 @@ const getArticles = async (
     }
     await Promise.all(
       dirents.map(async (dirent) => {
-        if (dirent.isDirectory()) {
+        if (dirent.isDirectory() && currentDepth <= maxDepthToTraverse) {
           const directoryPath = resolve(directory, dirent.name);
-          await parseDirectories(directoryPath);
+          await parseDirectories(directoryPath, currentDepth + 1);
         }
       }),
     );
   };
-  await parseDirectories(platformDocumentsPath);
+  await parseDirectories(platformDocumentsPath, 1);
   const contentNavStructure = getNavigationItems(flatArticles);
   return { contentNavStructure, currentPagesContent, frontMatterData };
 };

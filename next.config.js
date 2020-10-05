@@ -1,6 +1,3 @@
-const withMDX = require('@next/mdx')({
-  extension: /\.(md|mdx)$/,
-});
 const sass = require('@zeit/next-sass');
 const withPlugins = require('next-compose-plugins');
 const withImages = require('next-images');
@@ -23,12 +20,6 @@ module.exports = withPlugins(
           });
           return config;
         },
-      },
-    ],
-    [
-      withMDX,
-      {
-        pageExtensions: ['tsx'],
       },
     ],
     transpileModules,

@@ -1,9 +1,10 @@
 export const documentFilesBasePath = `${process.cwd()}/content/`;
-export const isPostFileRegex = /docs\.(mdx|md)$/g;
-export const pathRegex = /([^\/]*)(.*)\/docs\.(mdx|md)$/g;
-export const orderRegex = /.*\/([0-9+]+)\.[^\/]*\/docs\.(mdx|md)$/g;
+export const isPostFileRegex = /docs\.(mdx|md)$/gi;
+export const pathRegex = /([^\/]*)(.*)\/docs\.(mdx|md)$/gi;
+export const orderRegex = /.*\/([0-9+]+)\.[^\/]*\/docs\.(mdx|md)$/gi;
 export const orderPartRegex = /\/([0-9+]+)\./g;
-export const imageUrls = /(\!\[.*?\]\()(\S*?)(?=\))\)/g;
+export const isMdImageRegex = /(\!\[.*?\]\()(\S*?)(?=\))\)/g;
+export const isHtmlImageRegex = /(<img .*src=["'])(\S*?)(?=("|'))(.*\/>)/gi;
 
 export const rootImageDirectory = 'images';
 export const staticImageDirectory = 'public';
@@ -88,7 +89,12 @@ export const replaceLinkInContent = (
   revisedImageName: string,
   content: string,
 ) => {
-  const imageRegex = new RegExp(imageLink, 'g');
+  // regex to catch all instances of the link in addition to check is prefixed
+  // prefix to avoid `(foo-bar.png)` being captured when searching for "bar.png"
+  const imageRegex = new RegExp(
+    `(?<=[\(\/'"])${imageLink.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}`,
+    'g',
+  );
   return content.replace(imageRegex, revisedImageName);
 };
 

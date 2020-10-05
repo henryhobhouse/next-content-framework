@@ -31,6 +31,7 @@ const ImageContainer = styled.div`
   position: relative;
   display: block;
   width: 600px;
+  padding-bottom: 20px;
 `;
 
 interface StaticImageProps {
@@ -53,6 +54,7 @@ const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt }) => {
         src={`/${articleImageSize}/${imgUrl}`}
         alt={alt}
         onLoad={() => setImageLoading(false)}
+        loading="lazy"
       />
     </ImageContainer>
   );

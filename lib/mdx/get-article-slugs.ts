@@ -9,15 +9,18 @@ import {
 
 import { FsPromises } from 'pages/embedded/[...slug]';
 
-const getSlugs = async (
+const getArticleSlugs = async (
   contentPagedir: string,
   promises: FsPromises,
   resolve: Resolve,
 ) => {
   const paths: StaticPathParams[] = [];
   const platformDocumentsPath = `${documentFilesBasePath}/${contentPagedir}`;
+  // as articles is only 3 layers deep then only retrieve those. (connectors being level 4 and 5 and dealt
+  // with in the connectors-list and connectors pages
+  const maxDepthToTraverse = 3;
 
-  const parseDirectories = async (directory: string) => {
+  const parseDirectories = async (directory: string, currentDepth: number) => {
     const dirents = await promises.readdir(directory, {
       withFileTypes: true,
     });
@@ -49,15 +52,15 @@ const getSlugs = async (
     }
     await Promise.all(
       dirents.map(async (dirent) => {
-        if (dirent.isDirectory()) {
+        if (dirent.isDirectory() && currentDepth <= maxDepthToTraverse) {
           const directoryPath = resolve(directory, dirent.name);
-          await parseDirectories(directoryPath);
+          await parseDirectories(directoryPath, currentDepth + 1);
         }
       }),
     );
   };
-  await parseDirectories(platformDocumentsPath);
+  await parseDirectories(platformDocumentsPath, 1);
   return paths;
 };
 
-export default getSlugs;
+export default getArticleSlugs;

@@ -4,7 +4,7 @@ const { resolve } = require('path');
 const dirTree = require('directory-tree');
 
 const documentFilesBasePath = `${process.cwd()}/content/`;
-const isPostFileRegex = /docs\.(mdx|md)$/g;
+const isPostFileRegex = /docs\.(mdx|md)$/gi;
 const orderPartRegex = /^([0-9+]+)\./g;
 const imageUrls = /(\!\[.*?\]\()(\S*?)(?=\))/g;
 const isUrlRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/g;
