@@ -42,6 +42,8 @@ interface StaticImageProps {
 const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt }) => {
   const [imageLoading, setImageLoading] = useState(true);
 
+  if (!imgUrl) return null;
+
   // TODO: add BlurrImage back once image optimisation script is done.
   return (
     <ImageContainer>
