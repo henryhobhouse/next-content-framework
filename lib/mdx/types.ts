@@ -9,7 +9,7 @@ export interface ParentNode extends Node {
   /**
    * List representing the children of a node.
    */
-  children: Node[];
+  children?: Node[];
 }
 
 export interface Point {
@@ -57,6 +57,10 @@ export interface Node {
    */
   data?: Data;
 
+  value?: string;
+
+  id?: string;
+
   /**
    * Location of a node in a source document.
    * Must not be present if a node is generated.
@@ -68,7 +72,7 @@ export interface Node {
   [key: string]: unknown;
 }
 
-export interface SearchMap {
+export interface SearchMap extends ParentNode {
   value: string;
   id: string;
   depth: number;
@@ -105,7 +109,8 @@ export interface MdxRenderedToString {
 export interface DocumentPostProps {
   navigationStructure: NavigationArticle[];
   content?: MdxRenderedToString;
-  frontmatter?: Record<string, unknown>;
+  frontmatter?: Record<string, string>;
+  tableOfContents: TableOfContents;
 }
 
 export interface TableOfContents {

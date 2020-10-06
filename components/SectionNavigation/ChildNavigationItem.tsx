@@ -5,7 +5,6 @@ import Link from 'next/link';
 import React, { FC, memo, useContext, useEffect, useState } from 'react';
 
 import { CurrentRouteContext } from '../../lib/context/current-route';
-import { SecondTierNavigationArticle } from '../../lib/mdx/mdx-parse';
 
 import {
   IconWrapper,
@@ -15,6 +14,8 @@ import {
   NavItemIcon,
   NavItemLink,
 } from './section-navigation.sc';
+
+import { SecondTierNavigationArticle } from 'lib/mdx/types';
 
 interface ChildNavigationArticleProps {
   item: SecondTierNavigationArticle;

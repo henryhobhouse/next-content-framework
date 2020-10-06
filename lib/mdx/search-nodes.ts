@@ -39,7 +39,7 @@ const searchNodes = (root: ParentNode, headingDepth: number) => {
   const maxDepth = headingDepth;
   const parents = root;
   const slugs = new githubSlugger();
-  const map: SearchMap[] = [];
+  const map: Partial<SearchMap>[] = [];
 
   slugs.reset();
 

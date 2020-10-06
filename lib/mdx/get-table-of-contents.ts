@@ -1,7 +1,8 @@
 import mdx from '@mdx-js/mdx';
 
+import parseTocNodes from './parse-toc-nodes';
 import searchNodes from './search-nodes';
-import { ParentNode, TableOfContents } from './types';
+import { ParentNode, SearchMap, TableOfContents } from './types';
 
 const maxDepthOfToc = 3;
 
@@ -9,10 +10,10 @@ const getTableOfContents = (mdxContent: string): TableOfContents => {
   const compiler = mdx.createMdxAstCompiler({ remarkPlugins: [] });
   // get MarkDown as AST as much easier to parse than pure HTML
   const mdAst: ParentNode = compiler.parse(mdxContent);
-  const something = searchNodes(mdAst, maxDepthOfToc);
+  const headerNodes = searchNodes(mdAst, maxDepthOfToc);
+  const tableOfContents = parseTocNodes(headerNodes as SearchMap[]);
 
-  console.log(something);
-  return {};
+  return tableOfContents;
 };
 
 export default getTableOfContents;

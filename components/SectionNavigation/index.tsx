@@ -1,8 +1,6 @@
 import { isEmpty } from 'lodash-es';
 import React, { FC } from 'react';
 
-import { NavigationArticle } from '../../lib/mdx/mdx-parse';
-
 import ChildNavigationArticle from './ChildNavigationItem';
 import {
   NavigationSection,
@@ -10,6 +8,8 @@ import {
   SectionTitle,
   SectionWrapper,
 } from './section-navigation.sc';
+
+import { NavigationArticle } from 'lib/mdx/types';
 
 const SectionNavigation: FC<{ items: NavigationArticle[] }> = ({ items }) => (
   <SectionWrapper>

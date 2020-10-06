@@ -3,8 +3,10 @@ import { resolve } from 'path';
 
 import hydrate from 'next-mdx-remote/hydrate';
 import React, { FC } from 'react';
+import styled from 'styled-components';
 
 import ArticleWrapper from 'components/ArticleWrapper';
+import DesktopTableOfContents from 'components/DesktopTableOfContents';
 import SectionNavigation from 'components/SectionNavigation';
 import getArticleSlugs from 'lib/mdx/get-article-slugs';
 import getArticles from 'lib/mdx/get-articles';
@@ -14,9 +16,20 @@ import { DocumentPostProps, StaticPathParams } from 'lib/mdx/types';
 const contentPagedir = 'embedded';
 export type FsPromises = typeof promises;
 
+const TableOfContentWrapper = styled.div`
+  width: 200px;
+`;
+
+export const TableOfContentStickyWrapper = styled.div`
+  position: sticky;
+  top: 100px;
+`;
+
 const EmbeddedPosts: FC<DocumentPostProps> = ({
   content,
   navigationStructure,
+  frontmatter,
+  tableOfContents,
 }) => {
   // for client side rendering
   const hydratedContent =
@@ -28,7 +41,17 @@ const EmbeddedPosts: FC<DocumentPostProps> = ({
   return (
     <>
       <SectionNavigation items={navigationStructure} />
-      <ArticleWrapper>{hydratedContent}</ArticleWrapper>
+
+      <ArticleWrapper id="article-content">
+        <h1>{frontmatter?.title}</h1>
+        <br />
+        {hydratedContent}
+      </ArticleWrapper>
+      <TableOfContentWrapper>
+        <TableOfContentStickyWrapper>
+          <DesktopTableOfContents tableOfContents={tableOfContents} />
+        </TableOfContentStickyWrapper>
+      </TableOfContentWrapper>
     </>
   );
 };
@@ -57,6 +80,7 @@ export async function getStaticProps({
     contentNavStructure,
     currentPagesContent,
     frontMatterData,
+    currentPageTocData,
   } = await getArticles(slug, contentPagedir, promises, resolve);
 
   return {
@@ -64,6 +88,7 @@ export async function getStaticProps({
       navigationStructure: contentNavStructure,
       content: currentPagesContent,
       frontmatter: frontMatterData,
+      tableOfContents: currentPageTocData,
     },
   };
 }
