@@ -1,3 +1,9 @@
+import {
+  NavigationArticle,
+  BaseNavigationArticle,
+  SecondTierNavigationArticle,
+} from './types';
+
 export const documentFilesBasePath = `${process.cwd()}/content/`;
 export const isPostFileRegex = /docs\.(mdx|md)$/gi;
 export const pathRegex = /([^\/]*)(.*)\/docs\.(mdx|md)$/gi;
@@ -11,42 +17,6 @@ export const staticImageDirectory = 'public';
 export const referenceImageSize = 1200; //px
 export const articleImageSize = 600; // px
 export const lazyLoadImageSize = 20; // px
-
-export interface BaseNavigationArticle {
-  level: number;
-  order: number;
-  slug: string;
-  title?: string | null;
-  parentSlug: string;
-}
-
-export interface SecondTierNavigationArticle extends BaseNavigationArticle {
-  children: BaseNavigationArticle[];
-}
-
-export interface NavigationArticle extends BaseNavigationArticle {
-  children: SecondTierNavigationArticle[];
-}
-
-export interface StaticPathParams {
-  params: {
-    slug: string[];
-  };
-}
-
-export interface MdxRenderedToString {
-  compiledSource: string;
-  renderedOutput: string;
-  scope: Record<string, unknown>;
-}
-
-export interface DocumentPostProps {
-  navigationStructure: NavigationArticle[];
-  content?: MdxRenderedToString;
-  frontmatter?: Record<string, unknown>;
-}
-
-export type Resolve = (...pathSegment: string[]) => string;
 
 export const getNavigationItems = (
   allItems: Omit<NavigationArticle, 'children'>[],

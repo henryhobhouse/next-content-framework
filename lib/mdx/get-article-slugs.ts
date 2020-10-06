@@ -3,9 +3,8 @@ import {
   isPostFileRegex,
   orderPartRegex,
   pathRegex,
-  Resolve,
-  StaticPathParams,
 } from './mdx-parse';
+import { Resolve, StaticPathParams } from './types';
 
 import { FsPromises } from 'pages/embedded/[...slug]';
 

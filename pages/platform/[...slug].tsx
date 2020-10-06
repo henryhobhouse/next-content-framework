@@ -9,7 +9,7 @@ import SectionNavigation from 'components/SectionNavigation';
 import getArticleSlugs from 'lib/mdx/get-article-slugs';
 import getArticles from 'lib/mdx/get-articles';
 import mdxComponents from 'lib/mdx/mdx-components';
-import { DocumentPostProps, StaticPathParams } from 'lib/mdx/mdx-parse';
+import { DocumentPostProps, StaticPathParams } from 'lib/mdx/types';
 
 const contentPagedir = 'platform';
 

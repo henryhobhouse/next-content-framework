@@ -1,20 +1,26 @@
 import matter from 'gray-matter';
 import renderToString from 'next-mdx-remote/render-to-string';
+import rehypeAutoLinkHeadings from 'rehype-autolink-headings';
+import rehypeSlug from 'rehype-slug';
 import remarkUnwrapImages from 'remark-unwrap-images';
 
 import { addRelativeImageLinks } from './add-relative-links';
+import getTableOfContents from './get-table-of-contents';
 import mdxComponents from './mdx-components';
 import {
   documentFilesBasePath,
   getNavigationItems,
   isPostFileRegex,
-  MdxRenderedToString,
-  NavigationArticle,
   orderPartRegex,
   orderRegex,
   pathRegex,
-  Resolve,
 } from './mdx-parse';
+import {
+  Resolve,
+  NavigationArticle,
+  MdxRenderedToString,
+  TableOfContents,
+} from './types';
 
 import { FsPromises } from 'pages/embedded/[...slug]';
 
@@ -31,12 +37,14 @@ const getArticles = async (
   contentNavStructure: NavigationArticle[];
   currentPagesContent?: MdxRenderedToString;
   frontMatterData?: Record<string, unknown>;
+  currentPageTocData?: TableOfContents;
 }> => {
   // as articles is only 3 layers deep then only retrieve those. (connectors being level 4 and 5 and dealt
   // with in the connectors-list and connectors pages
   const maxDepthToTraverse = 3;
   const flatArticles: Omit<NavigationArticle, 'children'>[] = [];
   let currentPagesContent: MdxRenderedToString | undefined;
+  let currentPageTocData: TableOfContents | undefined;
   let frontMatterData: Record<string, unknown> | undefined;
   const platformDocumentsPath = `${documentFilesBasePath}/${contentPagedir}`;
 
@@ -103,8 +111,11 @@ const getArticles = async (
             components: mdxComponents,
             mdxOptions: {
               remarkPlugins: [remarkUnwrapImages],
+              rehypePlugins: [rehypeSlug, rehypeAutoLinkHeadings],
             },
           });
+
+          currentPageTocData = getTableOfContents(transformedContent);
         }
       }
     }
@@ -119,7 +130,12 @@ const getArticles = async (
   };
   await parseDirectories(platformDocumentsPath, 1);
   const contentNavStructure = getNavigationItems(flatArticles);
-  return { contentNavStructure, currentPagesContent, frontMatterData };
+  return {
+    contentNavStructure,
+    currentPagesContent,
+    frontMatterData,
+    currentPageTocData,
+  };
 };
 
 export default getArticles;

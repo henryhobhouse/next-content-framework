@@ -1,4 +1,7 @@
 declare module 'remark-unwrap-images';
+declare module 'rehype-autolink-headings';
+declare module 'rehype-slug';
+declare module '@mdx-js/mdx';
 declare module 'next-mdx-remote/render-to-string' {
   function renderToString(
     source: string,

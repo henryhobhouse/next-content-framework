@@ -7,7 +7,8 @@ const MdxAnchor: FC<AnchorHTMLAttributes<HTMLAnchorElement>> = ({
   ...rest
 }) => {
   const isExternalUrl = href?.startsWith('http');
-  return !!isExternalUrl ? (
+  const isHeaderLink = href?.startsWith('#');
+  return isExternalUrl || isHeaderLink ? (
     <a href={href} {...rest}>
       {children}
     </a>
