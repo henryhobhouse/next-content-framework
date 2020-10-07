@@ -76,7 +76,7 @@ const DesktopTableOfContents: FC<{ tableOfContents: TableOfContents }> = ({
         const firstSection = index === 0;
 
         return (
-          <ListItem key={index}>
+          <ListItem key={`${section.url}-${index}`}>
             <Row>
               <Anchor
                 active={active}
