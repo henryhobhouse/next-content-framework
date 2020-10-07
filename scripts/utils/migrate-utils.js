@@ -7,6 +7,7 @@ const imageUrls = /(\!\[.*?\]\()(\S*?)(?=\))/g;
 const isUrlRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/g;
 const isGifPlayerRegex = /(<GifPlayer)(.*)(\/>)/g;
 const isInlineStyleRegex = /(?<=style=)".*"/g;
+const redirectLinkRegex = /redirect_from:\s*-\s*[\/\w]*/im;
 
 const getLinksWithPaths = (markdownTextBuffer) => {
   const links = [];
@@ -36,6 +37,13 @@ const getInlineStyles = (markdownTextBuffer) => {
     if (result[0]) inlineStyles.push(result[0]);
   }
   return inlineStyles;
+};
+
+const getRedirectLink = (markdownTextBuffer) => {
+  let redirectLink;
+  const regCheck = new RegExp(redirectLinkRegex);
+  redirectLink = regCheck.exec(markdownTextBuffer.toString());
+  return redirectLink && redirectLink.length && redirectLink[0];
 };
 
 const convertInlineToObjectStyles = async (
@@ -154,9 +162,27 @@ const updateImageLinks = async (
   }
 };
 
+const removeRedirectLink = async (
+  redirectLink,
+  markdownText,
+  markdownFileLocation,
+) => {
+  let updatedContent = markdownText;
+  updatedContent = updatedContent.replace(redirectLink, '');
+  await writeFile(markdownFileLocation, updatedContent);
+};
+
+const setNextRedirects = async (redirectLinks) => {
+  const linksModule = `module.exports = ${JSON.stringify(redirectLinks)}`;
+  await writeFile(`${process.cwd()}/redirects.ts`, linksModule);
+};
+
 exports.updateImageLinks = updateImageLinks;
 exports.updateGifJsx = updateGifJsx;
 exports.getOldGifPlayerJsx = getOldGifPlayerJsx;
 exports.getLinksWithPaths = getLinksWithPaths;
 exports.getInlineStyles = getInlineStyles;
 exports.convertInlineToObjectStyles = convertInlineToObjectStyles;
+exports.getRedirectLink = getRedirectLink;
+exports.removeRedirectLink = removeRedirectLink;
+exports.setNextRedirects = setNextRedirects;

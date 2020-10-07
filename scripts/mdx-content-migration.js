@@ -6,6 +6,10 @@ const dirTree = require('directory-tree');
 const migrateUtils = require('./utils/migrate-utils');
 const documentFilesBasePath = `${process.cwd()}/content/`;
 const isPostFileRegex = /docs\.(mdx|md)$/gi;
+const orderPartRegex = /\/([0-9+]+)\./g;
+const pathRegex = /([^\/]*)(.*)\/docs\.(mdx|md)$/gi;
+
+const redirectLinks = [];
 
 const migrateContent = async (dir, contentDirStructure) => {
   const dirents = await readdir(dir, { withFileTypes: true });
@@ -40,6 +44,7 @@ const migrateContent = async (dir, contentDirStructure) => {
       );
     }
 
+    // replace all inline string styles with objects to be JSX compatible
     const inlineStyles = migrateUtils.getInlineStyles(markdownText);
     if (inlineStyles.length) {
       await migrateUtils.convertInlineToObjectStyles(
@@ -49,7 +54,30 @@ const migrateContent = async (dir, contentDirStructure) => {
       );
     }
 
-    // TODO: Find redirects and add to next.config (https://nextjs.org/docs/api-reference/next.config.js/redirects)
+    // assume only one redirect per file. Find, copy to next config, and remove original.
+    // redirects setup as per (https://nextjs.org/docs/api-reference/next.config.js/redirects)
+    const redirectLink = migrateUtils.getRedirectLink(markdownText);
+    if (redirectLink) {
+      const relativePath = markdownFileLocation.replace(
+        `${process.cwd()}/content/`,
+        '',
+      );
+      const pathComponents = pathRegex.exec(relativePath);
+      const section = pathComponents[1];
+      const path = pathComponents[2];
+      const localPath = path.replace(orderPartRegex, '/');
+      const slug = `/${section}${localPath}`;
+      redirectLinks.push({
+        source: redirectLink.match(/(?<=\s)(\S+$)/im)[0].replace(/\/$/, ''),
+        destination: slug,
+        permanent: true,
+      });
+      await migrateUtils.removeRedirectLink(
+        redirectLink,
+        markdownText,
+        markdownFileLocation,
+      );
+    }
   }
   await Promise.all(
     dirents.map((dirent) => {
@@ -65,4 +93,5 @@ const migrateContent = async (dir, contentDirStructure) => {
     extensions: /\.fake$/,
   });
   await migrateContent(documentFilesBasePath, contentDirStructure);
+  await migrateUtils.setNextRedirects(redirectLinks);
 })();
