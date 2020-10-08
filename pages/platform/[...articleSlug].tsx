@@ -8,14 +8,14 @@ import styled from 'styled-components';
 import ArticleWrapper from 'components/ArticleWrapper';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
 import SectionNavigation from 'components/SectionNavigation';
-import getArticleSlugs from 'lib/mdx/get-article-slugs';
-import getArticles from 'lib/mdx/get-articles';
 import mdxComponents from 'lib/mdx/mdx-components';
-import { DocumentPostProps, StaticPathParams } from 'lib/mdx/types';
+import getArticle from 'lib/mdx/page-fetching/get-article';
+import getArticleSlugs from 'lib/mdx/page-fetching/get-article-slugs';
+import { DocumentPostProps, StaticArticlePathParams } from 'lib/mdx/types';
 
 const contentPagedir = 'platform';
 
-const TableOfContentWrapper = styled.div`
+export const TableOfContentWrapper = styled.div`
   width: 200px;
 `;
 
@@ -74,18 +74,20 @@ export async function getStaticPaths() {
  * Could source from multiple data sources easily which will makes transitioning in the future
  * much much easier.
  */
-export async function getStaticProps({ params: { slug } }: StaticPathParams) {
+export async function getStaticProps({
+  params: { articleSlug },
+}: StaticArticlePathParams) {
   const {
     contentNavStructure,
-    currentPagesContent,
+    pageContent,
     frontMatterData,
     currentPageTocData,
-  } = await getArticles(slug, contentPagedir, promises, resolve);
+  } = await getArticle(articleSlug, contentPagedir, promises, resolve);
 
   return {
     props: {
       navigationStructure: contentNavStructure,
-      content: currentPagesContent,
+      content: pageContent,
       frontmatter: frontMatterData,
       tableOfContents: currentPageTocData,
     },

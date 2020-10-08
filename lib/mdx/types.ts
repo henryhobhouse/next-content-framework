@@ -94,9 +94,22 @@ export interface NavigationArticle extends BaseNavigationArticle {
   children: SecondTierNavigationArticle[];
 }
 
-export interface StaticPathParams {
+export interface StaticArticlePathParams {
   params: {
-    slug: string[];
+    articleSlug: string[];
+  };
+}
+
+export interface StaticConnectorListPathParams {
+  params: {
+    connectorList: string;
+  };
+}
+
+export interface StaticConnectorPathParams {
+  params: {
+    connector: string;
+    connectorList: string;
   };
 }
 
@@ -104,6 +117,20 @@ export interface MdxRenderedToString {
   compiledSource: string;
   renderedOutput: string;
   scope: Record<string, unknown>;
+}
+
+export interface ConnectorMetaData {
+  frontmatter: Record<string, string>;
+  slug: string;
+}
+
+export interface ConnectorListProps {
+  navigationStructure: NavigationArticle[];
+  content?: MdxRenderedToString;
+  frontmatter?: Record<string, string>;
+  tableOfContents: TableOfContents;
+  connectors: ConnectorMetaData[];
+  connectorListSection: 'trigger' | 'core' | 'helper' | 'service';
 }
 
 export interface DocumentPostProps {

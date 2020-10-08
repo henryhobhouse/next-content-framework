@@ -12,6 +12,7 @@ export const UnorderedList = styled.ul`
   margin-bottom: 15px;
   padding: 0;
   list-style: none;
+  margin-left: 1rem;
 `;
 
 export const Anchor = styled.a<{ active: boolean }>`

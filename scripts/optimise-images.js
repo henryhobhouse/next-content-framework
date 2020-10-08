@@ -210,8 +210,9 @@ const optimisePng = async (imageConfig, pipeline, size) => {
     const optimisedPng = await imagemin.buffer(unoptimisedImage, {
       plugins: [
         imageminPngquant({
-          speed: 2,
-          strip: false,
+          quality: [0.5, 0.75],
+          speed: 4,
+          strip: true,
         }),
       ],
     });
@@ -266,6 +267,7 @@ const checkImageDirectories = () => {
     `${optimisedImageDirectory}/${originalFileDirectory}`,
     `${optimisedImageDirectory}/${svgFileDirectory}`,
     `${optimisedImageDirectory}/${lazyLoadedPlaceholderWidth}`,
+    `${optimisedImageDirectory}/sizeRef`,
   ];
   dirsToCheck.forEach((dir) => {
     const fullDirPath = `${process.cwd()}/${dir}`;
@@ -301,6 +303,33 @@ const optimiseImages = async () => {
                 quality: 80,
                 force: imageConfig.fileType === `webp`,
               });
+
+            // TODO: add error handling and refactor to push size metadata into own file to be used by add relative links
+            // if (size === lazyLoadedPlaceholderWidth) {
+            //   const imagePathDirectories = imageConfig.filePath.split('/');
+            //   const parentDirectoryName = imagePathDirectories[
+            //     imagePathDirectories.length - 2
+            //   ]
+            //     .replace(orderPartRegex, '')
+            //     .toLowerCase();
+            //   const { width, height } = await pipeline.metadata();
+            //   const blankImage = await sharp({
+            //     create: {
+            //       width,
+            //       height,
+            //       channels: 3,
+            //       background: { r: 255, g: 255, b: 255, alpha: 0 },
+            //     },
+            //   })
+            //     .jpeg({
+            //       quality: 1,
+            //     })
+            //     .toBuffer();
+            //   writeFileSync(
+            //     `${process.cwd()}/${optimisedImageDirectory}/sizeRef/${parentDirectoryName}-${imageConfig.name.toLowerCase()}`,
+            //     blankImage,
+            //   );
+            // }
 
             if (imageConfig.fileType === `png`) {
               try {
@@ -354,9 +383,6 @@ removeOriginals = async () => {
       speed: 'N/A',
     });
     await optimiseImages();
-    spinner.info(
-      'Original images are in the images directory. Adding placeholders in content directory...',
-    );
     await removeOriginals();
     progressBar.stop();
     spinner.succeed(

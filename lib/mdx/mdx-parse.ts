@@ -4,7 +4,6 @@ import {
   SecondTierNavigationArticle,
 } from './types';
 
-export const documentFilesBasePath = `${process.cwd()}/content/`;
 export const isPostFileRegex = /docs\.(mdx|md)$/gi;
 export const pathRegex = /([^\/]*)(.*)\/docs\.(mdx|md)$/gi;
 export const orderRegex = /.*\/([0-9+]+)\.[^\/]*\/docs\.(mdx|md)$/gi;
@@ -12,11 +11,14 @@ export const orderPartRegex = /\/([0-9+]+)\./g;
 export const isMdImageRegex = /(\!\[.*?\]\()(\S*?)(?=\))\)/g;
 export const isHtmlImageRegex = /(<img .*src=["'])(\S*?)(?=("|'))(.*\/>)/gi;
 
+export const documentFilesBasePath = `${process.cwd()}/content/`;
+export const connectorDocsRelativePath = '/connectors/docs';
 export const rootImageDirectory = 'images';
 export const staticImageDirectory = 'public';
 export const referenceImageSize = 1200; //px
 export const articleImageSize = 600; // px
 export const lazyLoadImageSize = 20; // px
+export const connectorListRelativePath = 'platform/50.connectors/1000.docs';
 
 export const getNavigationItems = (
   allItems: Omit<NavigationArticle, 'children'>[],

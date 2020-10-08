@@ -62,21 +62,24 @@ const migrateContent = async (dir, contentDirStructure) => {
         `${process.cwd()}/content/`,
         '',
       );
+      pathRegex.lastIndex = 0;
       const pathComponents = pathRegex.exec(relativePath);
-      const section = pathComponents[1];
-      const path = pathComponents[2];
-      const localPath = path.replace(orderPartRegex, '/');
-      const slug = `/${section}${localPath}`;
-      redirectLinks.push({
-        source: redirectLink.match(/(?<=\s)(\S+$)/im)[0].replace(/\/$/, ''),
-        destination: slug,
-        permanent: true,
-      });
-      await migrateUtils.removeRedirectLink(
-        redirectLink,
-        markdownText,
-        markdownFileLocation,
-      );
+      if (pathComponents) {
+        const section = pathComponents[1];
+        const path = pathComponents[2];
+        const localPath = path.replace(orderPartRegex, '/');
+        const slug = `/${section}${localPath}`;
+        redirectLinks.push({
+          source: redirectLink.match(/(?<=\s)(\S+$)/im)[0].replace(/\/$/, ''),
+          destination: slug,
+          permanent: true,
+        });
+        await migrateUtils.removeRedirectLink(
+          redirectLink,
+          markdownText,
+          markdownFileLocation,
+        );
+      }
     }
   }
   await Promise.all(

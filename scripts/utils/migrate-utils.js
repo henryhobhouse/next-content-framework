@@ -7,7 +7,7 @@ const imageUrls = /(\!\[.*?\]\()(\S*?)(?=\))/g;
 const isUrlRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/g;
 const isGifPlayerRegex = /(<GifPlayer)(.*)(\/>)/g;
 const isInlineStyleRegex = /(?<=style=)".*"/g;
-const redirectLinkRegex = /redirect_from:\s*-\s*[\/\w]*/im;
+const redirectLinkRegex = /redirect_from:\s*-\s*[\/\-\w]*/im;
 
 const getLinksWithPaths = (markdownTextBuffer) => {
   const links = [];
@@ -168,13 +168,16 @@ const removeRedirectLink = async (
   markdownFileLocation,
 ) => {
   let updatedContent = markdownText;
-  updatedContent = updatedContent.replace(redirectLink, '');
+  const redirectLinkRegex = new RegExp(
+    `${redirectLink.replace(/[-\/\\^$*+?.()|[\]{}]/gm, '\\$&')}`,
+  );
+  updatedContent = updatedContent.replace(redirectLinkRegex, '');
   await writeFile(markdownFileLocation, updatedContent);
 };
 
 const setNextRedirects = async (redirectLinks) => {
   const linksModule = `module.exports = ${JSON.stringify(redirectLinks)}`;
-  await writeFile(`${process.cwd()}/redirects.ts`, linksModule);
+  await writeFile(`${process.cwd()}/redirects.js`, linksModule);
 };
 
 exports.updateImageLinks = updateImageLinks;

@@ -4,51 +4,50 @@ import rehypeAutoLinkHeadings from 'rehype-autolink-headings';
 import rehypeSlug from 'rehype-slug';
 import remarkUnwrapImages from 'remark-unwrap-images';
 
-import { addRelativeImageLinks } from './add-relative-links';
-import getTableOfContents from './get-table-of-contents';
-import mdxComponents from './mdx-components';
 import {
   documentFilesBasePath,
-  getNavigationItems,
   isPostFileRegex,
   orderPartRegex,
   orderRegex,
   pathRegex,
-} from './mdx-parse';
+} from '../mdx-parse';
 import {
-  Resolve,
-  NavigationArticle,
   MdxRenderedToString,
+  NavigationArticle,
+  Resolve,
   TableOfContents,
-} from './types';
+} from '../types';
 
-import { FsPromises } from 'pages/embedded/[...slug]';
+import addRelativeImageLinks from 'lib/mdx/add-relative-links';
+import getTableOfContents from 'lib/mdx/get-table-of-contents';
+import mdxComponents from 'lib/mdx/mdx-components';
+import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
-/**
- * Recurrively iterate through all markdown files in the in the content folder and parse the data
- * To include meta data in both frontmatter but equally ordering for the side navigation.
- */
-const getArticles = async (
-  currentSlugSections: string[],
-  contentPagedir: string,
-  promises: FsPromises,
-  resolve: Resolve,
-): Promise<{
-  contentNavStructure: NavigationArticle[];
-  currentPagesContent?: MdxRenderedToString;
-  frontMatterData?: Record<string, string>;
-  currentPageTocData: TableOfContents;
-}> => {
-  // as articles is only 3 layers deep then only retrieve those. (connectors being level 4 and 5 and dealt
-  // with in the connectors-list and connectors pages
-  const maxDepthToTraverse = 3;
-  const flatArticles: Omit<NavigationArticle, 'children'>[] = [];
-  let currentPagesContent: MdxRenderedToString | undefined;
-  let currentPageTocData: TableOfContents = {};
+interface ParseDirectoriesProps {
+  rootDir: string;
+  currentPageSlug: string;
+  contentPagedir: string;
+  maxDepthToTraverse: number;
+  promises: FsPromises;
+  resolve: Resolve;
+}
+
+const parseDirectories = async ({
+  rootDir,
+  currentPageSlug,
+  contentPagedir,
+  maxDepthToTraverse,
+  promises,
+  resolve,
+}: ParseDirectoriesProps) => {
+  const navigationArticleDepth = 3;
+
+  const articlesForNav: Omit<NavigationArticle, 'children'>[] = [];
+  let pageContent: MdxRenderedToString | undefined;
   let frontMatterData: Record<string, string> | undefined;
-  const platformDocumentsPath = `${documentFilesBasePath}/${contentPagedir}`;
+  let currentPageTocData: TableOfContents = {};
 
-  const parseDirectories = async (directory: string, currentDepth: number) => {
+  const parse = async (directory: string, currentDepth: number) => {
     const dirents = await await promises.readdir(directory, {
       withFileTypes: true,
     });
@@ -83,7 +82,7 @@ const getArticles = async (
 
         // if there is a document title than add it to the side navigation config
         if (docTitle) {
-          flatArticles.push({
+          articlesForNav.push({
             title: docTitle,
             slug,
             level,
@@ -92,7 +91,7 @@ const getArticles = async (
           });
         }
 
-        if (slug === `/${contentPagedir}/${currentSlugSections.join('/')}`) {
+        if (slug === currentPageSlug) {
           const relativePathToImages = relativePath.replace(
             /\/docs.(mdx|md)$/,
             '',
@@ -107,7 +106,7 @@ const getArticles = async (
           frontMatterData = data;
 
           // for server side rendering
-          currentPagesContent = await renderToString(transformedContent, {
+          pageContent = await renderToString(transformedContent, {
             components: mdxComponents,
             mdxOptions: {
               remarkPlugins: [remarkUnwrapImages],
@@ -121,21 +120,25 @@ const getArticles = async (
     }
     await Promise.all(
       dirents.map(async (dirent) => {
-        if (dirent.isDirectory() && currentDepth <= maxDepthToTraverse) {
+        const isCompleted =
+          (currentDepth > navigationArticleDepth && !!pageContent) ||
+          currentDepth >= maxDepthToTraverse;
+        if (dirent.isDirectory() && !isCompleted) {
           const directoryPath = resolve(directory, dirent.name);
-          await parseDirectories(directoryPath, currentDepth + 1);
+          await parse(directoryPath, currentDepth + 1);
         }
       }),
     );
   };
-  await parseDirectories(platformDocumentsPath, 1);
-  const contentNavStructure = getNavigationItems(flatArticles);
+
+  await parse(rootDir, 1);
+
   return {
-    contentNavStructure,
-    currentPagesContent,
+    articlesForNav,
     frontMatterData,
+    pageContent,
     currentPageTocData,
   };
 };
 
-export default getArticles;
+export default parseDirectories;

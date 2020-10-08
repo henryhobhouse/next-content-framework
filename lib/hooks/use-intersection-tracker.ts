@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import useEventCallback from './use-event-callback';
+// import useEventCallback from './use-event-callback';
 
 type CurrentHeaders = {
   [key: string]: Element;
@@ -28,13 +28,12 @@ const useIntersectionTracker = (idsToTrack: string) => {
     CurrentHeaders
   >({});
 
-  const onHeadingEntersViewport = useEventCallback(
+  const onHeadingEntersViewport = useCallback(
     (observedEntries: IntersectionObserverEntry[]) => {
       if (!observedEntries || !observedEntries.length) return;
       observedEntries.forEach((entry) => {
         const { isIntersecting } = entry;
         const entryId = entry.target.id;
-
         // add to current headers is intersecting with the viewport
         if (isIntersecting) {
           // use states version of previous so concurrent mode & async friendly
@@ -72,6 +71,7 @@ const useIntersectionTracker = (idsToTrack: string) => {
         }
       });
     },
+    [currentHeadersInViewport],
   );
 
   /**

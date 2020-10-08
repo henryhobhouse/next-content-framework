@@ -1,19 +1,19 @@
 import {
+  connectorDocsRelativePath,
   documentFilesBasePath,
   isPostFileRegex,
   orderPartRegex,
   pathRegex,
-} from './mdx-parse';
-import { Resolve, StaticPathParams } from './types';
-
-import { FsPromises } from 'pages/embedded/[...slug]';
+} from 'lib/mdx/mdx-parse';
+import { Resolve, StaticArticlePathParams } from 'lib/mdx/types';
+import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 const getArticleSlugs = async (
   contentPagedir: string,
   promises: FsPromises,
   resolve: Resolve,
 ) => {
-  const paths: StaticPathParams[] = [];
+  const paths: StaticArticlePathParams[] = [];
   const platformDocumentsPath = `${documentFilesBasePath}/${contentPagedir}`;
   // as articles is only 3 layers deep then only retrieve those. (connectors being level 4 and 5 and dealt
   // with in the connectors-list and connectors pages
@@ -32,21 +32,28 @@ const getArticleSlugs = async (
     if (postFile) {
       const markdownPath = resolve(directory, postFile.name);
       const relativePath = markdownPath.replace(documentFilesBasePath, '');
+      const isConnectorListPage = relativePath.includes(
+        connectorDocsRelativePath,
+      );
 
       // as exec is global we need to reset the index each iteration of the loop
       pathRegex.lastIndex = 0;
 
       const pathComponents = pathRegex.exec(relativePath);
 
-      if (pathComponents) {
+      if (pathComponents && !isConnectorListPage) {
         const path = pathComponents[2];
         const localPath = path.replace(orderPartRegex, '/');
-
-        paths.push({
-          params: {
-            slug: [...localPath.split('/').filter(Boolean)],
-          },
-        });
+        const isConnectorListPage = localPath.startsWith(
+          connectorDocsRelativePath,
+        );
+        if (!isConnectorListPage) {
+          paths.push({
+            params: {
+              articleSlug: [...localPath.split('/').filter(Boolean)],
+            },
+          });
+        }
       }
     }
     await Promise.all(

@@ -2,35 +2,39 @@ import { promises } from 'fs';
 import { resolve } from 'path';
 
 import hydrate from 'next-mdx-remote/hydrate';
-import React, { FC } from 'react';
-import styled from 'styled-components';
+import React, { FC, useState } from 'react';
 
 import ArticleWrapper from 'components/ArticleWrapper';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
 import SectionNavigation from 'components/SectionNavigation';
-import getArticleSlugs from 'lib/mdx/get-article-slugs';
-import getArticles from 'lib/mdx/get-articles';
 import mdxComponents from 'lib/mdx/mdx-components';
-import { DocumentPostProps, StaticPathParams } from 'lib/mdx/types';
+import getConnector from 'lib/mdx/page-fetching/get-connector';
+import getConnectorSlugs from 'lib/mdx/page-fetching/get-connector-slugs';
+import {
+  MdxRenderedToString,
+  NavigationArticle,
+  StaticConnectorPathParams,
+  TableOfContents,
+} from 'lib/mdx/types';
+import { TableOfContentStickyWrapper } from 'pages/embedded/[...articleSlug]';
+import { TableOfContentWrapper } from 'pages/platform/[...articleSlug]';
 
-const contentPagedir = 'embedded';
-export type FsPromises = typeof promises;
+interface ConnectorListProps {
+  navigationStructure: NavigationArticle[];
+  content?: MdxRenderedToString;
+  frontmatter?: Record<string, string>;
+  tableOfContents: TableOfContents;
+}
 
-const TableOfContentWrapper = styled.div`
-  width: 200px;
-`;
-
-export const TableOfContentStickyWrapper = styled.div`
-  position: sticky;
-  top: 100px;
-`;
-
-const EmbeddedPosts: FC<DocumentPostProps> = ({
+const Connector: FC<ConnectorListProps> = ({
   content,
-  navigationStructure,
   frontmatter,
+  navigationStructure,
   tableOfContents,
 }) => {
+  // prevents immedaite re-render causing SC errors for miss-match classnames
+  const [toc] = useState(tableOfContents);
+
   // for client side rendering
   const hydratedContent =
     content &&
@@ -49,7 +53,7 @@ const EmbeddedPosts: FC<DocumentPostProps> = ({
       </ArticleWrapper>
       <TableOfContentWrapper>
         <TableOfContentStickyWrapper>
-          <DesktopTableOfContents tableOfContents={tableOfContents} />
+          <DesktopTableOfContents tableOfContents={toc} />
         </TableOfContentStickyWrapper>
       </TableOfContentWrapper>
     </>
@@ -60,7 +64,7 @@ const EmbeddedPosts: FC<DocumentPostProps> = ({
  * Create all the slugs (paths) for this page
  */
 export async function getStaticPaths() {
-  const paths = await getArticleSlugs(contentPagedir, promises, resolve);
+  const paths = await getConnectorSlugs(promises, resolve);
 
   return {
     paths,
@@ -74,23 +78,22 @@ export async function getStaticPaths() {
  * much much easier.
  */
 export async function getStaticProps({
-  params: { slug },
-}: StaticPathParams): Promise<{ props: DocumentPostProps }> {
+  params: { connector, connectorList },
+}: StaticConnectorPathParams) {
   const {
     contentNavStructure,
-    currentPagesContent,
+    pageContent,
     frontMatterData,
     currentPageTocData,
-  } = await getArticles(slug, contentPagedir, promises, resolve);
-
+  } = await getConnector(`${connectorList}/${connector}`, promises, resolve);
   return {
     props: {
       navigationStructure: contentNavStructure,
-      content: currentPagesContent,
+      content: pageContent,
       frontmatter: frontMatterData,
       tableOfContents: currentPageTocData,
     },
   };
 }
 
-export default EmbeddedPosts;
+export default Connector;

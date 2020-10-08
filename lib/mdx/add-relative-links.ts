@@ -5,7 +5,7 @@ import {
   rootImageDirectory,
 } from './mdx-parse';
 
-import { FsPromises } from 'pages/embedded/[...slug]';
+import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 const checkFileExists = async (filePath: string, promises: FsPromises) => {
   try {
@@ -38,7 +38,7 @@ export interface ImageLink {
  * updating the path to the correct file in the images directory but with size prefix to be determined
  * by the app.
  */
-export const addRelativeImageLinks = async (
+const addRelativeImageLinks = async (
   mdxContent: string,
   relativePath: string,
   promises: FsPromises,
@@ -129,3 +129,5 @@ export const addRelativeImageLinks = async (
 
   return enhancedContent;
 };
+
+export default addRelativeImageLinks;
