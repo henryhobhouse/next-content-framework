@@ -7,6 +7,14 @@ import {
 import { Resolve, StaticConnectorPathParams } from 'lib/mdx/types';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
+/**
+ * Get Connector Slugs as part of the static pre render (https://nextjs.org/docs/basic-features/data-fetching#getstaticpaths-static-generation)
+ *
+ * Recurrively traverse through all directories in the contentor docs directory to a depth of 2.
+ * Upon finding a doc.md|mdx file to determing markdown slug by removing order numbering from directory path and setting as the slug.
+ *
+ * Returns an array of all slugs.
+ */
 const getConnectorSlugs = async (promises: FsPromises, resolve: Resolve) => {
   const connectorDirPath = 'platform/50.connectors/1000.docs';
   const paths: StaticConnectorPathParams[] = [];

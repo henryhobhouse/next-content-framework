@@ -10,15 +10,14 @@ import { Node, ParentNode, SearchMap } from './types';
 const valueToString = (node: Node | Node[]): string => {
   if (Array.isArray(node)) {
     return all(node);
-  } else {
-    return (
-      (node?.value as string) ||
-      (node?.alt as string) ||
-      (node?.title as string) ||
-      (node?.children && all(node.children as Node[])) ||
-      ''
-    );
   }
+  return (
+    (node?.value as string) ||
+    (node?.alt as string) ||
+    (node?.title as string) ||
+    (node?.children && all(node.children as Node[])) ||
+    ''
+  );
 };
 
 const all = (values: Node[]): string => {
@@ -54,7 +53,7 @@ const searchNodes = (root: ParentNode, headingDepth: number) => {
     if (value && child?.depth && child.depth <= maxDepth) {
       map.push({
         depth: child.depth,
-        value: value,
+        value,
         id: slugs.slug(id || value),
       });
     }

@@ -55,19 +55,16 @@ const getImagesToOptimise = async (dir) => {
   const imageDirents = dirents.filter((dirent) =>
     dirent.name.match(imageFilesPostfixes),
   );
-  if (imageDirents.length) {
+  if (imageDirents.length)
     await Promise.all(
       imageDirents.map(async (imageDirent) => {
         const imageFileLocation = resolve(dir, imageDirent.name);
         const rawFileType = imageDirent.name.match(imageFileType)[0];
         const fileType = rawFileType === 'jpg' ? 'jpeg' : rawFileType;
-        if (fileType === 'svg') {
-          totalImagesToOptimise += 1;
-        } else if (fileType === 'gif') {
-          totalImagesToOptimise += 2;
-        } else {
-          totalImagesToOptimise += 3;
-        }
+        if (fileType === 'svg') totalImagesToOptimise += 1;
+        else if (fileType === 'gif') totalImagesToOptimise += 2;
+        else totalImagesToOptimise += 3;
+
         const imageConfig = {
           filePath: imageFileLocation,
           name: imageDirent.name,
@@ -76,7 +73,7 @@ const getImagesToOptimise = async (dir) => {
         imagesPathsToOptimise.push(imageConfig);
       }),
     );
-  }
+
   await Promise.all(
     dirents.map((dirent) => {
       const res = resolve(dir, dirent.name);
@@ -91,9 +88,9 @@ const getImagesToOptimise = async (dir) => {
  */
 const logSuccess = (imagePath) => {
   // add image, if not already done, to the list of successfully optimised images
-  if (!imagesSuccessfullyOptimised.includes(imagePath)) {
+  if (!imagesSuccessfullyOptimised.includes(imagePath))
     imagesSuccessfullyOptimised.push(imagePath);
-  }
+
   progressBar.increment();
 };
 
@@ -102,7 +99,7 @@ const logSuccess = (imagePath) => {
  * images directory along with svgs and small size variants for lazy loading.
  * The rest go into the public folder to be delivered statically.
  */
-getWriteFilePath = (size, imageConfig) => {
+const getWriteFilePath = (size, imageConfig) => {
   const imagePathDirectories = imageConfig.filePath.split('/');
   const parentDirectoryName = imagePathDirectories[
     imagePathDirectories.length - 2
@@ -110,15 +107,14 @@ getWriteFilePath = (size, imageConfig) => {
     .replace(orderPartRegex, '')
     .toLowerCase();
   let writePath;
-  if (size === referenceImageSize) {
+  if (size === referenceImageSize)
     writePath = `${optimisedImageDirectory}/${originalFileDirectory}/${parentDirectoryName}`;
-  } else if (size === lazyLoadedPlaceholderWidth) {
+  else if (size === lazyLoadedPlaceholderWidth)
     writePath = `${optimisedImageDirectory}/${size}/${parentDirectoryName}`;
-  } else if (imageConfig.fileType === 'svg') {
+  else if (imageConfig.fileType === 'svg')
     writePath = `${optimisedImageDirectory}/${svgFileDirectory}/${parentDirectoryName}`;
-  } else {
-    writePath = `${staticImageDirectory}/${size}/${parentDirectoryName}`;
-  }
+  else writePath = `${staticImageDirectory}/${size}/${parentDirectoryName}`;
+
   return writePath;
 };
 
@@ -262,21 +258,21 @@ const optimiseSvg = async (imageConfig) => {
 };
 
 const checkImageDirectories = () => {
-  dirsToCheck = [
+  const dirsToCheck = [
     `${staticImageDirectory}/${articleImageSize}`,
     `${optimisedImageDirectory}/${originalFileDirectory}`,
     `${optimisedImageDirectory}/${svgFileDirectory}`,
     `${optimisedImageDirectory}/${lazyLoadedPlaceholderWidth}`,
-    `${optimisedImageDirectory}/sizeRef`,
   ];
   dirsToCheck.forEach((dir) => {
     const fullDirPath = `${process.cwd()}/${dir}`;
-    if (!existsSync(fullDirPath)) {
-      mkdirp.sync(fullDirPath);
-    }
+    if (!existsSync(fullDirPath)) mkdirp.sync(fullDirPath);
   });
 };
 
+/**
+ * Resize, optimise and extract size metadata for PNG, JPEG, SVG and GIF images
+ */
 const optimiseImages = async () => {
   checkImageDirectories();
   await Promise.all(
@@ -288,84 +284,82 @@ const optimiseImages = async () => {
       } else if (imageConfig.fileType === 'svg') {
         await optimiseSvg(imageConfig);
         return;
-      } else {
-        // handle all static images
-        await Promise.all(
-          staticImageSizes.map(async (size) => {
-            let clonedPipeline = pipeline.clone();
-            clonedPipeline
-              .resize({ width: size })
-              .png({
-                compressionLevel: 9,
-                force: imageConfig.fileType === `png`,
-              })
-              .webp({
-                quality: 80,
-                force: imageConfig.fileType === `webp`,
-              });
-
-            // TODO: add error handling and refactor to push size metadata into own file to be used by add relative links
-            // if (size === lazyLoadedPlaceholderWidth) {
-            //   const imagePathDirectories = imageConfig.filePath.split('/');
-            //   const parentDirectoryName = imagePathDirectories[
-            //     imagePathDirectories.length - 2
-            //   ]
-            //     .replace(orderPartRegex, '')
-            //     .toLowerCase();
-            //   const { width, height } = await pipeline.metadata();
-            //   const blankImage = await sharp({
-            //     create: {
-            //       width,
-            //       height,
-            //       channels: 3,
-            //       background: { r: 255, g: 255, b: 255, alpha: 0 },
-            //     },
-            //   })
-            //     .jpeg({
-            //       quality: 1,
-            //     })
-            //     .toBuffer();
-            //   writeFileSync(
-            //     `${process.cwd()}/${optimisedImageDirectory}/sizeRef/${parentDirectoryName}-${imageConfig.name.toLowerCase()}`,
-            //     blankImage,
-            //   );
-            // }
-
-            if (imageConfig.fileType === `png`) {
-              try {
-                await optimisePng(imageConfig, clonedPipeline, size);
-              } catch {
-                spinner.info(
-                  'As image cannot be optimised and/or resized. Use the orginal instead. PLEASE check if original works to avoid issues in the app',
-                );
-                const originalFile = await readFile(imageConfig.filePath);
-                await writeOptimisedImage(imageConfig, originalFile, size);
-              }
-              return;
-            }
-
-            if (imageConfig.fileType === `jpeg`) {
-              try {
-                await optimiseJpeg(imageConfig, clonedPipeline, size);
-              } catch {
-                spinner.info(
-                  'As image cannot be optimised and/or resized. Use the orginal instead. PLEASE check if original works to avoid issues in the app',
-                );
-                const originalFile = await readFile(imageConfig.filePath);
-                await writeOptimisedImage(imageConfig, originalFile, size);
-              }
-              return;
-            }
-
-            await writeFromPipeline(imageConfig, clonedPipeline, size);
-          }),
-        );
       }
+      // handle all static images
+      await Promise.all(
+        staticImageSizes.map(async (size) => {
+          const clonedPipeline = pipeline.clone();
+          clonedPipeline
+            .resize({ width: size })
+            .png({
+              compressionLevel: 9,
+              force: imageConfig.fileType === `png`,
+            })
+            .webp({
+              quality: 80,
+              force: imageConfig.fileType === `webp`,
+            });
+
+          // if (size === lazyLoadedPlaceholderWidth) {
+          //   const imagePathDirectories = imageConfig.filePath.split('/');
+          //   const parentDirectoryName = imagePathDirectories[
+          //     imagePathDirectories.length - 2
+          //   ]
+          //     .replace(orderPartRegex, '')
+          //     .toLowerCase();
+          //   const { width, height } = await pipeline.metadata();
+          //   const blankImage = await sharp({
+          //     create: {
+          //       width,
+          //       height,
+          //       channels: 3,
+          //       background: { r: 255, g: 255, b: 255, alpha: 0 },
+          //     },
+          //   })
+          //     .jpeg({
+          //       quality: 1,
+          //     })
+          //     .toBuffer();
+          //   writeFileSync(
+          //     `${process.cwd()}/${optimisedImageDirectory}/sizeRef/${parentDirectoryName}-${imageConfig.name.toLowerCase()}`,
+          //     blankImage,
+          //   );
+          // }
+
+          if (imageConfig.fileType === `png`) {
+            try {
+              await optimisePng(imageConfig, clonedPipeline, size);
+            } catch {
+              spinner.info(
+                'As image cannot be optimised and/or resized. Use the orginal instead. PLEASE check if original works to avoid issues in the app',
+              );
+              const originalFile = await readFile(imageConfig.filePath);
+              await writeOptimisedImage(imageConfig, originalFile, size);
+            }
+            return;
+          }
+
+          if (imageConfig.fileType === `jpeg`) {
+            try {
+              await optimiseJpeg(imageConfig, clonedPipeline, size);
+            } catch {
+              spinner.info(
+                'As image cannot be optimised and/or resized. Use the orginal instead. PLEASE check if original works to avoid issues in the app',
+              );
+              const originalFile = await readFile(imageConfig.filePath);
+              await writeOptimisedImage(imageConfig, originalFile, size);
+            }
+            return;
+          }
+
+          await writeFromPipeline(imageConfig, clonedPipeline, size);
+        }),
+      );
     }),
   );
 };
 
-removeOriginals = async () => {
+const removeOriginals = async () => {
   Promise.all(
     imagesSuccessfullyOptimised.map(async (filePath) => {
       await unlink(filePath);
@@ -382,6 +376,9 @@ removeOriginals = async () => {
     progressBar.start(totalImagesToOptimise, 0, {
       speed: 'N/A',
     });
+    // TODO: refactor error handling to output to log file rathern than console
+    // TOOD: feat push images sizes to config object to be used at build time to add size meta data to html
+    // TODO: tweak image quality/compression levels to bring inline with Gatsby Images (currently over compressed slighlty)
     await optimiseImages();
     await removeOriginals();
     progressBar.stop();

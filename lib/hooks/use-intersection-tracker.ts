@@ -1,6 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
-
-// import useEventCallback from './use-event-callback';
+import { useEffect, useState, useCallback } from 'react';
 
 type CurrentHeaders = {
   [key: string]: Element;
@@ -28,6 +26,8 @@ const useIntersectionTracker = (idsToTrack: string) => {
     CurrentHeaders
   >({});
 
+  // TODO: work out why the intersection observer is not working when isolated (having to allow a circular re-render
+  // to get it to work in this configuration). Have tried polyfill to no success.
   const onHeadingEntersViewport = useCallback(
     (observedEntries: IntersectionObserverEntry[]) => {
       if (!observedEntries || !observedEntries.length) return;

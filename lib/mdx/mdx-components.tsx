@@ -9,6 +9,9 @@ import Highlight from 'components/Highlight';
 import MdxAnchor from 'components/MdxAnchor';
 import OptimisedImage from 'components/OptimisedImage';
 
+/**
+ * Options: https://mdxjs.com/table-of-components
+ */
 const genericComponents = {
   pre: (preProps: HTMLAttributes<HTMLPreElement>) => {
     const props = preToCodeBlock(preProps);
@@ -23,6 +26,7 @@ const genericComponents = {
   a: MdxAnchor,
 };
 
+// Non standard JSX components to be used in markdown
 const MdxComponents = {
   DynamicBlock,
   Highlight,

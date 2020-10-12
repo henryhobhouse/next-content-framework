@@ -2,7 +2,7 @@ import { promises } from 'fs';
 import { resolve } from 'path';
 
 import hydrate from 'next-mdx-remote/hydrate';
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 
 import ArticleWrapper from 'components/ArticleWrapper';
@@ -30,8 +30,6 @@ const PlatformPosts: FC<DocumentPostProps> = ({
   frontmatter,
   tableOfContents,
 }) => {
-  // prevents immedaite re-render causing SC errors for miss-match classnames
-  const [toc] = useState(tableOfContents);
   // for client side rendering
   const hydratedContent =
     content &&
@@ -48,9 +46,10 @@ const PlatformPosts: FC<DocumentPostProps> = ({
         <br />
         {hydratedContent}
       </ArticleWrapper>
+
       <TableOfContentWrapper>
         <TableOfContentStickyWrapper>
-          <DesktopTableOfContents tableOfContents={toc} />
+          <DesktopTableOfContents tableOfContents={tableOfContents} />
         </TableOfContentStickyWrapper>
       </TableOfContentWrapper>
     </>

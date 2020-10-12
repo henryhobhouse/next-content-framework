@@ -1,6 +1,6 @@
 import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 
 import useIntersectionTracker from '../../lib/hooks/use-intersection-tracker';
 
@@ -103,4 +103,4 @@ const DesktopTableOfContents: FC<{ tableOfContents: TableOfContents }> = ({
   );
 };
 
-export default DesktopTableOfContents;
+export default memo(DesktopTableOfContents);

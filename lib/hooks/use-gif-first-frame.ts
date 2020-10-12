@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
+/**
+ * Extract first image frame as standalone image from a gif.
+ */
 const useGifFirstFrame = (gifUrl: string) => {
   const [firstFrameImage, setFirstFrameImage] = useState<string>();
 

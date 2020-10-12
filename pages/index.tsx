@@ -9,8 +9,6 @@ const LinkWrapper = styled.div`
   }
 `;
 
-const Home = () => {
-  return <LinkWrapper>This is the home page!</LinkWrapper>;
-};
+const Home = () => <LinkWrapper>This is the home page!</LinkWrapper>;
 
 export default Home;

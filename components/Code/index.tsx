@@ -14,30 +14,25 @@ interface CodeProps {
   language: Language;
 }
 
-const Code: FC<CodeProps> = ({ cn, codeString, language }) => {
-  return (
-    <Highlight {...defaultProps} code={codeString} language={language}>
-      {({ className, style, tokens, getLineProps, getTokenProps }) => (
-        <div className={cn('code')}>
-          <Clipboard data-clipboard-text={codeString} className={cn('copy')}>
-            <FontAwesomeIcon icon={faCopy} />
-          </Clipboard>
-          <pre className={className} style={style}>
-            {tokens.map((line, i) => (
-              <div key={i} {...getLineProps({ line, key: i })}>
-                {line.map((token, key) => (
-                  <span
-                    key={token.content}
-                    {...getTokenProps({ token, key })}
-                  />
-                ))}
-              </div>
-            ))}
-          </pre>
-        </div>
-      )}
-    </Highlight>
-  );
-};
+const Code: FC<CodeProps> = ({ cn, codeString, language }) => (
+  <Highlight {...defaultProps} code={codeString} language={language}>
+    {({ className, style, tokens, getLineProps, getTokenProps }) => (
+      <div className={cn('code')}>
+        <Clipboard data-clipboard-text={codeString} className={cn('copy')}>
+          <FontAwesomeIcon icon={faCopy} />
+        </Clipboard>
+        <pre className={className} style={style}>
+          {tokens.map((line, i) => (
+            <div key={i} {...getLineProps({ line, key: i })}>
+              {line.map((token, key) => (
+                <span key={token.content} {...getTokenProps({ token, key })} />
+              ))}
+            </div>
+          ))}
+        </pre>
+      </div>
+    )}
+  </Highlight>
+);
 
 export default withStyles(styles)(Code);

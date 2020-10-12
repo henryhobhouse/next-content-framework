@@ -16,12 +16,11 @@ const checkFileExists = async (filePath: string, promises: FsPromises) => {
   }
 };
 
-const checkValidLink = async (imageLink: string, promises: FsPromises) => {
-  return checkFileExists(
+const checkValidLink = async (imageLink: string, promises: FsPromises) =>
+  checkFileExists(
     `${process.cwd()}/${rootImageDirectory}/originals/${imageLink}`,
     promises,
   );
-};
 
 enum LinkType {
   md,
@@ -40,7 +39,7 @@ export interface ImageLink {
  */
 const addRelativeImageLinks = async (
   mdxContent: string,
-  relativePath: string,
+  parentDirectoryRelativePath: string,
   promises: FsPromises,
 ) => {
   const imageLinksToUpdate: ImageLink[] = [];
@@ -65,9 +64,9 @@ const addRelativeImageLinks = async (
       imageLinksToUpdate.push({ link: result[2], type: LinkType.html });
   }
 
-  const nonDupedImageLinks = imageLinksToUpdate.filter((value, index, self) => {
-    return self.indexOf(value) === index;
-  });
+  const nonDupedImageLinks = imageLinksToUpdate.filter(
+    (value, index, self) => self.indexOf(value) === index,
+  );
 
   // iterate through image links to parse relative path
   await Promise.all(
@@ -78,7 +77,7 @@ const addRelativeImageLinks = async (
       const fileName = imageLinkDirectories[
         imageLinkDirectories.length - 1
       ].toLowerCase();
-      const relativePathSegments = relativePath.split('/');
+      const relativePathSegments = parentDirectoryRelativePath.split('/');
       const imageLinkSegments = nonRelativeLink.split('/');
       const nonRelativeLinkSegments = imageLinkSegments.filter(
         (dir) => dir !== '..',
@@ -106,7 +105,7 @@ const addRelativeImageLinks = async (
       if (!isValidLink) {
         // eslint-disable-next-line no-console
         console.warn(
-          `WARNING: The image "${imageLink}" referenced in "${relativePath}/docs.mdx|md" does not exist.`,
+          `WARNING: The image "${imageLink}" referenced in "${parentDirectoryRelativePath}/docs.mdx|md" does not exist.`,
         );
         const links = enhancedContent.match(
           imageLink.type === LinkType.md ? isMdImageRegex : isHtmlImageRegex,
@@ -115,7 +114,7 @@ const addRelativeImageLinks = async (
         if (badLink) {
           // escape all special characters from link and make global in case multiple instances
           const linkRegex = new RegExp(
-            `${badLink.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}`,
+            `${badLink.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}`,
             'g',
           );
           enhancedContent = enhancedContent.replace(linkRegex, '');
@@ -125,7 +124,7 @@ const addRelativeImageLinks = async (
   );
 
   // remove all comments
-  enhancedContent = enhancedContent.replace(/\<\!\-\-.*\-\-\>/g, '');
+  enhancedContent = enhancedContent.replace(/<!--.*-->/g, '');
 
   return enhancedContent;
 };

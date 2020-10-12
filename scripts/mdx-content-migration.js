@@ -4,10 +4,11 @@ const { resolve } = require('path');
 const dirTree = require('directory-tree');
 
 const migrateUtils = require('./utils/migrate-utils');
+
 const documentFilesBasePath = `${process.cwd()}/content/`;
 const isPostFileRegex = /docs\.(mdx|md)$/gi;
 const orderPartRegex = /\/([0-9+]+)\./g;
-const pathRegex = /([^\/]*)(.*)\/docs\.(mdx|md)$/gi;
+const pathRegex = /([^/]*)(.*)\/docs\.(mdx|md)$/gi;
 
 const redirectLinks = [];
 
@@ -24,35 +25,32 @@ const migrateContent = async (dir, contentDirStructure) => {
 
     // update links with paths to check valid and reaplce slug names with those in the file structure
     const linksWithPaths = migrateUtils.getLinksWithPaths(markdownText);
-    if (linksWithPaths.length) {
+    if (linksWithPaths.length)
       await migrateUtils.updateImageLinks(
         linksWithPaths,
         markdownText,
         contentDirStructure,
         markdownFileLocation,
       );
-    }
 
     // replace gif player references with standard image links that can now automatically
     // deal with gifs and static images alike.
     const gifPlayers = migrateUtils.getOldGifPlayerJsx(markdownText);
-    if (gifPlayers.length) {
+    if (gifPlayers.length)
       await migrateUtils.updateGifJsx(
         gifPlayers,
         markdownText,
         markdownFileLocation,
       );
-    }
 
     // replace all inline string styles with objects to be JSX compatible
     const inlineStyles = migrateUtils.getInlineStyles(markdownText);
-    if (inlineStyles.length) {
+    if (inlineStyles.length)
       await migrateUtils.convertInlineToObjectStyles(
         inlineStyles,
         markdownText,
         markdownFileLocation,
       );
-    }
 
     // assume only one redirect per file. Find, copy to next config, and remove original.
     // redirects setup as per (https://nextjs.org/docs/api-reference/next.config.js/redirects)

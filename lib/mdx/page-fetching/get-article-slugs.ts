@@ -8,6 +8,18 @@ import {
 import { Resolve, StaticArticlePathParams } from 'lib/mdx/types';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
+/**
+ * Get Article Slugs as part of the static pre render (https://nextjs.org/docs/basic-features/data-fetching#getstaticpaths-static-generation)
+ *
+ * Recurrively traverse through all directories in the content directory to a depth of 3 (as all articles
+ * are in directory depths 1-3. Upon finding a doc.md|mdx file to determing markdown slug by removing order
+ * numbering from directory path and setting as the slug.
+ *
+ * The only exception is the markdown files in the connector docs (platorm/50.connectors/1000.docs) directory
+ * as these are handled by the connector list page templates.
+ *
+ * Returns an array of all slugs.
+ */
 const getArticleSlugs = async (
   contentPagedir: string,
   promises: FsPromises,
@@ -20,6 +32,7 @@ const getArticleSlugs = async (
   const maxDepthToTraverse = 3;
 
   const parseDirectories = async (directory: string, currentDepth: number) => {
+    // get all dirents in current directory
     const dirents = await promises.readdir(directory, {
       withFileTypes: true,
     });

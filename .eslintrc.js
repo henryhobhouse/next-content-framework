@@ -13,6 +13,7 @@ module.exports = {
     'plugin:import/warnings',
     'plugin:import/typescript',
     'prettier/react',
+    'esnext',
   ],
   settings: {
     react: {
@@ -22,23 +23,45 @@ module.exports = {
       typescript: {}, // this loads <rootdir>/tsconfig.json to eslint
     },
   },
+  env: {
+    browser: true,
+    node: true,
+  },
   plugins: ['react-hooks', '@typescript-eslint', 'eslint-plugin-react'],
   overrides: [
     {
       files: ['*.js'],
+      extends: ['node', 'node/style-guide'],
       rules: {
+        'array-bracket-spacing': 0,
+        indent: ['error', 2],
         '@typescript-eslint/no-var-requires': 0,
+        'import/no-commonjs': 0,
+        'template-curly-spacing': 0,
+        'operator-linebreak': 0,
+        'valid-jsdoc': 0,
+        'arrow-parens': 0,
+        'no-extra-parens': 0,
+        'space-before-function-paren': 0,
+        semi: 0,
       },
     },
   ],
   rules: {
     'react/prop-types': 0,
+    'no-use-before-define': 0,
     'react/display-name': 0,
+    'import/no-nodejs-modules': 0,
+    'import/prefer-default-export': 0,
     'react-hooks/rules-of-hooks': 'error',
     '@typescript-eslint/explicit-module-boundary-types': 0,
     '@typescript-eslint/no-unused-vars': [
       'error',
-      { vars: 'all', args: 'after-used', ignoreRestSiblings: true },
+      {
+        vars: 'all',
+        args: 'after-used',
+        ignoreRestSiblings: true,
+      },
     ],
     'react/jsx-uses-vars': 1,
     'react/react-in-jsx-scope': 1,
@@ -46,12 +69,6 @@ module.exports = {
     'import/no-named-as-default': 0,
     '@typescript-eslint/camelcase': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
-    'import/order': [
-      'error',
-      {
-        'newlines-between': 'always-and-inside-groups',
-      },
-    ],
     'import/order': [
       'error',
       {

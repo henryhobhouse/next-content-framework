@@ -1,4 +1,4 @@
-import parseDirectories from './parse-directories';
+import recursiveParseDirectories from './recursive-parse-directories';
 
 import { documentFilesBasePath, getNavigationItems } from 'lib/mdx/mdx-parse';
 import {
@@ -36,7 +36,7 @@ const getConnector = async (
     currentPageTocData,
     frontMatterData,
     pageContent,
-  } = await parseDirectories({
+  } = await recursiveParseDirectories({
     rootDir: productDocumentsPath,
     currentPageSlug: connectorSlug,
     contentPagedir: documentPathRootSection,

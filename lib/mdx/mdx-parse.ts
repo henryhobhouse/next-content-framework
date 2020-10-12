@@ -5,10 +5,10 @@ import {
 } from './types';
 
 export const isPostFileRegex = /docs\.(mdx|md)$/gi;
-export const pathRegex = /([^\/]*)(.*)\/docs\.(mdx|md)$/gi;
-export const orderRegex = /.*\/([0-9+]+)\.[^\/]*\/docs\.(mdx|md)$/gi;
+export const pathRegex = /([^/]*)(.*)\/docs\.(mdx|md)$/gi;
+export const orderRegex = /.*\/([0-9+]+)\.[^/]*\/docs\.(mdx|md)$/gi;
 export const orderPartRegex = /\/([0-9+]+)\./g;
-export const isMdImageRegex = /(\!\[.*?\]\()(\S*?)(?=\))\)/g;
+export const isMdImageRegex = /(!\[.*?\]\()(\S*?)(?=\))\)/g;
 export const isHtmlImageRegex = /(<img .*src=["'])(\S*?)(?=("|'))(.*\/>)/gi;
 
 export const documentFilesBasePath = `${process.cwd()}/content/`;
@@ -41,8 +41,8 @@ export const getNavigationItems = (
     return { ...secondLevelArticle, children: filteredThirdLevelChildren };
   };
 
-  return topLevelArticles.map((topLevelArticle) => {
-    return Object.assign(topLevelArticle, {
+  return topLevelArticles.map((topLevelArticle) =>
+    Object.assign(topLevelArticle, {
       children: secondLevelArticles
         .filter(
           (secondLevelArticle) =>
@@ -52,8 +52,8 @@ export const getNavigationItems = (
           hydrateSecondTierWithChildren(filteredSecondLevelArticles),
         )
         .sort((article1, article2) => article1.order - article2.order),
-    });
-  });
+    }),
+  );
 };
 
 export const replaceLinkInContent = (
@@ -64,7 +64,7 @@ export const replaceLinkInContent = (
   // regex to catch all instances of the link in addition to check is prefixed
   // prefix to avoid `(foo-bar.png)` being captured when searching for "bar.png"
   const imageRegex = new RegExp(
-    `(?<=[\(\/'"])${imageLink.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}`,
+    `(?<=[(/'"])${imageLink.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}`,
     'g',
   );
   return content.replace(imageRegex, revisedImageName);
@@ -91,7 +91,7 @@ export const preToCodeBlock = (preProps: any) => {
     return {
       codeString: codeString.trim(),
       className,
-      language: match != null ? match[1] : '',
+      language: !match ? match[1] : '',
       ...props,
     };
   }

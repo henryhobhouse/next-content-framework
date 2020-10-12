@@ -24,18 +24,18 @@ const getItems = (
       }
     });
     return current;
-  } else {
-    if (node.type === `list`) {
-      current.items = node?.children?.map((i) => getItems(i, {}));
-      return current;
-    } else if (node.type === `listItem`) {
-      const heading = getItems((node?.children ?? [])[0], {});
-      if (node?.children && node.children.length > 1) {
-        getItems(node.children[1], heading);
-      }
-      return heading;
-    }
   }
+  if (node.type === `list`) {
+    current.items = node?.children?.map((i) => getItems(i, {}));
+    return current;
+  } else if (node.type === `listItem`) {
+    const heading = getItems((node?.children ?? [])[0], {});
+    if (node?.children && node.children.length > 1) {
+      getItems(node.children[1], heading);
+    }
+    return heading;
+  }
+
   return {};
 };
 
