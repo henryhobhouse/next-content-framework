@@ -4,6 +4,13 @@ import { ServerStyleSheet } from 'styled-components';
 
 import GlobalStyle from '../lib/styles';
 
+/**
+ * _document page. Customises the "Document" model to augment the app's HTML.
+ *
+ * Only rendered in the server (build time for SSG)
+ *
+ * https://nextjs.org/docs/advanced-features/custom-document
+ */
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet();

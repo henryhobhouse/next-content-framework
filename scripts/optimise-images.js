@@ -119,7 +119,7 @@ const getWriteFilePath = (size, imageConfig) => {
 };
 
 /**
- * Write to file system
+ * Write optimised image data to a file in the system
  */
 const writeOptimisedImage = (imageConfig, optimisedImage, size) => {
   const relateiveWritePath = getWriteFilePath(size, imageConfig);
@@ -185,7 +185,7 @@ const optimiseGif = async (imageConfig) => {
 };
 
 /**
- * Write to file system using sharps image pipeline
+ * Write to file system using sharps image pipeline (async)
  */
 const writeFromPipeline = async (imageConfig, clonedPipeline, size) => {
   try {
@@ -200,6 +200,9 @@ const writeFromPipeline = async (imageConfig, clonedPipeline, size) => {
   }
 };
 
+/**
+ * Optimised already resized GIF images
+ */
 const optimisePng = async (imageConfig, pipeline, size) => {
   try {
     const unoptimisedImage = await pipeline.toBuffer();
@@ -226,6 +229,9 @@ const optimisePng = async (imageConfig, pipeline, size) => {
   }
 };
 
+/**
+ * Optimised already resized JPEG images
+ */
 const optimiseJpeg = async (imageConfig, pipeline, size) => {
   try {
     const unoptimisedImage = await pipeline.toBuffer();
@@ -251,6 +257,9 @@ const optimiseJpeg = async (imageConfig, pipeline, size) => {
   }
 };
 
+/**
+ * Optimised SVG images
+ */
 const optimiseSvg = async (imageConfig) => {
   const svgDataBuffer = await readFile(imageConfig.filePath);
   const optimiseSvg = await imageminSvgo({})(svgDataBuffer);
@@ -359,6 +368,10 @@ const optimiseImages = async () => {
   );
 };
 
+/**
+ * Remove originals (in lieu of reference images) and replace with empty
+ * placeholders for content writers to know what is available
+ */
 const removeOriginals = async () => {
   Promise.all(
     imagesSuccessfullyOptimised.map(async (filePath) => {

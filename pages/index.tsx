@@ -9,6 +9,9 @@ const LinkWrapper = styled.div`
   }
 `;
 
+/**
+ * Entry (home) page for the app
+ */
 const Home = () => <LinkWrapper>This is the home page!</LinkWrapper>;
 
 export default Home;
