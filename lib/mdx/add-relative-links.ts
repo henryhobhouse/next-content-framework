@@ -105,7 +105,7 @@ const addRelativeImageLinks = async (
       if (!isValidLink) {
         // eslint-disable-next-line no-console
         console.warn(
-          `WARNING: The image "${imageLink}" referenced in "${parentDirectoryRelativePath}/docs.mdx|md" does not exist.`,
+          `WARNING: The image "${imageLink.link}" referenced in "${parentDirectoryRelativePath}/docs.mdx|md" does not exist.`,
         );
         const links = enhancedContent.match(
           imageLink.type === LinkType.md ? isMdImageRegex : isHtmlImageRegex,

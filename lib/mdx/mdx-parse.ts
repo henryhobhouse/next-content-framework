@@ -91,7 +91,7 @@ export const preToCodeBlock = (preProps: any) => {
     return {
       codeString: codeString.trim(),
       className,
-      language: !match ? match[1] : '',
+      language: match ? match[1] : '',
       ...props,
     };
   }
