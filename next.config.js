@@ -26,19 +26,10 @@ module.exports = withPlugins(
     transpileModules,
   ],
   {
+    basePath: '/documentation',
+    reactStrictMode: true,
     async redirects() {
       return redirectsConfig;
-    },
-    webpack(config) {
-      config.module.rules.push({
-        test: /\.(png|jpe?g|gif|svg)$/i,
-        use: [
-          {
-            loader: 'url-loader',
-          },
-        ],
-      });
-      return config;
     },
   },
 );

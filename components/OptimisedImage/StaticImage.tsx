@@ -53,7 +53,7 @@ const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt }) => {
       />
 
       <FullImage
-        src={`/${articleImageSize}/${imgUrl}`}
+        src={`/documentation/${articleImageSize}/${imgUrl}`}
         alt={alt}
         onLoad={() => setImageLoading(false)}
         loading="lazy"

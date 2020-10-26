@@ -30,7 +30,7 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt }) => {
     }
   }, [imageRef?.height]);
 
-  const gifRelativePath = `/${articleImageSize}/${gifUrl}`;
+  const gifRelativePath = `/documentation/${articleImageSize}/${gifUrl}`;
 
   const { firstFrameImage } = useGifFirstFrame(gifRelativePath);
 

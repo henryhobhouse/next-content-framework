@@ -17,6 +17,6 @@ yarn dev
 yarn build; yarn start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/documentation](http://localhost:3000/documentation) with your browser to see the result.
 
 More details to come. 
