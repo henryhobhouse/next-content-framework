@@ -1,4 +1,7 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+
+import useEventCallback from './use-event-callback';
 
 type CurrentHeaders = {
   [key: string]: Element;
@@ -25,10 +28,11 @@ const useIntersectionTracker = (idsToTrack: string) => {
   const [currentHeadersInViewport, setCurrentHeadersInViewport] = useState<
     CurrentHeaders
   >({});
+  const { asPath } = useRouter();
 
   // TODO: work out why the intersection observer is not working when isolated (having to allow a circular re-render
   // to get it to work in this configuration). Have tried polyfill to no success.
-  const onHeadingEntersViewport = useCallback(
+  const onHeadingEntersViewport = useEventCallback(
     (observedEntries: IntersectionObserverEntry[]) => {
       if (!observedEntries || !observedEntries.length) return;
       observedEntries.forEach((entry) => {
@@ -71,7 +75,6 @@ const useIntersectionTracker = (idsToTrack: string) => {
         }
       });
     },
-    [currentHeadersInViewport],
   );
 
   /**
@@ -100,9 +103,12 @@ const useIntersectionTracker = (idsToTrack: string) => {
       threshold: 1,
     });
 
-    const targets = document.querySelectorAll(idsToTrack);
-
-    targets.forEach((target) => observer.observe(target));
+    // need to work out why but intersection observer isn't working if setting targets immedaitely.
+    // temp solution. Possibly lazy image loading effecting the dom?
+    setTimeout(() => {
+      const targets = document.querySelectorAll(idsToTrack);
+      targets.forEach((target) => observer.observe(target));
+    }, 200);
 
     // on dismount of parent disconnect the observer
     return () => {
@@ -110,7 +116,7 @@ const useIntersectionTracker = (idsToTrack: string) => {
         observer.disconnect();
       }
     };
-  }, [idsToTrack, onHeadingEntersViewport]);
+  }, [idsToTrack, onHeadingEntersViewport, asPath]);
 
   return {
     activeSectionId,

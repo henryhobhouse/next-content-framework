@@ -63,23 +63,23 @@ const Connector: FC<ConnectorListProps> = ({
 /**
  * Create all the slugs (paths) for this page
  */
-export async function getStaticPaths() {
+export const getStaticPaths = async () => {
   const paths = await getConnectorSlugs(promises, resolve);
 
   return {
     paths,
     fallback: false,
   };
-}
+};
 
 /**
  * Source all content on build (via either SSR or SSG). Powerful as agnostic to source. We
  * Could source from multiple data sources easily which will makes transitioning in the future
  * much much easier.
  */
-export async function getStaticProps({
+export const getStaticProps = async ({
   params: { connector, connectorList },
-}: StaticConnectorPathParams) {
+}: StaticConnectorPathParams) => {
   const {
     contentNavStructure,
     pageContent,
@@ -94,6 +94,6 @@ export async function getStaticProps({
       tableOfContents: currentPageTocData,
     },
   };
-}
+};
 
 export default Connector;
