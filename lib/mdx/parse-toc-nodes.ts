@@ -15,7 +15,7 @@ const getItems = (
   if (!node) {
     return {};
   } else if (node.type === `paragraph`) {
-    visit(node, (item) => {
+    visit(node, (item: Node) => {
       if (item.type === `link`) {
         current.url = item.url as string;
       }

@@ -1,22 +1,36 @@
-const { readdir, readFile, writeFile, unlink } = require('fs').promises;
-const { writeFileSync, existsSync } = require('fs');
-const { resolve } = require('path');
+import { promises, writeFileSync, existsSync } from 'fs';
+import { resolve } from 'path';
+import gifResize from '@gumlet/gif-resize';
+import cliProgress from 'cli-progress';
+import colors from 'colors';
+import imagemin from 'imagemin';
+import imageminGifsicle from 'imagemin-gifsicle';
+import imageminMozjpeg from 'imagemin-mozjpeg';
+import imageminPngquant from 'imagemin-pngquant';
+import imageminSvgo from 'imagemin-svgo';
+import mkdirp from 'mkdirp';
+import ora from 'ora';
+import sharp, { Sharp } from 'sharp';
 
-const gifResize = require('@gumlet/gif-resize');
-const cliProgress = require('cli-progress');
-const _colors = require('colors');
-const imagemin = require('imagemin');
-const imageminGifsicle = require('imagemin-gifsicle');
-const imageminMozjpeg = require('imagemin-mozjpeg');
-const imageminPngquant = require('imagemin-pngquant');
-const imageminSvgo = require('imagemin-svgo');
-const mkdirp = require('mkdirp');
-const ora = require('ora');
-const sharp = require('sharp');
+const imageFileType = {
+  svg: 'svg',
+  jpeg: 'jpeg',
+  png: 'png',
+  gif: 'gif',
+  webp: 'webp',
+} as const;
+
+type ImageFileType = keyof typeof imageFileType;
+
+interface ImageConfig {
+  filePath: string;
+  name: string;
+  fileType: keyof typeof imageFileType;
+}
 
 const documentFilesBasePath = `${process.cwd()}/content/`;
 const imageFilesPostfixes = /(gif|png|svg|jpe?g)$/i;
-const imageFileType = /(?<=\.)(gif|png|svg|jpe?g)$/i;
+const imageFileTypeRegex = /(?<=\.)(gif|png|svg|jpe?g)$/i;
 const optimisedImageDirectory = 'images';
 const staticImageDirectory = 'public';
 const originalFileDirectory = 'originals';
@@ -29,17 +43,14 @@ const referenceImageSize = 1200;
 const articleImageSize = 600;
 const imageSizes = [referenceImageSize, articleImageSize]; // Add to this if we need more options
 const staticImageSizes = [...imageSizes, lazyLoadedPlaceholderWidth];
-
 const spinner = ora();
-
-const imagesPathsToOptimise = [];
-const imagesSuccessfullyOptimised = [];
+const imagesPathsToOptimise: ImageConfig[] = [];
+const imagesSuccessfullyOptimised: string[] = [];
 let totalImagesToOptimise = 0;
 const progressBar = new cliProgress.SingleBar({
-  format:
-    '|' +
-    _colors.magenta('{bar}') +
-    '| {percentage}% || {value}/{total} Image variants || ETA: {eta}s',
+  format: `|${colors.magenta(
+    '{bar}',
+  )}| {percentage}% || {value}/{total} Image variants || ETA: {eta}s`,
   barCompleteChar: '\u2588',
   barIncompleteChar: '\u2591',
   hideCursor: true,
@@ -50,35 +61,43 @@ const progressBar = new cliProgress.SingleBar({
  * Recurrisively iterate through all content directories and add any accepted image files
  * to a list.
  */
-const getImagesToOptimise = async (dir) => {
-  const dirents = await readdir(dir, { withFileTypes: true });
+const getImagesToOptimise = async (directoryPath: string) => {
+  const dirents = await promises.readdir(directoryPath, {
+    withFileTypes: true,
+  });
   const imageDirents = dirents.filter((dirent) =>
     dirent.name.match(imageFilesPostfixes),
   );
   if (imageDirents.length)
     await Promise.all(
       imageDirents.map(async (imageDirent) => {
-        const imageFileLocation = resolve(dir, imageDirent.name);
-        const rawFileType = imageDirent.name.match(imageFileType)[0];
-        const fileType = rawFileType === 'jpg' ? 'jpeg' : rawFileType;
-        if (fileType === 'svg') totalImagesToOptimise += 1;
-        else if (fileType === 'gif') totalImagesToOptimise += 2;
-        else totalImagesToOptimise += 3;
+        const imageFileLocation = resolve(directoryPath, imageDirent.name);
+        const rawFileTypeArray = imageDirent.name.match(imageFileTypeRegex);
+        const rawFileType = Array.isArray(rawFileTypeArray)
+          ? rawFileTypeArray[0]
+          : '';
+        const fileType =
+          rawFileType === 'jpg' ? imageFileType.jpeg : rawFileType;
+        if (fileType === imageFileType.svg) totalImagesToOptimise += 1;
+        else if (fileType === imageFileType.gif) totalImagesToOptimise += 2;
+        else if (fileType) totalImagesToOptimise += 3;
 
-        const imageConfig = {
-          filePath: imageFileLocation,
-          name: imageDirent.name,
-          fileType,
-        };
-        imagesPathsToOptimise.push(imageConfig);
+        if (fileType) {
+          const imageConfig = {
+            filePath: imageFileLocation,
+            name: imageDirent.name,
+            fileType: fileType as ImageFileType,
+          };
+          imagesPathsToOptimise.push(imageConfig);
+        }
       }),
     );
 
   await Promise.all(
-    dirents.map((dirent) => {
-      const res = resolve(dir, dirent.name);
+    dirents.map(async (dirent) => {
+      const res = resolve(directoryPath, dirent.name);
       const isDirectory = dirent.isDirectory();
-      return isDirectory ? getImagesToOptimise(res) : res;
+      if (isDirectory) await getImagesToOptimise(res);
     }),
   );
 };
@@ -86,7 +105,7 @@ const getImagesToOptimise = async (dir) => {
 /**
  * Update progress bar and update list of successfully optimised images.
  */
-const logSuccess = (imagePath) => {
+const logSuccess = (imagePath: string) => {
   // add image, if not already done, to the list of successfully optimised images
   if (!imagesSuccessfullyOptimised.includes(imagePath))
     imagesSuccessfullyOptimised.push(imagePath);
@@ -99,7 +118,7 @@ const logSuccess = (imagePath) => {
  * images directory along with svgs and small size variants for lazy loading.
  * The rest go into the public folder to be delivered statically.
  */
-const getWriteFilePath = (size, imageConfig) => {
+const getWriteFilePath = (imageConfig: ImageConfig, size?: number) => {
   const imagePathDirectories = imageConfig.filePath.split('/');
   const parentDirectoryName = imagePathDirectories[
     imagePathDirectories.length - 2
@@ -121,8 +140,12 @@ const getWriteFilePath = (size, imageConfig) => {
 /**
  * Write optimised image data to a file in the system
  */
-const writeOptimisedImage = (imageConfig, optimisedImage, size) => {
-  const relateiveWritePath = getWriteFilePath(size, imageConfig);
+const writeOptimisedImage = (
+  imageConfig: ImageConfig,
+  optimisedImage: Buffer,
+  size?: number,
+) => {
+  const relateiveWritePath = getWriteFilePath(imageConfig, size);
   try {
     // Done syncronously as async can cause memory heap errors at scale
     writeFileSync(
@@ -142,11 +165,11 @@ const writeOptimisedImage = (imageConfig, optimisedImage, size) => {
 /**
  * Resize and optimised GIF images
  */
-const optimiseGif = async (imageConfig) => {
+const optimiseGif = async (imageConfig: ImageConfig) => {
   await Promise.all(
     imageSizes.map(async (size) => {
       try {
-        const gifDataBuffer = await readFile(imageConfig.filePath);
+        const gifDataBuffer = await promises.readFile(imageConfig.filePath);
 
         // resize image
         const resizedOptimisedGif = await gifResize({
@@ -166,7 +189,6 @@ const optimiseGif = async (imageConfig) => {
               process.cwd(),
               '',
             )}, will use resized image only. ${err.message}`,
-            err,
           );
           writeOptimisedImage(imageConfig, resizedOptimisedGif, size);
         }
@@ -187,9 +209,13 @@ const optimiseGif = async (imageConfig) => {
 /**
  * Write to file system using sharps image pipeline (async)
  */
-const writeFromPipeline = async (imageConfig, clonedPipeline, size) => {
+const writeFromPipeline = async (
+  imageConfig: ImageConfig,
+  clonedPipeline: Sharp,
+  size: number,
+) => {
   try {
-    const relateiveWritePath = getWriteFilePath(size, imageConfig);
+    const relateiveWritePath = getWriteFilePath(imageConfig, size);
     await clonedPipeline.toFile(
       `./${relateiveWritePath}-${imageConfig.name.toLowerCase()}`,
     );
@@ -203,7 +229,11 @@ const writeFromPipeline = async (imageConfig, clonedPipeline, size) => {
 /**
  * Optimised already resized GIF images
  */
-const optimisePng = async (imageConfig, pipeline, size) => {
+const optimisePng = async (
+  imageConfig: ImageConfig,
+  pipeline: Sharp,
+  size: number,
+) => {
   try {
     const unoptimisedImage = await pipeline.toBuffer();
     const optimisedPng = await imagemin.buffer(unoptimisedImage, {
@@ -223,7 +253,6 @@ const optimisePng = async (imageConfig, pipeline, size) => {
         process.cwd(),
         '',
       )}, will use resized image only. ${err.message}`,
-      err,
     );
     writeFromPipeline(imageConfig, pipeline, size);
   }
@@ -232,7 +261,11 @@ const optimisePng = async (imageConfig, pipeline, size) => {
 /**
  * Optimised already resized JPEG images
  */
-const optimiseJpeg = async (imageConfig, pipeline, size) => {
+const optimiseJpeg = async (
+  imageConfig: ImageConfig,
+  pipeline: Sharp,
+  size: number,
+) => {
   try {
     const unoptimisedImage = await pipeline.toBuffer();
 
@@ -251,7 +284,6 @@ const optimiseJpeg = async (imageConfig, pipeline, size) => {
         process.cwd(),
         '',
       )}, will use resized image only. ${err.message}`,
-      err,
     );
     writeFromPipeline(imageConfig, pipeline, size);
   }
@@ -260,10 +292,10 @@ const optimiseJpeg = async (imageConfig, pipeline, size) => {
 /**
  * Optimised SVG images
  */
-const optimiseSvg = async (imageConfig) => {
-  const svgDataBuffer = await readFile(imageConfig.filePath);
-  const optimiseSvg = await imageminSvgo({})(svgDataBuffer);
-  writeOptimisedImage(imageConfig, optimiseSvg, null);
+const optimiseSvg = async (imageConfig: ImageConfig) => {
+  const svgDataBuffer = await promises.readFile(imageConfig.filePath);
+  const optimisedSvg = await imageminSvgo({})(svgDataBuffer);
+  writeOptimisedImage(imageConfig, optimisedSvg);
 };
 
 const checkImageDirectories = () => {
@@ -290,7 +322,8 @@ const optimiseImages = async () => {
       if (imageConfig.fileType === 'gif') {
         await optimiseGif(imageConfig);
         return;
-      } else if (imageConfig.fileType === 'svg') {
+      }
+      if (imageConfig.fileType === 'svg') {
         await optimiseSvg(imageConfig);
         return;
       }
@@ -342,7 +375,9 @@ const optimiseImages = async () => {
               spinner.info(
                 'As image cannot be optimised and/or resized. Use the orginal instead. PLEASE check if original works to avoid issues in the app',
               );
-              const originalFile = await readFile(imageConfig.filePath);
+              const originalFile = await promises.readFile(
+                imageConfig.filePath,
+              );
               await writeOptimisedImage(imageConfig, originalFile, size);
             }
             return;
@@ -355,7 +390,9 @@ const optimiseImages = async () => {
               spinner.info(
                 'As image cannot be optimised and/or resized. Use the orginal instead. PLEASE check if original works to avoid issues in the app',
               );
-              const originalFile = await readFile(imageConfig.filePath);
+              const originalFile = await promises.readFile(
+                imageConfig.filePath,
+              );
               await writeOptimisedImage(imageConfig, originalFile, size);
             }
             return;
@@ -375,8 +412,8 @@ const optimiseImages = async () => {
 const removeOriginals = async () => {
   Promise.all(
     imagesSuccessfullyOptimised.map(async (filePath) => {
-      await unlink(filePath);
-      await writeFile(`${filePath}.optimised`, '');
+      await promises.unlink(filePath);
+      await promises.writeFile(`${filePath}.optimised`, '');
     }),
   );
 };

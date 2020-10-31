@@ -11,12 +11,7 @@ import {
   orderRegex,
   pathRegex,
 } from '../mdx-parse';
-import {
-  MdxRenderedToString,
-  NavigationArticle,
-  Resolve,
-  TableOfContents,
-} from '../types';
+import { MdxRenderedToString, Resolve, TableOfContents } from '../types';
 
 import addRelativeImageLinks from 'lib/mdx/add-relative-links';
 import getTableOfContents from 'lib/mdx/get-table-of-contents';
@@ -56,7 +51,6 @@ const recursiveParseDirectories = async ({
 }: RecursiveParseDirectoriesProps) => {
   const navigationArticleDepth = 3;
 
-  const articlesForNav: Omit<NavigationArticle, 'children'>[] = [];
   let pageContent: MdxRenderedToString | undefined;
   let frontMatterData: Record<string, string> | undefined;
   let currentPageTocData: TableOfContents = {};
@@ -80,32 +74,17 @@ const recursiveParseDirectories = async ({
       orderRegex.lastIndex = 0;
 
       const pathComponents = pathRegex.exec(relativePath);
-      const orderComponents = orderRegex.exec(relativePath);
 
       if (pathComponents) {
         const path = pathComponents[2];
         const localPath = path.replace(orderPartRegex, '/');
         const slug = `/${contentPagedir}${localPath}`;
-        const level = (localPath && localPath.match(/\//g)?.length) || 1;
-        const order = orderComponents ? parseInt(orderComponents[1]) : 0;
-        const parentSlug = slug.replace(/\/[a-zA-Z0-9-]+$/, '');
-        const markdownData = await promises.readFile(markdownPath, 'utf8');
-        const { data, content } = matter(markdownData);
-
-        const docTitle = data.menu_title || data.title;
-
-        // if there is a document title than add it to the side navigation config
-        if (docTitle) {
-          articlesForNav.push({
-            title: docTitle,
-            slug,
-            level,
-            order,
-            parentSlug,
-          });
-        }
 
         if (slug === currentPageSlug) {
+          const markdownData = await promises.readFile(markdownPath, 'utf8');
+
+          const { data, content } = matter(markdownData);
+
           const relativePathToParentDirectory = relativePath.replace(
             /\/docs.(mdx|md)$/,
             '',
@@ -149,7 +128,6 @@ const recursiveParseDirectories = async ({
   await recursiveParse(rootDir, 1);
 
   return {
-    articlesForNav,
     frontMatterData,
     pageContent,
     currentPageTocData,

@@ -2,7 +2,7 @@ const withPlugins = require('next-compose-plugins');
 const withImages = require('next-images');
 const transpileModules = require('next-transpile-modules')(['lodash-es']);
 
-const createSiteMetaData = require('./lib/ts-node/mdx/create-site-meta-data');
+const createSiteMetaData = require('./lib/build-scripts/mdx/create-site-meta-data');
 const redirectsConfig = require('./redirects');
 
 module.exports = withPlugins(

@@ -125,7 +125,6 @@ export interface ConnectorMetaData {
 }
 
 export interface ConnectorListProps {
-  navigationStructure: NavigationArticle[];
   content?: MdxRenderedToString;
   frontmatter?: Record<string, string>;
   tableOfContents: TableOfContents;
@@ -134,7 +133,6 @@ export interface ConnectorListProps {
 }
 
 export interface DocumentPostProps {
-  navigationStructure: NavigationArticle[];
   content?: MdxRenderedToString;
   frontmatter?: Record<string, string>;
   tableOfContents: TableOfContents;

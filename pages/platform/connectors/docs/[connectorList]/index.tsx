@@ -8,12 +8,14 @@ import ArticleWrapper from 'components/ArticleWrapper';
 import Connector from 'components/connector';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
 import SectionNavigation from 'components/SectionNavigation';
+import navigationStructure from 'lib/build-scripts/platform-nav-config.json';
 import mdxComponents from 'lib/mdx/mdx-components';
 import getConnectorList from 'lib/mdx/page-fetching/get-connector-list';
 import getConnectorListConnectors from 'lib/mdx/page-fetching/get-connector-list-connectors';
 import getConnectorListSlugs from 'lib/mdx/page-fetching/get-connector-list-slugs';
 import {
   ConnectorListProps,
+  NavigationArticle,
   StaticConnectorListPathParams,
 } from 'lib/mdx/types';
 import { TableOfContentStickyWrapper } from 'pages/embedded/[...articleSlug]';
@@ -22,7 +24,6 @@ import { TableOfContentWrapper } from 'pages/platform/[...articleSlug]';
 const ConnectorList: FC<ConnectorListProps> = ({
   content,
   frontmatter,
-  navigationStructure,
   tableOfContents,
   connectorListSection,
   connectors,
@@ -39,7 +40,9 @@ const ConnectorList: FC<ConnectorListProps> = ({
 
   return (
     <>
-      <SectionNavigation items={navigationStructure} />
+      <SectionNavigation
+        items={(navigationStructure as { config: NavigationArticle[] }).config}
+      />
       <ArticleWrapper id="article-content">
         <h1>{frontmatter?.title}</h1>
         <br />
@@ -85,7 +88,6 @@ export const getStaticProps = async ({
   params: { connectorList },
 }: StaticConnectorListPathParams) => {
   const {
-    contentNavStructure,
     pageContent,
     frontMatterData,
     currentPageTocData,
@@ -99,7 +101,6 @@ export const getStaticProps = async ({
 
   return {
     props: {
-      navigationStructure: contentNavStructure,
       content: pageContent,
       frontmatter: frontMatterData,
       tableOfContents: currentPageTocData,

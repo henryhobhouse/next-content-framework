@@ -1,12 +1,7 @@
 import recursiveParseDirectories from './recursive-parse-directories';
 
-import { documentFilesBasePath, getNavigationItems } from 'lib/mdx/mdx-parse';
-import {
-  Resolve,
-  NavigationArticle,
-  MdxRenderedToString,
-  TableOfContents,
-} from 'lib/mdx/types';
+import { documentFilesBasePath } from 'lib/mdx/mdx-parse';
+import { Resolve, MdxRenderedToString, TableOfContents } from 'lib/mdx/types';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 /**
@@ -18,7 +13,6 @@ const getConnectorLists = async (
   promises: FsPromises,
   resolve: Resolve,
 ): Promise<{
-  contentNavStructure: NavigationArticle[];
   pageContent?: MdxRenderedToString;
   frontMatterData?: Record<string, string>;
   currentPageTocData: TableOfContents;
@@ -32,7 +26,6 @@ const getConnectorLists = async (
   const connectorListSlug = `/${documentPathRootSection}/connectors/docs/${currentConnectorSection}`;
 
   const {
-    articlesForNav,
     currentPageTocData,
     frontMatterData,
     pageContent,
@@ -45,10 +38,7 @@ const getConnectorLists = async (
     resolve,
   });
 
-  const contentNavStructure = getNavigationItems(articlesForNav);
-
   return {
-    contentNavStructure,
     pageContent,
     frontMatterData,
     currentPageTocData,

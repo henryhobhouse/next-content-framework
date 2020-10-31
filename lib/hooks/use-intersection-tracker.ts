@@ -104,7 +104,7 @@ const useIntersectionTracker = (idsToTrack: string) => {
     });
 
     // need to work out why but intersection observer isn't working if setting targets immedaitely.
-    // temp solution. Possibly lazy image loading effecting the dom?
+    // Response from query seems to be same but if you use before 200ms it doesn't work?
     setTimeout(() => {
       const targets = document.querySelectorAll(idsToTrack);
       targets.forEach((target) => observer.observe(target));

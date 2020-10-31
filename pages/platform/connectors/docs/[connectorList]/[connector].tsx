@@ -7,6 +7,7 @@ import React, { FC, useState } from 'react';
 import ArticleWrapper from 'components/ArticleWrapper';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
 import SectionNavigation from 'components/SectionNavigation';
+import navigationStructure from 'lib/build-scripts/platform-nav-config.json';
 import mdxComponents from 'lib/mdx/mdx-components';
 import getConnector from 'lib/mdx/page-fetching/get-connector';
 import getConnectorSlugs from 'lib/mdx/page-fetching/get-connector-slugs';
@@ -20,7 +21,6 @@ import { TableOfContentStickyWrapper } from 'pages/embedded/[...articleSlug]';
 import { TableOfContentWrapper } from 'pages/platform/[...articleSlug]';
 
 interface ConnectorListProps {
-  navigationStructure: NavigationArticle[];
   content?: MdxRenderedToString;
   frontmatter?: Record<string, string>;
   tableOfContents: TableOfContents;
@@ -29,7 +29,6 @@ interface ConnectorListProps {
 const Connector: FC<ConnectorListProps> = ({
   content,
   frontmatter,
-  navigationStructure,
   tableOfContents,
 }) => {
   // prevents immedaite re-render causing SC errors for miss-match classnames
@@ -44,7 +43,9 @@ const Connector: FC<ConnectorListProps> = ({
 
   return (
     <>
-      <SectionNavigation items={navigationStructure} />
+      <SectionNavigation
+        items={(navigationStructure as { config: NavigationArticle[] }).config}
+      />
 
       <ArticleWrapper id="article-content">
         <h1>{frontmatter?.title}</h1>
@@ -81,14 +82,12 @@ export const getStaticProps = async ({
   params: { connector, connectorList },
 }: StaticConnectorPathParams) => {
   const {
-    contentNavStructure,
     pageContent,
     frontMatterData,
     currentPageTocData,
   } = await getConnector(`${connectorList}/${connector}`, promises, resolve);
   return {
     props: {
-      navigationStructure: contentNavStructure,
       content: pageContent,
       frontmatter: frontMatterData,
       tableOfContents: currentPageTocData,

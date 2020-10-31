@@ -1,32 +1,44 @@
-const { readdir, readFile } = require('fs').promises;
-const { resolve } = require('path');
-
-const dirTree = require('directory-tree');
-
-const migrateUtils = require('./utils/migrate-utils');
+import { promises } from 'fs';
+import dirTree, { DirectoryTree } from 'directory-tree';
+import { resolve } from 'path';
+import { Redirect } from 'next/dist/lib/load-custom-routes';
+import {
+  getLinksWithPaths,
+  updateImageLinks,
+  getOldGifPlayerJsx,
+  updateGifJsx,
+  getInlineStyles,
+  convertInlineToObjectStyles,
+  getRedirectLink,
+  removeRedirectLink,
+  setNextRedirects,
+} from './utils/migrate-utils';
 
 const documentFilesBasePath = `${process.cwd()}/content/`;
 const isPostFileRegex = /docs\.(mdx|md)$/gi;
 const orderPartRegex = /\/([0-9+]+)\./g;
 const pathRegex = /([^/]*)(.*)\/docs\.(mdx|md)$/gi;
 
-const redirectLinks = [];
+const redirectLinks: Redirect[] = [];
 
-const migrateContent = async (dir, contentDirStructure) => {
-  const dirents = await readdir(dir, { withFileTypes: true });
+const migrateContent = async (
+  dir: string,
+  contentDirStructure: DirectoryTree,
+) => {
+  const dirents = await promises.readdir(dir, { withFileTypes: true });
   const postFile = dirents.find(
     (dirent) => !!dirent.name.match(isPostFileRegex),
   );
   if (postFile) {
     const markdownFileLocation = resolve(dir, postFile.name);
     const markdownText = await (
-      await readFile(markdownFileLocation, 'utf8')
+      await promises.readFile(markdownFileLocation, 'utf8')
     ).toString();
 
     // update links with paths to check valid and reaplce slug names with those in the file structure
-    const linksWithPaths = migrateUtils.getLinksWithPaths(markdownText);
+    const linksWithPaths = getLinksWithPaths(markdownText);
     if (linksWithPaths.length)
-      await migrateUtils.updateImageLinks(
+      await updateImageLinks(
         linksWithPaths,
         markdownText,
         contentDirStructure,
@@ -35,18 +47,14 @@ const migrateContent = async (dir, contentDirStructure) => {
 
     // replace gif player references with standard image links that can now automatically
     // deal with gifs and static images alike.
-    const gifPlayers = migrateUtils.getOldGifPlayerJsx(markdownText);
+    const gifPlayers = getOldGifPlayerJsx(markdownText);
     if (gifPlayers.length)
-      await migrateUtils.updateGifJsx(
-        gifPlayers,
-        markdownText,
-        markdownFileLocation,
-      );
+      await updateGifJsx(gifPlayers, markdownText, markdownFileLocation);
 
     // replace all inline string styles with objects to be JSX compatible
-    const inlineStyles = migrateUtils.getInlineStyles(markdownText);
+    const inlineStyles = getInlineStyles(markdownText);
     if (inlineStyles.length)
-      await migrateUtils.convertInlineToObjectStyles(
+      await convertInlineToObjectStyles(
         inlineStyles,
         markdownText,
         markdownFileLocation,
@@ -54,7 +62,12 @@ const migrateContent = async (dir, contentDirStructure) => {
 
     // assume only one redirect per file. Find, copy to next config, and remove original.
     // redirects setup as per (https://nextjs.org/docs/api-reference/next.config.js/redirects)
-    const redirectLink = migrateUtils.getRedirectLink(markdownText);
+    const redirectLink = getRedirectLink(markdownText);
+    const sourceMatch = redirectLink?.match(/(?<=\s)(\S+$)/im);
+    const source = Array.isArray(sourceMatch)
+      ? sourceMatch[0].replace(/\/$/, '')
+      : '';
+
     if (redirectLink) {
       const relativePath = markdownFileLocation.replace(
         `${process.cwd()}/content/`,
@@ -68,11 +81,11 @@ const migrateContent = async (dir, contentDirStructure) => {
         const localPath = path.replace(orderPartRegex, '/');
         const slug = `/${section}${localPath}`;
         redirectLinks.push({
-          source: redirectLink.match(/(?<=\s)(\S+$)/im)[0].replace(/\/$/, ''),
+          source,
           destination: slug,
           permanent: true,
         });
-        await migrateUtils.removeRedirectLink(
+        await removeRedirectLink(
           redirectLink,
           markdownText,
           markdownFileLocation,
@@ -81,10 +94,10 @@ const migrateContent = async (dir, contentDirStructure) => {
     }
   }
   await Promise.all(
-    dirents.map((dirent) => {
-      const res = resolve(dir, dirent.name);
+    dirents.map(async (dirent) => {
+      const directPath = resolve(dir, dirent.name);
       const isDirectory = dirent.isDirectory();
-      return isDirectory ? migrateContent(res, contentDirStructure) : res;
+      if (isDirectory) await migrateContent(directPath, contentDirStructure);
     }),
   );
 };
@@ -94,5 +107,7 @@ const migrateContent = async (dir, contentDirStructure) => {
     extensions: /\.fake$/,
   });
   await migrateContent(documentFilesBasePath, contentDirStructure);
-  await migrateUtils.setNextRedirects(redirectLinks);
+  if (redirectLinks.length) {
+    await setNextRedirects(redirectLinks);
+  }
 })();

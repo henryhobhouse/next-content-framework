@@ -8,10 +8,15 @@ import styled from 'styled-components';
 import ArticleWrapper from 'components/ArticleWrapper';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
 import SectionNavigation from 'components/SectionNavigation';
+import navigationStructure from 'lib/build-scripts/platform-nav-config.json';
 import mdxComponents from 'lib/mdx/mdx-components';
 import getArticle from 'lib/mdx/page-fetching/get-article';
 import getArticleSlugs from 'lib/mdx/page-fetching/get-article-slugs';
-import { DocumentPostProps, StaticArticlePathParams } from 'lib/mdx/types';
+import {
+  DocumentPostProps,
+  NavigationArticle,
+  StaticArticlePathParams,
+} from 'lib/mdx/types';
 
 const contentPagedir = 'platform';
 
@@ -26,7 +31,6 @@ export const TableOfContentStickyWrapper = styled.div`
 
 const PlatformPosts: FC<DocumentPostProps> = ({
   content,
-  navigationStructure,
   frontmatter,
   tableOfContents,
 }) => {
@@ -39,7 +43,9 @@ const PlatformPosts: FC<DocumentPostProps> = ({
 
   return (
     <>
-      <SectionNavigation items={navigationStructure} />
+      <SectionNavigation
+        items={(navigationStructure as { config: NavigationArticle[] }).config}
+      />
 
       <ArticleWrapper id="article-content">
         <h1>{frontmatter?.title}</h1>
@@ -76,16 +82,15 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({
   params: { articleSlug },
 }: StaticArticlePathParams) => {
-  const {
-    contentNavStructure,
-    pageContent,
-    frontMatterData,
-    currentPageTocData,
-  } = await getArticle(articleSlug, contentPagedir, promises, resolve);
+  const { pageContent, frontMatterData, currentPageTocData } = await getArticle(
+    articleSlug,
+    contentPagedir,
+    promises,
+    resolve,
+  );
 
   return {
     props: {
-      navigationStructure: contentNavStructure,
       content: pageContent,
       frontmatter: frontMatterData,
       tableOfContents: currentPageTocData,

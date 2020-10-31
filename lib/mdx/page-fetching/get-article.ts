@@ -1,12 +1,7 @@
 import recursiveParseDirectories from './recursive-parse-directories';
 
-import { documentFilesBasePath, getNavigationItems } from 'lib/mdx/mdx-parse';
-import {
-  Resolve,
-  NavigationArticle,
-  MdxRenderedToString,
-  TableOfContents,
-} from 'lib/mdx/types';
+import { documentFilesBasePath } from 'lib/mdx/mdx-parse';
+import { Resolve, MdxRenderedToString, TableOfContents } from 'lib/mdx/types';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 /**
@@ -19,7 +14,6 @@ const getArticle = async (
   promises: FsPromises,
   resolve: Resolve,
 ): Promise<{
-  contentNavStructure: NavigationArticle[];
   pageContent?: MdxRenderedToString;
   frontMatterData?: Record<string, string>;
   currentPageTocData: TableOfContents;
@@ -32,7 +26,6 @@ const getArticle = async (
   const articleSlug = `/${contentPagedir}/${currentSlugSections.join('/')}`;
 
   const {
-    articlesForNav,
     currentPageTocData,
     frontMatterData,
     pageContent,
@@ -45,10 +38,7 @@ const getArticle = async (
     resolve,
   });
 
-  const contentNavStructure = getNavigationItems(articlesForNav);
-
   return {
-    contentNavStructure,
     pageContent,
     frontMatterData,
     currentPageTocData,

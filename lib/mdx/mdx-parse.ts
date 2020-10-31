@@ -70,6 +70,7 @@ export const replaceLinkInContent = (
   return content.replace(imageRegex, revisedImageName);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const preToCodeBlock = (preProps: any) => {
   if (
     // children is code element

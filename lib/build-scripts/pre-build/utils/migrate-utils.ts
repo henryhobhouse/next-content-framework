@@ -1,6 +1,9 @@
-const { writeFile } = require('fs').promises;
+/* eslint-disable no-cond-assign */
+import { DirectoryTree } from 'directory-tree';
+import { promises } from 'fs';
 
-const _ = require('lodash');
+import _ from 'lodash';
+import { Redirect } from 'next/dist/lib/load-custom-routes';
 
 const orderPartRegex = /^([0-9+]+)\./g;
 const imageUrls = /(!\[.*?\]\()(\S*?)(?=\))/g;
@@ -9,11 +12,12 @@ const isGifPlayerRegex = /(<GifPlayer)(.*)(\/>)/g;
 const isInlineStyleRegex = /(?<=style=)".*"/g;
 const redirectLinkRegex = /redirect_from:\s*-\s*[/\-\w]*/im;
 
-const getLinksWithPaths = (markdownTextBuffer) => {
+export const getLinksWithPaths = (markdownText: string) => {
   const links = [];
   let result;
   const regCheck = new RegExp(imageUrls);
-  while ((result = regCheck.exec(markdownTextBuffer.toString())))
+  // eslint-disable-next-line prettier/prettier
+  while (result = regCheck.exec(markdownText))
     if (result[2]) links.push(result[2]);
 
   const filteredLinks = links
@@ -26,29 +30,29 @@ const getLinksWithPaths = (markdownTextBuffer) => {
     })
     .filter(Boolean);
   if (!filteredLinks.length) return [];
-  return filteredLinks;
+  return filteredLinks as string[];
 };
 
-const getInlineStyles = (markdownTextBuffer) => {
+export const getInlineStyles = (markdownText: string) => {
   const inlineStyles = [];
   let result;
   const regCheck = new RegExp(isInlineStyleRegex);
-  while ((result = regCheck.exec(markdownTextBuffer.toString())))
+  while ((result = regCheck.exec(markdownText)))
     if (result[0]) inlineStyles.push(result[0]);
 
   return inlineStyles;
 };
 
-const getRedirectLink = (markdownTextBuffer) => {
+export const getRedirectLink = (markdownText: string) => {
   const regCheck = new RegExp(redirectLinkRegex);
-  const redirectLink = regCheck.exec(markdownTextBuffer.toString());
-  return redirectLink && redirectLink.length && redirectLink[0];
+  const redirectLink = regCheck.exec(markdownText);
+  return redirectLink?.length ? redirectLink[0] : '';
 };
 
-const convertInlineToObjectStyles = async (
-  inlineStyles,
-  markdownText,
-  markdownFileLocation,
+export const convertInlineToObjectStyles = async (
+  inlineStyles: string[],
+  markdownText: string,
+  markdownFileLocation: string,
 ) => {
   let enhancedContent = markdownText;
   inlineStyles.forEach((inlineStyle) => {
@@ -74,20 +78,23 @@ const convertInlineToObjectStyles = async (
       `{${stringifiedStyles}}`,
     );
   });
-  await writeFile(markdownFileLocation, enhancedContent);
+  await promises.writeFile(markdownFileLocation, enhancedContent);
 };
 
-const getOldGifPlayerJsx = (markdownTextBuffer) => {
+export const getOldGifPlayerJsx = (markdownText: string) => {
   const gifPlayers = [];
   let result;
   const regCheck = new RegExp(isGifPlayerRegex);
-  while ((result = regCheck.exec(markdownTextBuffer.toString())))
+  while ((result = regCheck.exec(markdownText)))
     if (result[0]) gifPlayers.push(result[0]);
 
   return gifPlayers;
 };
 
-const findDirectory = (dirName, dirStructure) => {
+const findDirectory = (
+  dirName: string,
+  dirStructure: DirectoryTree,
+): false | string => {
   if (
     dirStructure.name === dirName ||
     dirStructure.name.replace(orderPartRegex, '') === dirName
@@ -97,7 +104,7 @@ const findDirectory = (dirName, dirStructure) => {
   if (!dirStructure.children || dirStructure.children.length === 0)
     return false;
 
-  let foundChildDirectory;
+  let foundChildDirectory: string | false = false;
   dirStructure.children.some((childDirectory) => {
     foundChildDirectory = findDirectory(dirName, childDirectory);
     return foundChildDirectory;
@@ -105,12 +112,16 @@ const findDirectory = (dirName, dirStructure) => {
   return foundChildDirectory;
 };
 
-const getParsedLink = (link, contentDirStructure, markdownFileLocation) => {
+export const getParsedLink = (
+  link: string,
+  contentDirStructure: DirectoryTree,
+  markdownFileLocation: string,
+) => {
   const updatedLink = link.replace(/^(.\/|\/)/, '');
   const linkDirectories = updatedLink
     .split('/')
     .filter((dir) => dir !== '.' && dir !== '' && dir !== 'content');
-  const parsedLinkDirectories = [];
+  const parsedLinkDirectories: string[] = [];
   const fileName = linkDirectories.pop();
   linkDirectories.forEach((directory) => {
     if (directory === '..') {
@@ -118,29 +129,36 @@ const getParsedLink = (link, contentDirStructure, markdownFileLocation) => {
       return;
     }
     const correctDirectoryName = findDirectory(directory, contentDirStructure);
-    if (!correctDirectoryName)
+    if (!correctDirectoryName) {
       // eslint-disable-next-line no-console
       console.error(`${link} in ${markdownFileLocation} does not exist`);
-
-    parsedLinkDirectories.push(correctDirectoryName);
+    } else {
+      parsedLinkDirectories.push(correctDirectoryName);
+    }
   });
   return [...parsedLinkDirectories, fileName].join('/');
 };
 
-const updateGifJsx = async (gifPlayers, markdownText, markdownFileLocation) => {
+export const updateGifJsx = async (
+  gifPlayers: string[],
+  markdownText: string,
+  markdownFileLocation: string,
+) => {
   let updatedContent = markdownText;
   gifPlayers.forEach((player) => {
     const link = player.match(/(?<=gif=")(.*)(?=")/);
-    updatedContent = updatedContent.replace(player, `![Gif](${link[0]})`);
+    if (Array.isArray(link)) {
+      updatedContent = updatedContent.replace(player, `![Gif](${link[0]})`);
+    }
   });
-  await writeFile(markdownFileLocation, updatedContent);
+  await promises.writeFile(markdownFileLocation, updatedContent);
 };
 
-const updateImageLinks = async (
-  linksWithPaths,
-  markdownText,
-  contentDirStructure,
-  markdownFileLocation,
+export const updateImageLinks = async (
+  linksWithPaths: string[],
+  markdownText: string,
+  contentDirStructure: DirectoryTree,
+  markdownFileLocation: string,
 ) => {
   let updatedContent = markdownText;
   let hasBeenUpdated = false;
@@ -155,36 +173,29 @@ const updateImageLinks = async (
     updatedContent = updatedContent.replace(link, parsedLink);
   });
   if (hasBeenUpdated) {
-    if (!updatedContent)
-      throw new Error('no content has been updated', markdownFileLocation);
-    await writeFile(markdownFileLocation, updatedContent);
+    if (!updatedContent) {
+      throw new Error(`no content has been updated at ${markdownFileLocation}`);
+    }
+    await promises.writeFile(markdownFileLocation, updatedContent);
   }
 };
 
-const removeRedirectLink = async (
-  redirectLink,
-  markdownText,
-  markdownFileLocation,
+export const removeRedirectLink = async (
+  redirectLink: string,
+  markdownText: string,
+  markdownFileLocation: string,
 ) => {
   let updatedContent = markdownText;
-  const redirectLinkRegex = new RegExp(
+  const linkRegex = new RegExp(
     `${redirectLink.replace(/[-/\\^$*+?.()|[\]{}]/gm, '\\$&')}`,
   );
-  updatedContent = updatedContent.replace(redirectLinkRegex, '');
-  await writeFile(markdownFileLocation, updatedContent);
+  updatedContent = updatedContent.replace(linkRegex, '');
+  await promises.writeFile(markdownFileLocation, updatedContent);
 };
 
-const setNextRedirects = async (redirectLinks) => {
-  const linksModule = `module.exports = ${JSON.stringify(redirectLinks)}`;
-  await writeFile(`${process.cwd()}/redirects.js`, linksModule);
+export const setNextRedirects = async (redirectLinks: Redirect[]) => {
+  if (redirectLinks.length) {
+    const linksModule = `module.exports = ${JSON.stringify(redirectLinks)}`;
+    await promises.writeFile(`${process.cwd()}/redirects.js`, linksModule);
+  }
 };
-
-exports.updateImageLinks = updateImageLinks;
-exports.updateGifJsx = updateGifJsx;
-exports.getOldGifPlayerJsx = getOldGifPlayerJsx;
-exports.getLinksWithPaths = getLinksWithPaths;
-exports.getInlineStyles = getInlineStyles;
-exports.convertInlineToObjectStyles = convertInlineToObjectStyles;
-exports.getRedirectLink = getRedirectLink;
-exports.removeRedirectLink = removeRedirectLink;
-exports.setNextRedirects = setNextRedirects;

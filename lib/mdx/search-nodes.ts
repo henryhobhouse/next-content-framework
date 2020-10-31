@@ -46,6 +46,7 @@ const searchNodes = (root: ParentNode, headingDepth: number) => {
     const value = valueToString(child);
     const id = child?.data?.hProperties?.id;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!is(parents, parent as any)) {
       return;
     }
