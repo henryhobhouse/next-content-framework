@@ -1,5 +1,5 @@
 import { SingleBar } from 'cli-progress';
-import { promises } from 'fs';
+import { writeFileSync } from 'fs';
 import { Sharp } from 'sharp';
 
 import { ImageConfig } from './get-images-to-optimise';
@@ -19,7 +19,7 @@ export const writeOptimisedImage = async (
 
   try {
     // Done syncronously as async can cause memory heap errors at scale
-    await promises.writeFile(
+    writeFileSync(
       `${process.cwd()}/${relativeWritePath}-${imageConfig.name.toLowerCase()}`,
       optimisedImage,
     );

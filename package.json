@@ -6,7 +6,7 @@
     "dev": "yarn ts-next dev",
     "local-ts-node": "ts-node -P ./lib/build-scripts/tsconfig.json",
     "ts-next": "yarn local-ts-node ./node_modules/next/dist/bin/next",
-    "debug-dev": "NODE_OPTIONS='--inspect-brk' next dev",
+    "debug-dev": "NODE_OPTIONS='--inspect-brk' yarn ts-next dev",
     "build-static": "yarn ts-next build && next export",
     "build": "yarn ts-next build",
     "start": "yarn ts-next start",
