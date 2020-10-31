@@ -13,7 +13,7 @@ const isInlineStyleRegex = /(?<=style=)".*"/g;
 const redirectLinkRegex = /redirect_from:\s*-\s*[/\-\w]*/im;
 
 export const getLinksWithPaths = (markdownText: string) => {
-  const links = [];
+  const links: string[] = [];
   let result;
   const regCheck = new RegExp(imageUrls);
   // eslint-disable-next-line prettier/prettier
@@ -34,7 +34,7 @@ export const getLinksWithPaths = (markdownText: string) => {
 };
 
 export const getInlineStyles = (markdownText: string) => {
-  const inlineStyles = [];
+  const inlineStyles: string[] = [];
   let result;
   const regCheck = new RegExp(isInlineStyleRegex);
   while ((result = regCheck.exec(markdownText)))
@@ -82,7 +82,7 @@ export const convertInlineToObjectStyles = async (
 };
 
 export const getOldGifPlayerJsx = (markdownText: string) => {
-  const gifPlayers = [];
+  const gifPlayers: string[] = [];
   let result;
   const regCheck = new RegExp(isGifPlayerRegex);
   while ((result = regCheck.exec(markdownText)))
@@ -195,7 +195,11 @@ export const removeRedirectLink = async (
 
 export const setNextRedirects = async (redirectLinks: Redirect[]) => {
   if (redirectLinks.length) {
-    const linksModule = `module.exports = ${JSON.stringify(redirectLinks)}`;
+    const linksModule = `module.exports = ${JSON.stringify(
+      redirectLinks,
+      null,
+      2,
+    )};`;
     await promises.writeFile(`${process.cwd()}/redirects.js`, linksModule);
   }
 };

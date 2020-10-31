@@ -12,7 +12,7 @@ import {
   getRedirectLink,
   removeRedirectLink,
   setNextRedirects,
-} from './utils/migrate-utils';
+} from './migrate-utils';
 
 const documentFilesBasePath = `${process.cwd()}/content/`;
 const isPostFileRegex = /docs\.(mdx|md)$/gi;

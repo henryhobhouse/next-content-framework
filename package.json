@@ -12,7 +12,7 @@
     "start": "yarn ts-next start",
     "lint": "eslint . --format=codeframe",
     "type-check": "tsc --noEmit",
-    "migrate": "yarn local-ts-node ./lib/build-scripts/pre-build/mdx-content-migration.ts",
+    "migrate": "yarn local-ts-node ./lib/build-scripts/pre-build/migration/migrate-content.ts",
     "optimise-images": "NODE_OPTIONS='--max-old-space-size=16384' yarn local-ts-node ./lib/build-scripts/pre-build/optimise-images.ts"
   },
   "dependencies": {

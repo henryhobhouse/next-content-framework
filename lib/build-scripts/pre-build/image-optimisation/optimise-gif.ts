@@ -1,0 +1,71 @@
+import imageminGifsicle from 'imagemin-gifsicle';
+import gifResize from '@gumlet/gif-resize';
+import { promises } from 'fs';
+import { SingleBar } from 'cli-progress';
+
+import { ImageConfig } from './get-images-to-optimise';
+import { writeOptimisedImage } from './write-to-system';
+
+/**
+ * Resize and optimised GIF images
+ */
+const optimiseGif = async (
+  imageConfig: ImageConfig,
+  imageSizes: number[],
+  imagesSuccessfullyOptimised: string[],
+  progressBar: SingleBar,
+) => {
+  await Promise.all(
+    imageSizes.map(async (width) => {
+      try {
+        const gifDataBuffer = await promises.readFile(imageConfig.filePath);
+
+        // resize image
+        const resizedOptimisedGif = await gifResize({
+          width,
+        })(gifDataBuffer);
+
+        try {
+          // optimize image
+          const optimisedGif = await imageminGifsicle({
+            interlaced: true,
+            optimizationLevel: 3,
+          })(resizedOptimisedGif);
+          writeOptimisedImage(
+            imageConfig,
+            optimisedGif,
+            imagesSuccessfullyOptimised,
+            progressBar,
+            width,
+          );
+        } catch (err) {
+          // error optimising the resized gif. Used resized image instead and inform console.
+          // spinner.warn(
+          //   `Error optimising ${imageConfig.filePath.replace(
+          //     process.cwd(),
+          //     '',
+          //   )}, will use resized image only. ${err.message}`,
+          // );
+          writeOptimisedImage(
+            imageConfig,
+            resizedOptimisedGif,
+            imagesSuccessfullyOptimised,
+            progressBar,
+            width,
+          );
+        }
+      } catch (err) {
+        // error with initial resizing of the image. Escalate the error and inform console.
+        // spinner.info(
+        //   `Error resizing gif ${imageConfig.filePath.replace(
+        //     process.cwd(),
+        //     '',
+        //   )}. Please check it. ${err.message}`,
+        // );
+        throw new Error(err);
+      }
+    }),
+  );
+};
+
+export default optimiseGif;

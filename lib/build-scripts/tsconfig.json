@@ -19,7 +19,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noEmit": true,
-    "baseUrl": "."
   },
   "exclude": [
     "node_modules",
