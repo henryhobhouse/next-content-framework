@@ -43,6 +43,7 @@ module.exports = {
         'arrow-parens': 0,
         'no-extra-parens': 0,
         'space-before-function-paren': 0,
+        'import/no-extraneous-dependencies': 0,
         semi: 0,
       },
     },
@@ -52,6 +53,7 @@ module.exports = {
       rules: {
         'import/no-commonjs': 0,
         '@typescript-eslint/no-var-requires': 0,
+        'import/no-extraneous-dependencies': 0,
       },
     },
   ],
