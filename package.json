@@ -3,15 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "yarn ts-next dev",
+    "local-ts-node": "ts-node -P ./lib/ts-node/tsconfig.json",
+    "ts-next": "yarn local-ts-node ./node_modules/next/dist/bin/next",
     "debug-dev": "NODE_OPTIONS='--inspect-brk' next dev",
-    "build-static": "next build && next export",
-    "build": "next build",
+    "build-static": "yarn ts-next build && next export",
+    "build": "yarn ts-next build",
     "start": "next start",
     "lint": "eslint . --format=codeframe",
     "type-check": "tsc --noEmit",
-    "migrate": "node ./scripts/mdx-content-migration.js",
-    "optimise-images": "NODE_OPTIONS='--max-old-space-size=16384' node ./scripts/optimise-images.js"
+    "migrate": "yarn local-ts-node ./lib/ts-node/scripts/mdx-content-migration.js",
+    "optimise-images": "NODE_OPTIONS='--max-old-space-size=16384' yarn local-ts-node ./lib/ts-node/scripts/optimise-images.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
@@ -54,13 +56,13 @@
     "@types/styled-components": "^5.1.3",
     "@typescript-eslint/eslint-plugin": "^4.1.0",
     "@typescript-eslint/parser": "^4.1.0",
+    "@x-and-ai/eslint-config-ts-node": "^0.1.6",
     "babel-plugin-styled-components": "^1.11.1",
     "cli-progress": "^3.8.2",
     "colors": "^1.4.0",
     "directory-tree": "^2.2.4",
     "eslint": "^7.8.1",
     "eslint-config-esnext": "^4.1.0",
-    "eslint-config-node": "^4.1.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-import-resolver-typescript": "^2.3.0",
     "eslint-plugin-babel": "^5.3.1",
@@ -78,6 +80,7 @@
     "ora": "^5.1.0",
     "prettier": "^2.1.1",
     "sharp": "^0.26.1",
+    "ts-node": "^9.0.0",
     "typescript": "^4.0.2",
     "url-loader": "^4.1.1"
   }

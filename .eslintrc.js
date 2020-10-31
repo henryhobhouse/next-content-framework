@@ -31,7 +31,7 @@ module.exports = {
   overrides: [
     {
       files: ['*.js'],
-      extends: ['node', 'node/style-guide'],
+      extends: ['@x-and-ai/eslint-config-ts-node'],
       rules: {
         'array-bracket-spacing': 0,
         indent: ['error', 2],
@@ -44,6 +44,14 @@ module.exports = {
         'no-extra-parens': 0,
         'space-before-function-paren': 0,
         semi: 0,
+      },
+    },
+    {
+      files: ['./lib/ts-node/**/*.ts'],
+      extends: ['@x-and-ai/eslint-config-ts-node'],
+      rules: {
+        'import/no-commonjs': 0,
+        '@typescript-eslint/no-var-requires': 0,
       },
     },
   ],

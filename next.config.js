@@ -2,6 +2,7 @@ const withPlugins = require('next-compose-plugins');
 const withImages = require('next-images');
 const transpileModules = require('next-transpile-modules')(['lodash-es']);
 
+const createSiteMetaData = require('./lib/ts-node/mdx/create-site-meta-data');
 const redirectsConfig = require('./redirects');
 
 module.exports = withPlugins(
@@ -29,6 +30,9 @@ module.exports = withPlugins(
     basePath: '/documentation',
     reactStrictMode: true,
     async redirects() {
+      // TODO refactor to _app getStaticProps when available
+      // issue https://github.com/vercel/next.js/discussions/10949#discussioncomment-110524
+      await createSiteMetaData();
       return redirectsConfig;
     },
   },
