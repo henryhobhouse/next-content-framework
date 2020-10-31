@@ -118,7 +118,7 @@ const logSuccess = (imagePath: string) => {
  * images directory along with svgs and small size variants for lazy loading.
  * The rest go into the public folder to be delivered statically.
  */
-const getWriteFilePath = (imageConfig: ImageConfig, size?: number) => {
+const getWriteFilePath = (imageConfig: ImageConfig, width?: number) => {
   const imagePathDirectories = imageConfig.filePath.split('/');
   const parentDirectoryName = imagePathDirectories[
     imagePathDirectories.length - 2
@@ -126,13 +126,13 @@ const getWriteFilePath = (imageConfig: ImageConfig, size?: number) => {
     .replace(orderPartRegex, '')
     .toLowerCase();
   let writePath;
-  if (size === referenceImageSize)
+  if (width === referenceImageSize)
     writePath = `${optimisedImageDirectory}/${originalFileDirectory}/${parentDirectoryName}`;
-  else if (size === lazyLoadedPlaceholderWidth)
-    writePath = `${optimisedImageDirectory}/${size}/${parentDirectoryName}`;
+  else if (width === lazyLoadedPlaceholderWidth)
+    writePath = `${optimisedImageDirectory}/${width}/${parentDirectoryName}`;
   else if (imageConfig.fileType === 'svg')
     writePath = `${optimisedImageDirectory}/${svgFileDirectory}/${parentDirectoryName}`;
-  else writePath = `${staticImageDirectory}/${size}/${parentDirectoryName}`;
+  else writePath = `${staticImageDirectory}/${width}/${parentDirectoryName}`;
 
   return writePath;
 };
@@ -143,20 +143,20 @@ const getWriteFilePath = (imageConfig: ImageConfig, size?: number) => {
 const writeOptimisedImage = (
   imageConfig: ImageConfig,
   optimisedImage: Buffer,
-  size?: number,
+  width?: number,
 ) => {
-  const relateiveWritePath = getWriteFilePath(imageConfig, size);
+  const relativeWritePath = getWriteFilePath(imageConfig, width);
   try {
     // Done syncronously as async can cause memory heap errors at scale
     writeFileSync(
-      `${process.cwd()}/${relateiveWritePath}-${imageConfig.name.toLowerCase()}`,
+      `${process.cwd()}/${relativeWritePath}-${imageConfig.name.toLowerCase()}`,
       optimisedImage,
     );
 
     logSuccess(imageConfig.filePath);
   } catch (err) {
     spinner.warn(
-      `Fail at write to system with ${imageConfig.name} at ${size} with ${err.message}`,
+      `Fail at write to system with ${imageConfig.name} at ${width} with ${err.message}`,
     );
     throw new Error(err.message);
   }
@@ -167,21 +167,22 @@ const writeOptimisedImage = (
  */
 const optimiseGif = async (imageConfig: ImageConfig) => {
   await Promise.all(
-    imageSizes.map(async (size) => {
+    imageSizes.map(async (width) => {
       try {
         const gifDataBuffer = await promises.readFile(imageConfig.filePath);
 
         // resize image
         const resizedOptimisedGif = await gifResize({
-          width: size,
+          width,
         })(gifDataBuffer);
+
         try {
           // optimize image
           const optimisedGif = await imageminGifsicle({
             interlaced: true,
             optimizationLevel: 3,
           })(resizedOptimisedGif);
-          writeOptimisedImage(imageConfig, optimisedGif, size);
+          writeOptimisedImage(imageConfig, optimisedGif, width);
         } catch (err) {
           // error optimising the resized gif. Used resized image instead and inform console.
           spinner.warn(
@@ -190,7 +191,7 @@ const optimiseGif = async (imageConfig: ImageConfig) => {
               '',
             )}, will use resized image only. ${err.message}`,
           );
-          writeOptimisedImage(imageConfig, resizedOptimisedGif, size);
+          writeOptimisedImage(imageConfig, resizedOptimisedGif, width);
         }
       } catch (err) {
         // error with initial resizing of the image. Escalate the error and inform console.
@@ -212,12 +213,12 @@ const optimiseGif = async (imageConfig: ImageConfig) => {
 const writeFromPipeline = async (
   imageConfig: ImageConfig,
   clonedPipeline: Sharp,
-  size: number,
+  width: number,
 ) => {
   try {
-    const relateiveWritePath = getWriteFilePath(imageConfig, size);
+    const relativeWritePath = getWriteFilePath(imageConfig, width);
     await clonedPipeline.toFile(
-      `./${relateiveWritePath}-${imageConfig.name.toLowerCase()}`,
+      `./${relativeWritePath}-${imageConfig.name.toLowerCase()}`,
     );
     logSuccess(imageConfig.filePath);
   } catch (err) {
@@ -232,10 +233,11 @@ const writeFromPipeline = async (
 const optimisePng = async (
   imageConfig: ImageConfig,
   pipeline: Sharp,
-  size: number,
+  width: number,
 ) => {
   try {
     const unoptimisedImage = await pipeline.toBuffer();
+
     const optimisedPng = await imagemin.buffer(unoptimisedImage, {
       plugins: [
         imageminPngquant({
@@ -246,7 +248,7 @@ const optimisePng = async (
       ],
     });
 
-    writeOptimisedImage(imageConfig, optimisedPng, size);
+    writeOptimisedImage(imageConfig, optimisedPng, width);
   } catch (err) {
     spinner.warn(
       `Error optimising ${imageConfig.filePath.replace(
@@ -254,7 +256,7 @@ const optimisePng = async (
         '',
       )}, will use resized image only. ${err.message}`,
     );
-    writeFromPipeline(imageConfig, pipeline, size);
+    writeFromPipeline(imageConfig, pipeline, width);
   }
 };
 
@@ -264,7 +266,7 @@ const optimisePng = async (
 const optimiseJpeg = async (
   imageConfig: ImageConfig,
   pipeline: Sharp,
-  size: number,
+  width: number,
 ) => {
   try {
     const unoptimisedImage = await pipeline.toBuffer();
@@ -277,7 +279,7 @@ const optimiseJpeg = async (
       ],
     });
 
-    writeOptimisedImage(imageConfig, optimisedJpeg, size);
+    writeOptimisedImage(imageConfig, optimisedJpeg, width);
   } catch (err) {
     spinner.warn(
       `Error optimising ${imageConfig.filePath.replace(
@@ -285,7 +287,7 @@ const optimiseJpeg = async (
         '',
       )}, will use resized image only. ${err.message}`,
     );
-    writeFromPipeline(imageConfig, pipeline, size);
+    writeFromPipeline(imageConfig, pipeline, width);
   }
 };
 
@@ -319,27 +321,27 @@ const optimiseImages = async () => {
   await Promise.all(
     imagesPathsToOptimise.map(async (imageConfig) => {
       const pipeline = sharp(imageConfig.filePath);
-      if (imageConfig.fileType === 'gif') {
+      if (imageConfig.fileType === imageFileType.gif) {
         await optimiseGif(imageConfig);
         return;
       }
-      if (imageConfig.fileType === 'svg') {
+      if (imageConfig.fileType === imageFileType.svg) {
         await optimiseSvg(imageConfig);
         return;
       }
       // handle all static images
       await Promise.all(
-        staticImageSizes.map(async (size) => {
+        staticImageSizes.map(async (width) => {
           const clonedPipeline = pipeline.clone();
           clonedPipeline
-            .resize({ width: size })
+            .resize({ width })
             .png({
               compressionLevel: 9,
-              force: imageConfig.fileType === `png`,
+              force: imageConfig.fileType === imageFileType.png,
             })
             .webp({
               quality: 80,
-              force: imageConfig.fileType === `webp`,
+              force: imageConfig.fileType === imageFileType.webp,
             });
 
           // if (size === lazyLoadedPlaceholderWidth) {
@@ -368,9 +370,9 @@ const optimiseImages = async () => {
           //   );
           // }
 
-          if (imageConfig.fileType === `png`) {
+          if (imageConfig.fileType === imageFileType.png) {
             try {
-              await optimisePng(imageConfig, clonedPipeline, size);
+              await optimisePng(imageConfig, clonedPipeline, width);
             } catch {
               spinner.info(
                 'As image cannot be optimised and/or resized. Use the orginal instead. PLEASE check if original works to avoid issues in the app',
@@ -378,14 +380,14 @@ const optimiseImages = async () => {
               const originalFile = await promises.readFile(
                 imageConfig.filePath,
               );
-              await writeOptimisedImage(imageConfig, originalFile, size);
+              await writeOptimisedImage(imageConfig, originalFile, width);
             }
             return;
           }
 
-          if (imageConfig.fileType === `jpeg`) {
+          if (imageConfig.fileType === imageFileType.jpeg) {
             try {
-              await optimiseJpeg(imageConfig, clonedPipeline, size);
+              await optimiseJpeg(imageConfig, clonedPipeline, width);
             } catch {
               spinner.info(
                 'As image cannot be optimised and/or resized. Use the orginal instead. PLEASE check if original works to avoid issues in the app',
@@ -393,12 +395,12 @@ const optimiseImages = async () => {
               const originalFile = await promises.readFile(
                 imageConfig.filePath,
               );
-              await writeOptimisedImage(imageConfig, originalFile, size);
+              await writeOptimisedImage(imageConfig, originalFile, width);
             }
             return;
           }
 
-          await writeFromPipeline(imageConfig, clonedPipeline, size);
+          await writeFromPipeline(imageConfig, clonedPipeline, width);
         }),
       );
     }),

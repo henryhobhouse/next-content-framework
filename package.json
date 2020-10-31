@@ -12,8 +12,8 @@
     "start": "yarn ts-next start",
     "lint": "eslint . --format=codeframe",
     "type-check": "tsc --noEmit",
-    "migrate": "yarn local-ts-node ./lib/build-scripts/pre-build/mdx-content-migration.js",
-    "optimise-images": "NODE_OPTIONS='--max-old-space-size=16384' yarn local-ts-node ./lib/build-scripts/pre-build/optimise-images.js"
+    "migrate": "yarn local-ts-node ./lib/build-scripts/pre-build/mdx-content-migration.ts",
+    "optimise-images": "NODE_OPTIONS='--max-old-space-size=16384' yarn local-ts-node ./lib/build-scripts/pre-build/optimise-images.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
@@ -87,7 +87,7 @@
     "mkdirp": "^1.0.4",
     "ora": "^5.1.0",
     "prettier": "^2.1.1",
-    "sharp": "^0.26.1",
+    "sharp": "^0.26.2",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.2",
     "url-loader": "^4.1.1"
