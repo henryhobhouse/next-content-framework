@@ -1,6 +1,9 @@
 import { resolve } from 'path';
 import { promises } from 'fs';
 import matter from 'gray-matter';
+import mdx from '@mdx-js/mdx';
+import { prune } from 'underscore.string';
+import visit from 'unist-util-visit';
 
 import {
   connectorsListRegex,
@@ -11,23 +14,27 @@ import {
   orderRegex,
   pathRegex,
 } from '../../mdx/mdx-parse';
+import createNodeId from '../create-node-id';
 
 const navigationArticleDepth = 5;
 
 export interface NodeData {
+  id: string;
   title: string;
   description?: string;
-  tags?: string[];
+  tags?: string;
   content: string;
   section: string;
   slug: string;
+  excerpt: string;
   level: number;
   order: number;
   parentSlug: string;
   type: string;
-  imageIcon: string;
-  streamLineIcon: string;
+  imageIcon?: string;
+  streamlineIcon?: string;
 }
+
 type ParsedMdxCallback = (args: NodeData[], contentRoot: string) => void;
 
 const recursiveParseMdx = async (
@@ -94,21 +101,38 @@ const recursiveParseMdx = async (
           docType = 'connector-list';
         }
 
+        const compiler = mdx.createMdxAstCompiler({ remarkPlugins: [] });
+        const mdast = compiler.parse(content);
+
+        const excerptNodes: string[] = [];
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        visit(mdast, (node) => {
+          if (node.type === `text` || node.type === `inlineCode`) {
+            excerptNodes.push(node.value as string);
+          }
+        });
+
+        const excerpt = prune(excerptNodes.join(` `), 140, `…`);
+
         const title = data.menu_title || data.title;
+        const id = createNodeId(path);
 
         allNodesData.push({
+          id,
           title,
           description: data.description,
           tags: data.tags,
           content,
           section,
+          excerpt,
           slug,
           type: docType,
           level,
           order,
           parentSlug,
           imageIcon: data.imageIcon,
-          streamLineIcon: data.streamLineIcon,
+          streamlineIcon: data.streamlineIcon,
         });
       }
     }

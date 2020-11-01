@@ -4,6 +4,7 @@ declare module 'rehype-slug';
 declare module '@mdx-js/mdx';
 declare module 'unist-util-is';
 declare module 'unist-util-visit';
+declare module 'uuid/v5';
 
 declare module 'next-mdx-remote/render-to-string' {
   function renderToString(
