@@ -3,23 +3,39 @@ import { promises } from 'fs';
 import matter from 'gray-matter';
 
 import {
+  connectorsListRegex,
+  connectorsRegex,
   documentFilesBasePath,
   isPostFileRegex,
   orderPartRegex,
   orderRegex,
   pathRegex,
 } from '../../mdx/mdx-parse';
-import { NavigationArticle } from '../../mdx/types';
 
-const navigationArticleDepth = 3;
+const navigationArticleDepth = 5;
+
+export interface NodeData {
+  title: string;
+  description?: string;
+  tags?: string[];
+  content: string;
+  section: string;
+  slug: string;
+  level: number;
+  order: number;
+  parentSlug: string;
+  type: string;
+  imageIcon: string;
+  streamLineIcon: string;
+}
+type ParsedMdxCallback = (args: NodeData[], contentRoot: string) => void;
 
 const recursiveParseMdx = async (
   rootDir: string,
   contentRoot: string,
-): Promise<
-  Pick<NavigationArticle, 'level' | 'order' | 'slug' | 'title' | 'parentSlug'>[]
-> => {
-  const articlesForNav: Omit<NavigationArticle, 'children'>[] = [];
+  callback: ParsedMdxCallback,
+): Promise<void> => {
+  const allNodesData: NodeData[] = [];
 
   const parseMdx = async (directory: string, currentDepth: number) => {
     const dirents = await await promises.readdir(directory, {
@@ -38,32 +54,62 @@ const recursiveParseMdx = async (
       // as exec is global we need to reset the index each iteration of the loop
       pathRegex.lastIndex = 0;
       orderRegex.lastIndex = 0;
+      connectorsRegex.lastIndex = 0;
+      connectorsListRegex.lastIndex = 0;
 
       const pathComponents = pathRegex.exec(relativePath);
       const orderComponents = orderRegex.exec(relativePath);
 
       if (pathComponents) {
+        const section = pathComponents[1];
         const path = pathComponents[2];
         const localPath = path.replace(orderPartRegex, '/');
         const slug = `/${contentRoot}${localPath}`;
         const level = (localPath && localPath.match(/\//g)?.length) || 1;
         const order = orderComponents ? parseInt(orderComponents[1], 10) : 0;
         const parentSlug = slug.replace(/\/[a-zA-Z0-9-]+$/, '');
+        const connectorsComponents = connectorsRegex.exec(slug);
+        const isConnector = !!connectorsComponents;
+        const connectorListComponents = connectorsListRegex.exec(slug);
+        const isConnectorList = !!connectorListComponents;
+
         const markdownData = await promises.readFile(markdownPath, 'utf8');
-        const { data } = matter(markdownData);
+        const { data, content } = matter(markdownData);
 
-        const docTitle = data.menu_title || data.title;
+        if (isConnector && !data.connector)
+          // eslint-disable-next-line no-console
+          console.error(
+            `WARNING: connector at ${path} does not have a connector name`,
+          );
 
-        // if there is a document title than add it to the side navigation config
-        if (docTitle) {
-          articlesForNav.push({
-            title: docTitle,
-            slug,
-            level,
-            order,
-            parentSlug,
-          });
+        let docType = 'article';
+        if (!isConnectorList && (isConnector || data.connector)) {
+          docType = 'connector';
+        } else if (isConnectorList) {
+          docType = 'connector-list';
         }
+
+        // Check the path for the all connectors list
+        if (slug === '/platform/connectors/docs/') {
+          docType = 'connector-list';
+        }
+
+        const title = data.menu_title || data.title;
+
+        allNodesData.push({
+          title,
+          description: data.description,
+          tags: data.tags,
+          content,
+          section,
+          slug,
+          type: docType,
+          level,
+          order,
+          parentSlug,
+          imageIcon: data.imageIcon,
+          streamLineIcon: data.streamLineIcon,
+        });
       }
     }
     await Promise.all(
@@ -79,7 +125,7 @@ const recursiveParseMdx = async (
 
   await parseMdx(rootDir, 0);
 
-  return articlesForNav;
+  await callback(allNodesData, contentRoot);
 };
 
 export default recursiveParseMdx;
