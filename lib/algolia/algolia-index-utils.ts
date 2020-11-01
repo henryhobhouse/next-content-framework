@@ -2,9 +2,9 @@ import { Settings, SearchOptions } from '@algolia/client-search';
 import { SearchIndex, SearchClient } from 'algoliasearch';
 import { Ora } from 'ora';
 
-import { SearchHit, IndexQuery } from './types';
+import { NodeData } from '../build-scripts/mdx/recursive-parse-mdx';
 
-import { NodeData } from 'lib/build-scripts/mdx/recursive-parse-mdx';
+import { SearchHit, IndexQuery } from './types';
 
 /**
  * Does an Algolia index exist already

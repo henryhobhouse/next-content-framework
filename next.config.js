@@ -29,11 +29,17 @@ module.exports = withPlugins(
   {
     basePath: '/documentation',
     reactStrictMode: true,
-    async redirects() {
-      // TODO refactor to _app getStaticProps when available
-      // issue https://github.com/vercel/next.js/discussions/10949#discussioncomment-110524
-      await createSiteMetaData();
+    redirects() {
       return redirectsConfig;
+    },
+    webpack: async (config, { isServer }) => {
+      if (isServer)
+        // TODO refactor to _app getStaticProps when available
+        // issue https://github.com/vercel/next.js/discussions/10949#discussioncomment-110524
+        await createSiteMetaData();
+
+      // Important: return the modified config
+      return config;
     },
   },
 );
