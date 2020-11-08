@@ -40,12 +40,14 @@ const optimiseGif = async (
           );
         } catch (err) {
           // error optimising the resized gif. Used resized image instead and inform console.
-          logger.error(
-            `Error optimising GIF ${imageConfig.filePath.replace(
+          logger.error({
+            level: 'error',
+            noConsole: true,
+            message: `Cannot optimise GIF ${imageConfig.filePath.replace(
               process.cwd(),
               '',
             )}, will use resized image only. ${err.message}`,
-          );
+          });
           writeOptimisedImage(
             imageConfig,
             resizedOptimisedGif,
@@ -56,12 +58,14 @@ const optimiseGif = async (
         }
       } catch (err) {
         // error with initial resizing of the image. Escalate the error and inform console.
-        logger.error(
-          `Error resizing gif ${imageConfig.filePath.replace(
+        logger.error({
+          level: 'error',
+          noConsole: true,
+          message: `Error resizing gif ${imageConfig.filePath.replace(
             process.cwd(),
             '',
           )}. Please check it. ${err.message}`,
-        );
+        });
         throw new Error(err);
       }
     }),

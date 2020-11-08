@@ -91,9 +91,11 @@ const resizeAndOptimiseImages = async (
                 progressBar,
               );
             } catch {
-              logger.error(
-                `As ${imageConfig.fileType} ${imageConfig.filePath} cannot be optimised and/or resized. We will use the orginal instead. PLEASE check if original works to avoid issues in the app`,
-              );
+              logger.error({
+                level: 'error',
+                noConsole: true,
+                message: `As ${imageConfig.fileType} ${imageConfig.filePath} cannot be optimised and/or resized. We will use the orginal instead. PLEASE check if original works to avoid issues in the app`,
+              });
               const originalFile = await promises.readFile(
                 imageConfig.filePath,
               );
@@ -118,9 +120,11 @@ const resizeAndOptimiseImages = async (
                 progressBar,
               );
             } catch {
-              logger.error(
-                `As ${imageConfig.fileType} ${imageConfig.filePath} cannot be optimised and/or resized. We will use the orginal instead. PLEASE check if original works to avoid issues in the app`,
-              );
+              logger.error({
+                level: 'error',
+                noConsole: true,
+                message: `As ${imageConfig.fileType} ${imageConfig.filePath} cannot be optimised and/or resized. We will use the orginal instead. PLEASE check if original works to avoid issues in the app`,
+              });
               const originalFile = await promises.readFile(
                 imageConfig.filePath,
               );

@@ -34,12 +34,14 @@ const optimiseJpeg = async (
       width,
     );
   } catch (err) {
-    logger.error(
-      `Error optimising JPEG ${imageConfig.filePath.replace(
+    logger.error({
+      level: 'error',
+      noConsole: true,
+      message: `Cannot optimise JPEG ${imageConfig.filePath.replace(
         process.cwd(),
         '',
       )}, will use resized image only. ${err.message}`,
-    );
+    });
     writeFromPipeline(
       imageConfig,
       pipeline,

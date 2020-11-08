@@ -1,8 +1,9 @@
 import cliProgress from 'cli-progress';
 import colors from 'colors';
-import winston, { format } from 'winston';
+import { createReadStream } from 'fs';
 
 import getImagesToOptimise from './image-optimisation/get-images-to-optimise';
+import initialiseLogger from '../logger';
 import {
   articleImageSize,
   referenceImageSize,
@@ -12,37 +13,7 @@ import { removeOriginals } from './image-optimisation/utils';
 import resizeAndOptimiseImages from './image-optimisation/resize-and-optimise-images';
 
 const documentFilesBasePath = `${process.cwd()}/content/`;
-
-const LEVEL = Symbol.for('level');
-const cliFormat = format.cli({ colors: { info: 'blue', notice: 'green' } });
-
-cliFormat.transform(
-  {
-    [LEVEL]: 'info',
-    level: 'info',
-    message: 'my message',
-  },
-  { all: true },
-);
-
-global.logger = winston.createLogger({
-  level: 'info',
-  format: cliFormat,
-  defaultMeta: { service: 'user-service' },
-  transports: [
-    new winston.transports.Console({
-      consoleWarnLevels: ['info', 'notice', 'warning', 'crit'],
-    }),
-    //
-    // - Write all logs with level `error` to `image-optimisation-error.log`
-    //
-    new winston.transports.File({
-      filename: 'image-optimisation-error.log',
-      level: 'error',
-      format: winston.format.json(),
-    }),
-  ],
-});
+const errorLogFileName = 'image-optimisation-error.log';
 
 const imageSizes = [referenceImageSize, articleImageSize]; // Add to this if we need more options
 const staticImageSizes = [...imageSizes, lazyLoadImageSize];
@@ -58,8 +29,40 @@ export const progressBar = new cliProgress.SingleBar({
   etaBuffer: 300,
 });
 
+/**
+ * Assumes each line in error log is single error. Counts lines and outputs
+ * to console number of errors and prompts user to check error log file.
+ */
+const checkForErrors = () => {
+  let fileLinecount = 0;
+
+  // create read stream and count every tenth chunk to determine number of lines, and
+  // by extension errors
+  createReadStream(`${process.cwd()}/${errorLogFileName}`)
+    .on('data', (chunk) => {
+      for (let i = 0; i < chunk.length; i += 1)
+        if (chunk[i] === 10) fileLinecount += 1;
+    })
+    .on('end', () => {
+      if (fileLinecount > 0) {
+        logger.error({
+          level: 'error',
+          noFileSave: true,
+          message: `There were ${
+            fileLinecount + 1
+          } errors optimising images. Please check ${errorLogFileName} as some images are likely not to show correctly in the app`,
+        });
+      }
+    });
+};
+
 (async () => {
   try {
+    await initialiseLogger({
+      errorLogFileName,
+      metaData: { script: 'image-optimisation' },
+    });
+
     logger.info('Optimising newly added images...');
 
     const {
@@ -68,11 +71,11 @@ export const progressBar = new cliProgress.SingleBar({
     } = await getImagesToOptimise(documentFilesBasePath);
 
     logger.info(`${imagesPathsToOptimise.length} total images to optimise`);
+
     progressBar.start(totalImagesToOptimise, 0, {
       speed: 'N/A',
     });
 
-    // TODO: refactor error handling to output to log file rathern than console. (remove spinner errors as well)
     // TOOD: feat push images sizes to config object to be used at build time to add size meta data to html
     // TODO: tweak image quality/compression levels to bring inline with Gatsby Images (currently over compressed slighlty)
     // TODO: add functionality to check if placeholder has being removed (from reference files) and delete all assocaited
@@ -89,11 +92,16 @@ export const progressBar = new cliProgress.SingleBar({
     await removeOriginals(imagesSuccessfullyOptimised);
 
     progressBar.stop();
-    logger.notice(
-      `${imagesSuccessfullyOptimised.length} images successively optimised.`,
-    );
+    if (imagesSuccessfullyOptimised.length > 0) {
+      logger.log(
+        'success',
+        `${imagesSuccessfullyOptimised.length} images successively optimised.`,
+      );
+    }
+
+    checkForErrors();
   } catch (error) {
     progressBar.stop();
-    logger.crit(`ERROR: Image optimisation failed. ${error.message}`);
+    logger.error(`ERROR: Image optimisation failed. ${error.message}`);
   }
 })();

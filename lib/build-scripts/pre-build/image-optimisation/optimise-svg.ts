@@ -22,12 +22,14 @@ const optimiseSvg = async (
       progressBar,
     );
   } catch (err) {
-    logger.error(
-      `Error optimising SVG ${imageConfig.filePath.replace(
+    logger.error({
+      level: 'error',
+      noConsole: true,
+      message: `Cannot optimise SVG ${imageConfig.filePath.replace(
         process.cwd(),
         '',
       )}, will use resized image only. ${err.message}`,
-    );
+    });
   }
 };
 

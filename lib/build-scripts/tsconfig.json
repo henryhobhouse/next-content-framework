@@ -19,9 +19,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noEmit": true,
+    "typeRoots": ["./types"]
   },
   "exclude": [
-    "node_modules",
+    "./",
   ],
   "include": [
     "**/*.ts",
