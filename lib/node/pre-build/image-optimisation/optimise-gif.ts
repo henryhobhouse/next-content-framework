@@ -39,7 +39,7 @@ const optimiseGif = async (
             width,
           );
         } catch (err) {
-          // error optimising the resized gif. Used resized image instead and inform console.
+          // error optimising the resized gif. Used resized image instead and inform logger.
           logger.error({
             level: 'error',
             noConsole: true,
@@ -57,7 +57,7 @@ const optimiseGif = async (
           );
         }
       } catch (err) {
-        // error with initial resizing of the image. Escalate the error and inform console.
+        // error with initial resizing of the image. Escalate the error and inform logger.
         logger.error({
           level: 'error',
           noConsole: true,

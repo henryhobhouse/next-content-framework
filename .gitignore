@@ -35,4 +35,6 @@ yarn-error.log*
 .env
 .vscode
 
-lib/build-scripts/*-nav-config.json
+lib/node/*-nav-config.json
+
+**/*.log

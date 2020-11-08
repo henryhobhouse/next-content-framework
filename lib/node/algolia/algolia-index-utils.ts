@@ -1,8 +1,7 @@
 import { Settings, SearchOptions } from '@algolia/client-search';
 import { SearchIndex, SearchClient } from 'algoliasearch';
-import { Ora } from 'ora';
 
-import { NodeData } from '../build-scripts/mdx/recursive-parse-mdx';
+import { NodeData } from '../mdx/recursive-parse-mdx';
 
 import { SearchHit, IndexQuery } from './types';
 
@@ -71,16 +70,14 @@ export const moveIndex = async (
 interface GetSettingsToApplyProps {
   settings: Settings;
   index: SearchIndex;
-  spinner: Ora;
 }
 
 export const getSettingsToApply = async ({
   settings,
   index,
-  spinner,
 }: GetSettingsToApplyProps) => {
   const existingSettings = await index.getSettings().catch((e) => {
-    spinner.warn(`${e.toString()} ${index.indexName}`);
+    logger.warn(`${e.toString()} ${index.indexName}`);
   });
 
   const requestedSettings = {

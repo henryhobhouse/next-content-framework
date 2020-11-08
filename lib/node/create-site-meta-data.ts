@@ -1,7 +1,9 @@
-import recursiveParseMdx, { NodeData } from './mdx/recursive-parse-mdx';
-import updateAlgoliaArticleIndex from '../algolia/update-search-index';
-import algoliaIndexConfigs from '../algolia/index-configs';
+/* eslint-disable import/no-commonjs */
+import algoliaIndexConfigs from './algolia/index-configs';
+import updateAlgoliaArticleIndex from './algolia/update-search-index';
 import createNavigationConfigs from './mdx/create-navigation-configs';
+import recursiveParseMdx, { NodeData } from './mdx/recursive-parse-mdx';
+import initialiseLogger from './logger';
 
 const basePath = process.cwd();
 const contentDir = `${basePath}/content`;
@@ -9,6 +11,7 @@ const contentRoots = ['platform', 'embedded'];
 
 const createSiteMetaData = async () => {
   const allNodesData: NodeData[] = [];
+  initialiseLogger({ metaData: { script: 'create-site-meta-data' } });
 
   const parsedMdxCallback = async (
     contentRootNodesData: NodeData[],
@@ -33,4 +36,5 @@ const createSiteMetaData = async () => {
   );
 };
 
+// needs to be exported in AMD as next config (which imports it) is in JS
 module.exports = createSiteMetaData;

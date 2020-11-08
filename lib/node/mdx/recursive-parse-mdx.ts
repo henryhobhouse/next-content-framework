@@ -84,9 +84,8 @@ const recursiveParseMdx = async (
         const { data, content } = matter(markdownData);
 
         if (isConnector && !data.connector)
-          // eslint-disable-next-line no-console
-          console.error(
-            `WARNING: connector at ${path} does not have a connector name`,
+          logger.warn(
+            `Connector at "${path}" does not have a connector name in the frontmatter`,
           );
 
         let docType = 'article';

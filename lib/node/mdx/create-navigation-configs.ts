@@ -2,6 +2,10 @@ import { promises } from 'fs';
 import { getNavigationItems } from '../../mdx/mdx-parse';
 import { NodeData } from './recursive-parse-mdx';
 
+/**
+ * Callback for recursive parse MDX to create navigation
+ * content and write to file system
+ */
 const createNavigationConfigs = async (
   contentRootNodesData: NodeData[],
   contentRoot: string,
@@ -20,7 +24,7 @@ const createNavigationConfigs = async (
   const contentNavStructure = getNavigationItems(articlesForNav);
 
   await promises.writeFile(
-    `${basePath}/lib/build-scripts/${contentRoot}-nav-config.json`,
+    `${basePath}/lib/node/${contentRoot}-nav-config.json`,
     JSON.stringify({ config: contentNavStructure }, null, 2),
   );
 };

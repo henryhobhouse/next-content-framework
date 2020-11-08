@@ -42,7 +42,7 @@ module.exports = {
       },
     },
     {
-      files: ['./lib/build-scripts/**/*.ts'],
+      files: ['./lib/node/**/*.ts'],
       extends: ['@x-and-ai/eslint-config-ts-node'],
       rules: {
         'import/no-commonjs': 0,

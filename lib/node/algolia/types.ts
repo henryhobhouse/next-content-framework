@@ -1,6 +1,6 @@
 import { SearchOptions, Settings } from '@algolia/client-search';
 
-import { NodeData } from 'lib/build-scripts/mdx/recursive-parse-mdx';
+import { NodeData } from 'lib/node/mdx/recursive-parse-mdx';
 
 export type SearchHit = { [key: string]: string };
 
@@ -8,6 +8,10 @@ interface DateFilter {
   key: keyof NodeData;
   value: string;
 }
+
+export type TransformedObject = {
+  [key: string]: string | undefined;
+};
 
 export interface IndexQuery {
   transformer: (args: NodeData[]) => TransformedObject[];
@@ -23,7 +27,3 @@ export interface UpdateIndexOptions {
   chunkSize?: number;
   indexQueries: IndexQuery[];
 }
-
-export type TransformedObject = {
-  [key: string]: string | undefined;
-};
