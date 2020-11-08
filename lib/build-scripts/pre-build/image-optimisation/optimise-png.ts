@@ -37,12 +37,12 @@ const optimisePng = async (
       width,
     );
   } catch (err) {
-    // spinner.warn(
-    //   `Error optimising ${imageConfig.filePath.replace(
-    //     process.cwd(),
-    //     '',
-    //   )}, will use resized image only. ${err.message}`,
-    // );
+    logger.error(
+      `Error optimising PNG ${imageConfig.filePath.replace(
+        process.cwd(),
+        '',
+      )}, will use resized image only. ${err.message}`,
+    );
     writeFromPipeline(
       imageConfig,
       pipeline,

@@ -12,14 +12,23 @@ const optimiseSvg = async (
   imagesSuccessfullyOptimised: string[],
   progressBar: SingleBar,
 ) => {
-  const svgDataBuffer = await promises.readFile(imageConfig.filePath);
-  const optimisedSvg = await imageminSvgo({})(svgDataBuffer);
-  writeOptimisedImage(
-    imageConfig,
-    optimisedSvg,
-    imagesSuccessfullyOptimised,
-    progressBar,
-  );
+  try {
+    const svgDataBuffer = await promises.readFile(imageConfig.filePath);
+    const optimisedSvg = await imageminSvgo({})(svgDataBuffer);
+    writeOptimisedImage(
+      imageConfig,
+      optimisedSvg,
+      imagesSuccessfullyOptimised,
+      progressBar,
+    );
+  } catch (err) {
+    logger.error(
+      `Error optimising SVG ${imageConfig.filePath.replace(
+        process.cwd(),
+        '',
+      )}, will use resized image only. ${err.message}`,
+    );
+  }
 };
 
 export default optimiseSvg;

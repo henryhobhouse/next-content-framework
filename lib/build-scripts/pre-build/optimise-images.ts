@@ -1,6 +1,6 @@
 import cliProgress from 'cli-progress';
 import colors from 'colors';
-import ora from 'ora';
+import winston, { format } from 'winston';
 
 import getImagesToOptimise from './image-optimisation/get-images-to-optimise';
 import {
@@ -13,10 +13,41 @@ import resizeAndOptimiseImages from './image-optimisation/resize-and-optimise-im
 
 const documentFilesBasePath = `${process.cwd()}/content/`;
 
+const LEVEL = Symbol.for('level');
+const cliFormat = format.cli({ colors: { info: 'blue', notice: 'green' } });
+
+cliFormat.transform(
+  {
+    [LEVEL]: 'info',
+    level: 'info',
+    message: 'my message',
+  },
+  { all: true },
+);
+
+global.logger = winston.createLogger({
+  level: 'info',
+  format: cliFormat,
+  defaultMeta: { service: 'user-service' },
+  transports: [
+    new winston.transports.Console({
+      consoleWarnLevels: ['info', 'notice', 'warning', 'crit'],
+    }),
+    //
+    // - Write all logs with level `error` to `image-optimisation-error.log`
+    //
+    new winston.transports.File({
+      filename: 'image-optimisation-error.log',
+      level: 'error',
+      format: winston.format.json(),
+    }),
+  ],
+});
+
 const imageSizes = [referenceImageSize, articleImageSize]; // Add to this if we need more options
 const staticImageSizes = [...imageSizes, lazyLoadImageSize];
-export const spinner = ora();
 const imagesSuccessfullyOptimised: string[] = [];
+// eslint-disable-next-line import/prefer-default-export
 export const progressBar = new cliProgress.SingleBar({
   format: `|${colors.magenta(
     '{bar}',
@@ -29,14 +60,14 @@ export const progressBar = new cliProgress.SingleBar({
 
 (async () => {
   try {
-    spinner.info('Optimising newly added images...');
+    logger.info('Optimising newly added images...');
 
     const {
       imagesPathsToOptimise,
       totalImagesToOptimise,
     } = await getImagesToOptimise(documentFilesBasePath);
 
-    spinner.info(`${imagesPathsToOptimise.length} total images to optimise`);
+    logger.info(`${imagesPathsToOptimise.length} total images to optimise`);
     progressBar.start(totalImagesToOptimise, 0, {
       speed: 'N/A',
     });
@@ -58,11 +89,11 @@ export const progressBar = new cliProgress.SingleBar({
     await removeOriginals(imagesSuccessfullyOptimised);
 
     progressBar.stop();
-    spinner.succeed(
+    logger.notice(
       `${imagesSuccessfullyOptimised.length} images successively optimised.`,
     );
   } catch (error) {
     progressBar.stop();
-    spinner.fail(`ERROR: Image optimisation failed. ${error.message}`);
+    logger.crit(`ERROR: Image optimisation failed. ${error.message}`);
   }
 })();
