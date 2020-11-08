@@ -29,6 +29,7 @@ export interface NodeData {
   excerpt: string;
   level: number;
   order: number;
+  connectorSection?: string;
   parentSlug: string;
   type: string;
   imageIcon?: string;
@@ -83,6 +84,17 @@ const recursiveParseMdx = async (
         const markdownData = await promises.readFile(markdownPath, 'utf8');
         const { data, content } = matter(markdownData);
 
+        let { connectorSection } = data;
+        if (!connectorSection) {
+          if (connectorsComponents) {
+            // eslint-disable-next-line prefer-destructuring
+            connectorSection = connectorsComponents[1];
+          } else if (connectorListComponents) {
+            // eslint-disable-next-line prefer-destructuring
+            connectorSection = connectorListComponents[1];
+          }
+        }
+
         if (isConnector && !data.connector)
           logger.warn(
             `Connector at "${path}" does not have a connector name in the frontmatter`,
@@ -128,6 +140,7 @@ const recursiveParseMdx = async (
           slug,
           type: docType,
           level,
+          connectorSection,
           order,
           parentSlug,
           imageIcon: data.imageIcon,

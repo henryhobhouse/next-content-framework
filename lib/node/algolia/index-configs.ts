@@ -13,6 +13,7 @@ const algoliaIndexConfigs = [
         section: nodeData.section,
         slug: nodeData.slug,
         type: nodeData.type,
+        connectorSection: nodeData.connectorSection,
         imageIcon: nodeData.imageIcon,
         streamlineIcon: nodeData.streamlineIcon,
       })),
