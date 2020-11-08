@@ -15,27 +15,25 @@ const customLogLevels = {
   silly: 6,
 };
 
+const { timestamp, combine, printf, cli } = format;
+
 /**
  * https://github.com/winstonjs/logform#cli
  */
-const cliFormat = format.cli({
+const cliFormat = cli({
   colors: { info: 'blue', success: 'green', warn: 'yellow' },
   levels: customLogLevels,
 });
-const { timestamp, combine, printf } = format;
 
-// Ignore log messages if they have { noConsole: true }
+// Do not log messages to console if they have { noConsole: true }
 const noLogPrivateToConsole = format((info) => {
-  if (info.noConsole) {
-    return false;
-  }
+  if (info.noConsole) return false;
   return info;
 });
 
+// Do not save log messages to file if they have { noFileSave: true }
 const noLogPrivateToFile = format((info) => {
-  if (info.noFileSave) {
-    return false;
-  }
+  if (info.noFileSave) return false;
   return info;
 });
 
@@ -73,7 +71,7 @@ const initialiseLogger: InitialiseLogger = async (options) => {
         format: combine(noLogPrivateToConsole(), cliFormat),
       }),
       //
-      // - Write all logs with level `error` to `image-optimisation-error.log`
+      // - Write all logs with level `error` to `errorLogFileName` prop or fallback
       //
       new winston.transports.File({
         filename: options?.errorLogFileName ?? defaultErrorLogFileName,
