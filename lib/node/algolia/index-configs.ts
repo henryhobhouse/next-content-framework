@@ -1,4 +1,4 @@
-import { NodeData } from '../mdx/recursive-parse-mdx';
+import { NodeData } from '../mdx-meta/recursive-parse-mdx';
 
 const algoliaIndexConfigs = [
   {

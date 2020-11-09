@@ -1,6 +1,6 @@
 import { SearchOptions, Settings } from '@algolia/client-search';
 
-import { NodeData } from 'lib/node/mdx/recursive-parse-mdx';
+import { NodeData } from '../mdx-meta/recursive-parse-mdx';
 
 export type SearchHit = { [key: string]: string };
 

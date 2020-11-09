@@ -1,5 +1,5 @@
 import { promises } from 'fs';
-import { getNavigationItems } from '../../mdx/mdx-parse';
+import parseFlatNavigationItems from './parse-flat-navigation-items';
 import { NodeData } from './recursive-parse-mdx';
 
 /**
@@ -21,7 +21,7 @@ const createNavigationConfigs = async (
       parentSlug: nodeData.parentSlug,
     }));
 
-  const contentNavStructure = getNavigationItems(articlesForNav);
+  const contentNavStructure = parseFlatNavigationItems(articlesForNav);
 
   await promises.writeFile(
     `${basePath}/lib/node/${contentRoot}-nav-config.json`,

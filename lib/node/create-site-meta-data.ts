@@ -1,8 +1,8 @@
 /* eslint-disable import/no-commonjs */
 import algoliaIndexConfigs from './algolia/index-configs';
 import updateAlgoliaArticleIndex from './algolia/update-search-index';
-import createNavigationConfigs from './mdx/create-navigation-configs';
-import recursiveParseMdx, { NodeData } from './mdx/recursive-parse-mdx';
+import createNavigationConfigs from './mdx-meta/create-navigation-configs';
+import recursiveParseMdx, { NodeData } from './mdx-meta/recursive-parse-mdx';
 import initialiseLogger from './logger';
 
 const basePath = process.cwd();

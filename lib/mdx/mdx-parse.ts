@@ -1,9 +1,3 @@
-import {
-  NavigationArticle,
-  BaseNavigationArticle,
-  SecondTierNavigationArticle,
-} from './types';
-
 export const isPostFileRegex = /docs\.(mdx|md)$/gi;
 export const pathRegex = /([^/]*)(.*)\/docs\.(mdx|md)$/gi;
 export const orderRegex = /.*\/([0-9+]+)\.[^/]*\/docs\.(mdx|md)$/gi;
@@ -21,42 +15,6 @@ export const referenceImageSize = 1200; //px
 export const articleImageSize = 600; // px
 export const lazyLoadImageSize = 20; // px
 export const connectorListRelativePath = 'platform/50.connectors/1000.docs';
-
-export const getNavigationItems = (
-  allItems: Omit<NavigationArticle, 'children'>[],
-): NavigationArticle[] => {
-  const topLevelArticles = allItems
-    .filter((article) => article.level === 1)
-    .sort((art1, art2) => art1.order - art2.order);
-  const secondLevelArticles = allItems.filter((article) => article.level === 2);
-  const thirdLevelArticles = allItems.filter((article) => article.level === 3);
-
-  const hydrateSecondTierWithChildren = (
-    secondLevelArticle: BaseNavigationArticle,
-  ): SecondTierNavigationArticle => {
-    const filteredThirdLevelChildren = thirdLevelArticles
-      .filter(
-        (thirdLevelArticle) =>
-          thirdLevelArticle.parentSlug === secondLevelArticle.slug,
-      )
-      .sort((article1, article2) => article1.order - article2.order);
-    return { ...secondLevelArticle, children: filteredThirdLevelChildren };
-  };
-
-  return topLevelArticles.map((topLevelArticle) =>
-    Object.assign(topLevelArticle, {
-      children: secondLevelArticles
-        .filter(
-          (secondLevelArticle) =>
-            secondLevelArticle.parentSlug === topLevelArticle.slug,
-        )
-        .map((filteredSecondLevelArticles) =>
-          hydrateSecondTierWithChildren(filteredSecondLevelArticles),
-        )
-        .sort((article1, article2) => article1.order - article2.order),
-    }),
-  );
-};
 
 export const replaceLinkInContent = (
   imageLink: string,
