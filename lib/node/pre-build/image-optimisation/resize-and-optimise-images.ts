@@ -27,9 +27,9 @@ const resizeAndOptimiseImages = async (
       const pipeline = sharp(imageConfig.filePath);
 
       // get image size metadata and save to file system for use in build
-      await pipeline.metadata((err, metaData) =>
-        extractImageSize(err, metaData, imageConfig),
-      );
+      pipeline
+        .metadata()
+        .then((metaData) => extractImageSize(metaData, imageConfig));
 
       if (imageConfig.fileType === imageFileType.gif) {
         await optimiseGif(

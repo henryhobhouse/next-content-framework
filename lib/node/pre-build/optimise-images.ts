@@ -72,6 +72,8 @@ const checkForErrors = () => {
 
     logger.info(`${imagesPathsToOptimise.length} total images to optimise`);
 
+    if (imagesPathsToOptimise.length === 0) return;
+
     progressBar.start(totalImagesToOptimise, 0, {
       speed: 'N/A',
     });

@@ -5,19 +5,7 @@ import { ImageConfig } from './get-images-to-optimise';
 
 const imageSizeFilePath = `${process.cwd()}/images/meta-data.json`;
 
-const extractImageSize = (
-  error: Error,
-  metaData: Metadata,
-  imageConfig: ImageConfig,
-) => {
-  if (error) {
-    logger.error({
-      level: 'error',
-      noConsole: true,
-      message: `Unable to get image meta data: ${error.message}`,
-    });
-  }
-
+const extractImageSize = (metaData: Metadata, imageConfig: ImageConfig) => {
   const imageAttributes = {
     width: metaData.width,
     height: metaData.height,
