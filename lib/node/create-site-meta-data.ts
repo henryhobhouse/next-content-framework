@@ -23,6 +23,7 @@ const createSiteMetaData = async () => {
       allNodesData: contentRootNodesData,
       indexQueries: algoliaIndexConfigs,
     });
+    // TODO: Create sitemap
   };
 
   await Promise.all(

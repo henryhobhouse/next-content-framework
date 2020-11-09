@@ -9,7 +9,7 @@ import {
   referenceImageSize,
   lazyLoadImageSize,
 } from '../../mdx/mdx-parse';
-import { removeOriginals } from './image-optimisation/utils';
+// import { removeOriginals } from './image-optimisation/utils';
 import resizeAndOptimiseImages from './image-optimisation/resize-and-optimise-images';
 
 const documentFilesBasePath = `${process.cwd()}/content/`;
@@ -70,9 +70,12 @@ const checkForErrors = () => {
       totalImagesToOptimise,
     } = await getImagesToOptimise(documentFilesBasePath);
 
-    logger.info(`${imagesPathsToOptimise.length} total images to optimise`);
+    if (imagesPathsToOptimise.length === 0) {
+      logger.info('No new images to optimise.');
+      return;
+    }
 
-    if (imagesPathsToOptimise.length === 0) return;
+    logger.info(`${imagesPathsToOptimise.length} total images to optimise`);
 
     progressBar.start(totalImagesToOptimise, 0, {
       speed: 'N/A',
@@ -91,7 +94,7 @@ const checkForErrors = () => {
       progressBar,
     );
 
-    await removeOriginals(imagesSuccessfullyOptimised);
+    // await removeOriginals(imagesSuccessfullyOptimised);
 
     progressBar.stop();
     if (imagesSuccessfullyOptimised.length > 0) {

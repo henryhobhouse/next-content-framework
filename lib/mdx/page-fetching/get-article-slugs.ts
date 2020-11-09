@@ -38,12 +38,12 @@ const getArticleSlugs = async (
     });
 
     // assume only one post file per directory
-    const postFile = dirents.find(
+    const articleFile = dirents.find(
       (dirent) => !!dirent.name.match(isPostFileRegex),
     );
 
-    if (postFile) {
-      const markdownPath = resolve(directory, postFile.name);
+    if (articleFile) {
+      const markdownPath = resolve(directory, articleFile.name);
       const relativePath = markdownPath.replace(documentFilesBasePath, '');
       const isConnectorListPage = relativePath.includes(
         connectorDocsRelativePath,

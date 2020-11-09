@@ -60,12 +60,12 @@ const recursiveFindRouteData = async ({
     });
 
     // assume only one docs file per directory
-    const docsFile = dirents.find(
+    const articleFile = dirents.find(
       (dirent) => !!dirent.name.match(isPostFileRegex),
     );
 
-    if (docsFile) {
-      const markdownPath = resolve(directory, docsFile.name);
+    if (articleFile) {
+      const markdownPath = resolve(directory, articleFile.name);
       const relativePath = markdownPath.replace(documentFilesBasePath, '');
 
       // as exec is global we need to reset the index each iteration of the loop
@@ -108,6 +108,8 @@ const recursiveFindRouteData = async ({
           });
 
           currentPageTocData = getTableOfContents(transformedContent);
+
+          // TODO: add breacrumbs parsing.
         }
       }
     }
