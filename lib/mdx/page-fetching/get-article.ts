@@ -1,4 +1,4 @@
-import recursiveParseDirectories from './recursive-parse-directories';
+import recursiveFindRouteData from './recursive-find-route-data';
 
 import { documentFilesBasePath } from 'lib/mdx/mdx-parse';
 import { Resolve, MdxRenderedToString, TableOfContents } from 'lib/mdx/types';
@@ -29,7 +29,7 @@ const getArticle = async (
     currentPageTocData,
     frontMatterData,
     pageContent,
-  } = await recursiveParseDirectories({
+  } = await recursiveFindRouteData({
     rootDir: productDocumentsPath,
     currentPageSlug: articleSlug,
     contentPagedir,

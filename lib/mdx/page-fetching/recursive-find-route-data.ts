@@ -30,8 +30,7 @@ interface RecursiveParseDirectoriesProps {
 /**
  * Recursive Parse Directories.
  *
- * Recurisively traverse content directories. Generates article page metadata array for
- * creating navigation structure configuration
+ * Recurisively traverse content directories.
  *
  * In each directory check if docs.md|mdx and if so derive slug from directory path and
  * check if current page. If current page then:
@@ -41,7 +40,7 @@ interface RecursiveParseDirectoriesProps {
  *  * Returns pre-parsed markdown content and frontmatter data along with nav structure config
  *    and table of contents config.
  */
-const recursiveParseDirectories = async ({
+const recursiveFindRouteData = async ({
   rootDir,
   currentPageSlug,
   contentPagedir,
@@ -134,4 +133,4 @@ const recursiveParseDirectories = async ({
   };
 };
 
-export default recursiveParseDirectories;
+export default recursiveFindRouteData;
