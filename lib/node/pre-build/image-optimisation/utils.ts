@@ -35,12 +35,12 @@ export const logSuccess = (
  * The rest go into the public folder to be delivered statically.
  */
 export const getWriteFilePath = (imageConfig: ImageConfig, width?: number) => {
-  const imagePathDirectories = imageConfig.filePath.split('/');
+  const imagePathDirectories = imageConfig.filePath
+    .replace(orderPartRegex, '/')
+    .split('/');
   const parentDirectoryName = imagePathDirectories[
     imagePathDirectories.length - 2
-  ]
-    .replace(orderPartRegex, '')
-    .toLowerCase();
+  ].toLowerCase();
   let writePath;
   if (width === referenceImageSize)
     writePath = `${rootImageDirectory}/${originalFileDirectory}/${parentDirectoryName}`;

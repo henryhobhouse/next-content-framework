@@ -11,7 +11,7 @@ export const documentFilesBasePath = `${process.cwd()}/content/`;
 export const connectorDocsRelativePath = '/connectors/docs';
 export const rootImageDirectory = 'images';
 export const staticImageDirectory = 'public';
-export const referenceImageSize = 1200; //px
+export const referenceImageSize = 2000; //px
 export const articleImageSize = 600; // px
 export const lazyLoadImageSize = 20; // px
 export const connectorListRelativePath = 'platform/50.connectors/1000.docs';
@@ -30,6 +30,7 @@ export const replaceLinkInContent = (
   return content.replace(imageRegex, revisedImageName);
 };
 
+// inherited function. Need to work out props types but left as any for moment.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const preToCodeBlock = (preProps: any) => {
   if (

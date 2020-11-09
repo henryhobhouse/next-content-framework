@@ -82,6 +82,7 @@ const addRelativeImageLinks = async (
       const nonRelativeLinkSegments = imageLinkSegments.filter(
         (dir) => dir !== '..',
       );
+
       // get parent from link structure (when relative link) otherwise directory of docs file
       const parentDirectory =
         imageLinkSegments.length > 1

@@ -6,6 +6,7 @@ import optimiseGif from './optimise-gif';
 import optimiseJpeg from './optimise-jpeg';
 import optimisePng from './optimise-png';
 import optimiseSvg from './optimise-svg';
+import extractImageSize from './extract-image-size';
 import { checkImageDirectories } from './utils';
 import { writeOptimisedImage, writeFromPipeline } from './write-to-system';
 
@@ -22,7 +23,14 @@ const resizeAndOptimiseImages = async (
   checkImageDirectories();
   await Promise.all(
     imagesPathsToOptimise.map(async (imageConfig) => {
+      // initialise sharp with image
       const pipeline = sharp(imageConfig.filePath);
+
+      // get image size metadata and save to file system for use in build
+      await pipeline.metadata((err, metaData) =>
+        extractImageSize(err, metaData, imageConfig),
+      );
+
       if (imageConfig.fileType === imageFileType.gif) {
         await optimiseGif(
           imageConfig,
@@ -32,6 +40,7 @@ const resizeAndOptimiseImages = async (
         );
         return;
       }
+
       if (imageConfig.fileType === imageFileType.svg) {
         await optimiseSvg(
           imageConfig,
@@ -40,6 +49,7 @@ const resizeAndOptimiseImages = async (
         );
         return;
       }
+
       // handle all static images
       await Promise.all(
         staticImageSizes.map(async (width) => {
@@ -54,32 +64,6 @@ const resizeAndOptimiseImages = async (
               quality: 80,
               force: imageConfig.fileType === imageFileType.webp,
             });
-
-          // if (size === lazyLoadedPlaceholderWidth) {
-          //   const imagePathDirectories = imageConfig.filePath.split('/');
-          //   const parentDirectoryName = imagePathDirectories[
-          //     imagePathDirectories.length - 2
-          //   ]
-          //     .replace(orderPartRegex, '')
-          //     .toLowerCase();
-          //   const { width, height } = await pipeline.metadata();
-          //   const blankImage = await sharp({
-          //     create: {
-          //       width,
-          //       height,
-          //       channels: 3,
-          //       background: { r: 255, g: 255, b: 255, alpha: 0 },
-          //     },
-          //   })
-          //     .jpeg({
-          //       quality: 1,
-          //     })
-          //     .toBuffer();
-          //   writeFileSync(
-          //     `${process.cwd()}/${optimisedImageDirectory}/sizeRef/${parentDirectoryName}-${imageConfig.name.toLowerCase()}`,
-          //     blankImage,
-          //   );
-          // }
 
           if (imageConfig.fileType === imageFileType.png) {
             try {
