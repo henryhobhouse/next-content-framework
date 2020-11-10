@@ -45,9 +45,9 @@ export const getWriteFilePath = (imageConfig: ImageConfig, width?: number) => {
   if (width === referenceImageSize)
     writePath = `${rootImageDirectory}/${originalFileDirectory}/${parentDirectoryName}`;
   else if (width === lazyLoadImageSize)
-    writePath = `${rootImageDirectory}/${width}/${parentDirectoryName}`;
+    writePath = `${staticImageDirectory}/${width}/${parentDirectoryName}`;
   else if (imageConfig.fileType === 'svg')
-    writePath = `${rootImageDirectory}/${svgFileDirectory}/${parentDirectoryName}`;
+    writePath = `${staticImageDirectory}/${svgFileDirectory}/${parentDirectoryName}`;
   else writePath = `${staticImageDirectory}/${width}/${parentDirectoryName}`;
 
   return writePath;

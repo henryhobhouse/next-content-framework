@@ -1,21 +1,22 @@
 import styled, { css } from 'styled-components';
 
-export const GifWrapper = styled.div<{ $height?: number }>`
-  display: inline-block;
+export const GifWrapper = styled.div<{ $height?: number; $width: number }>`
+  display: block;
   position: relative;
   user-select: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
+  margin-left: auto;
+  margin-right: auto;
+  width: ${({ $width }) => `${$width}px`};
 
   img {
-    width: 600px;
+    ${({ $height }) =>
+      $height &&
+      css`
+        height: ${$height}px;
+      `}
   }
-
-  ${({ $height }) =>
-    $height &&
-    css`
-      height: ${$height}px;
-    `}
 `;
 
 export const PlayButton = styled.div<{ $playing: boolean }>`

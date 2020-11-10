@@ -37,7 +37,7 @@ const optimisePng = async (
       width,
     );
   } catch (err) {
-    logger.error({
+    logger.log({
       level: 'error',
       noConsole: true,
       message: `Cannot optimise PNG ${imageConfig.filePath.replace(

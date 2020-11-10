@@ -37,6 +37,7 @@ module.exports = {
         'import/no-commonjs': 0,
         'space-before-function-paren': 0,
         '@typescript-eslint/no-var-requires': 0,
+        'arrow-parens': 0,
         indent: ['error', 2],
         semi: 0,
       },

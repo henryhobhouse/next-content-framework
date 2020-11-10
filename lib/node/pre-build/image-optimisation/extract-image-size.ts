@@ -9,10 +9,6 @@ const extractImageSize = (metaData: Metadata, imageConfig: ImageConfig) => {
   const imageAttributes = {
     width: metaData.width,
     height: metaData.height,
-    ratio:
-      metaData.height && metaData.width
-        ? metaData.height / metaData.width
-        : null,
   };
 
   const imagePathDirectories = imageConfig.filePath

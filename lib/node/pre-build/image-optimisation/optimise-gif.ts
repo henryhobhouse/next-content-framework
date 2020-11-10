@@ -40,7 +40,7 @@ const optimiseGif = async (
           );
         } catch (err) {
           // error optimising the resized gif. Used resized image instead and inform logger.
-          logger.error({
+          logger.log({
             level: 'error',
             noConsole: true,
             message: `Cannot optimise GIF ${imageConfig.filePath.replace(
@@ -58,7 +58,7 @@ const optimiseGif = async (
         }
       } catch (err) {
         // error with initial resizing of the image. Escalate the error and inform logger.
-        logger.error({
+        logger.log({
           level: 'error',
           noConsole: true,
           message: `Error resizing gif ${imageConfig.filePath.replace(

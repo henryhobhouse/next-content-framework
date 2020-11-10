@@ -22,7 +22,7 @@ const optimiseSvg = async (
       progressBar,
     );
   } catch (err) {
-    logger.error({
+    logger.log({
       level: 'error',
       noConsole: true,
       message: `Cannot optimise SVG ${imageConfig.filePath.replace(

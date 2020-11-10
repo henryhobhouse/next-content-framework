@@ -78,12 +78,9 @@ const updateAlgoliaArticleIndex = async ({
               )
             ) {
               logger.error(
-                `when enablePartialUpdates is true, the objects must have at least one of the match fields. Current object:\n${JSON.stringify(
-                  currentNode,
-                  null,
-                  2,
-                )}\n` +
-                  `expected one of these fields:\n${matchFields.join('\n')}`,
+                `when enablePartialUpdates is true, the objects must have at least one of the matched fields.\n` +
+                  `Current object:\n${JSON.stringify(currentNode, null, 2)}\n` +
+                  `Expected one of these fields:\n${matchFields.join('\n')}`,
               );
             }
 

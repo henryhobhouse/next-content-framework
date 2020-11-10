@@ -29,7 +29,14 @@ const resizeAndOptimiseImages = async (
       // get image size metadata and save to file system for use in build
       pipeline
         .metadata()
-        .then((metaData) => extractImageSize(metaData, imageConfig));
+        .then((metaData) => extractImageSize(metaData, imageConfig))
+        .catch((error) =>
+          logger.log({
+            level: 'error',
+            noConsole: true,
+            message: `Could not get image metadata: ${error.message}`,
+          }),
+        );
 
       if (imageConfig.fileType === imageFileType.gif) {
         await optimiseGif(
@@ -75,7 +82,7 @@ const resizeAndOptimiseImages = async (
                 progressBar,
               );
             } catch {
-              logger.error({
+              logger.log({
                 level: 'error',
                 noConsole: true,
                 message: `As ${imageConfig.fileType} ${imageConfig.filePath} cannot be optimised and/or resized. We will use the orginal instead. PLEASE check if original works to avoid issues in the app`,
@@ -104,7 +111,7 @@ const resizeAndOptimiseImages = async (
                 progressBar,
               );
             } catch {
-              logger.error({
+              logger.log({
                 level: 'error',
                 noConsole: true,
                 message: `As ${imageConfig.fileType} ${imageConfig.filePath} cannot be optimised and/or resized. We will use the orginal instead. PLEASE check if original works to avoid issues in the app`,

@@ -1,6 +1,6 @@
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { AnimatePresence } from 'framer-motion';
-import { isEmpty } from 'lodash-es';
+import isEmpty from 'lodash/isEmpty';
 import Link from 'next/link';
 import React, { FC, memo, useContext, useEffect, useState } from 'react';
 

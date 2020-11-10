@@ -8,6 +8,7 @@ const config = {
         displayName: true,
       },
     ],
+    'lodash',
   ],
 };
 

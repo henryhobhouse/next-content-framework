@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash-es';
+import isEmpty from 'lodash/isEmpty';
 import React, { FC } from 'react';
 
 import ChildNavigationArticle from './ChildNavigationItem';

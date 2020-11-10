@@ -26,7 +26,7 @@ export const writeOptimisedImage = async (
 
     logSuccess(imageConfig.filePath, imagesSuccessfullyOptimised, progressBar);
   } catch (err) {
-    logger.error({
+    logger.log({
       level: 'error',
       message: `Unable to write optimised image with "writeOptimisedImage" for ${imageConfig.fileType} ${imageConfig.filePath} because of ${err.message}`,
       noConsole: true,
@@ -51,7 +51,7 @@ export const writeFromPipeline = async (
     );
     logSuccess(imageConfig.filePath, imagesSuccessfullyOptimised, progressBar);
   } catch (err) {
-    logger.error({
+    logger.log({
       level: 'error',
       message: `Unable to write from pipeline with writeFromPipeline for ${imageConfig.fileType} ${imageConfig.filePath} because of ${err.message}`,
       noConsole: true,

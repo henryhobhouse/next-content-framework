@@ -9,7 +9,7 @@ import {
   referenceImageSize,
   lazyLoadImageSize,
 } from '../../mdx/mdx-parse';
-// import { removeOriginals } from './image-optimisation/utils';
+import { removeOriginals } from './image-optimisation/utils';
 import resizeAndOptimiseImages from './image-optimisation/resize-and-optimise-images';
 
 const documentFilesBasePath = `${process.cwd()}/content/`;
@@ -45,7 +45,7 @@ const checkForErrors = () => {
     })
     .on('end', () => {
       if (fileLinecount > 0) {
-        logger.error({
+        logger.log({
           level: 'error',
           noFileSave: true,
           message: `There were ${
@@ -94,7 +94,7 @@ const checkForErrors = () => {
       progressBar,
     );
 
-    // await removeOriginals(imagesSuccessfullyOptimised);
+    await removeOriginals(imagesSuccessfullyOptimised);
 
     progressBar.stop();
     if (imagesSuccessfullyOptimised.length > 0) {

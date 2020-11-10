@@ -5,7 +5,6 @@ import styled, { css } from 'styled-components';
 import { articleImageSize } from 'lib/mdx/mdx-parse';
 
 const BlurredImage = styled.img<{ $imageLoaded: boolean }>`
-  width: 600px;
   position: relative;
   transition: opacity 500ms ease;
   bottom: 0;
@@ -23,38 +22,44 @@ const FullImage = styled.img`
   position: absolute;
   top: 0;
   left: 0;
-  width: 600px;
-  min-width: 600px;
+  max-width: 600px;
 `;
 
 const ImageContainer = styled.div`
   position: relative;
   display: block;
-  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
   padding-bottom: 20px;
 `;
 
 interface StaticImageProps {
   imgUrl: string;
   alt?: string;
+  width: number;
+  height?: number;
 }
 
-const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt }) => {
+const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt, width, height }) => {
   const [imageLoading, setImageLoading] = useState(true);
 
   if (!imgUrl) return null;
 
-  // TODO: add BlurrImage back once image optimisation script is done.
   return (
     <ImageContainer>
       <BlurredImage
-        src={require(`../../images/20/${imgUrl}`).default}
+        src={`/documentation/20/${imgUrl}`}
         $imageLoaded={!imageLoading}
+        width={width}
+        height={height}
+        loading="eager"
       />
 
       <FullImage
         src={`/documentation/${articleImageSize}/${imgUrl}`}
         alt={alt}
+        width={width}
+        height={height}
         onLoad={() => setImageLoading(false)}
         loading="lazy"
       />

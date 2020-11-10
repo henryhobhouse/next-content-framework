@@ -34,7 +34,7 @@ const optimiseJpeg = async (
       width,
     );
   } catch (err) {
-    logger.error({
+    logger.log({
       level: 'error',
       noConsole: true,
       message: `Cannot optimise JPEG ${imageConfig.filePath.replace(
