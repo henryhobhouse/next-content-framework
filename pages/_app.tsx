@@ -1,5 +1,4 @@
 import { AppProps } from 'next/app';
-import React from 'react';
 import styled from 'styled-components';
 
 import NavHeader from '../components/NavHeader';

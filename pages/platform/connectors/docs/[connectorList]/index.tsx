@@ -2,7 +2,7 @@ import { promises } from 'fs';
 import { resolve } from 'path';
 
 import hydrate from 'next-mdx-remote/hydrate';
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 
 import ArticleWrapper from 'components/ArticleWrapper';
 import Connector from 'components/connector';
@@ -43,6 +43,7 @@ const ConnectorList: FC<ConnectorListProps> = ({
       <SectionNavigation
         items={(navigationStructure as { config: NavigationArticle[] }).config}
       />
+
       <ArticleWrapper id="article-content">
         <h1>{frontmatter?.title}</h1>
         <br />
@@ -58,6 +59,7 @@ const ConnectorList: FC<ConnectorListProps> = ({
           ))}
         </div>
       </ArticleWrapper>
+
       <TableOfContentWrapper>
         <TableOfContentStickyWrapper>
           <DesktopTableOfContents tableOfContents={toc} />

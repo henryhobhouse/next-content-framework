@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 import styled, { css } from 'styled-components';
 
 import { articleImageSize } from 'lib/mdx/mdx-parse';

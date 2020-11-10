@@ -2,7 +2,7 @@ import { promises } from 'fs';
 import { resolve } from 'path';
 
 import hydrate from 'next-mdx-remote/hydrate';
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 
 import ArticleWrapper from 'components/ArticleWrapper';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
@@ -52,6 +52,7 @@ const Connector: FC<ConnectorListProps> = ({
         <br />
         {hydratedContent}
       </ArticleWrapper>
+
       <TableOfContentWrapper>
         <TableOfContentStickyWrapper>
           <DesktopTableOfContents tableOfContents={toc} />
