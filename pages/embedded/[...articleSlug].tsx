@@ -8,11 +8,11 @@ import styled from 'styled-components';
 import ArticleWrapper from 'components/ArticleWrapper';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
 import SectionNavigation from 'components/SectionNavigation';
-import mdxComponents from 'lib/mdx/mdx-components';
-import getArticle from 'lib/mdx/page-fetching/get-article';
-import getArticleSlugs from 'lib/mdx/page-fetching/get-article-slugs';
-import { DocumentPostProps, StaticArticlePathParams } from 'lib/mdx/types';
 import navigationStructure from 'lib/node/embedded-nav-config.json';
+import mdxComponents from 'lib/page-mdx/mdx-components';
+import getArticle from 'lib/page-mdx/page-fetching/get-article';
+import getArticleSlugs from 'lib/page-mdx/page-fetching/get-article-slugs';
+import { DocumentPostProps, StaticArticlePathParams } from 'lib/page-mdx/types';
 
 const contentPagedir = 'embedded';
 export type FsPromises = typeof promises;

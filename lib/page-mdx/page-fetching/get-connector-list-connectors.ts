@@ -6,8 +6,8 @@ import {
   orderPartRegex,
   orderRegex,
   pathRegex,
-} from 'lib/mdx/mdx-parse';
-import { Resolve, ConnectorMetaData } from 'lib/mdx/types';
+} from 'lib/page-mdx/mdx-parse';
+import { Resolve, ConnectorMetaData } from 'lib/page-mdx/types';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 const getConnectorListConnectors = async (

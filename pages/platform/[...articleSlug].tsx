@@ -2,21 +2,21 @@ import { promises } from 'fs';
 import { resolve } from 'path';
 
 import hydrate from 'next-mdx-remote/hydrate';
-import { FC } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 
 import ArticleWrapper from 'components/ArticleWrapper';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
 import SectionNavigation from 'components/SectionNavigation';
-import mdxComponents from 'lib/mdx/mdx-components';
-import getArticle from 'lib/mdx/page-fetching/get-article';
-import getArticleSlugs from 'lib/mdx/page-fetching/get-article-slugs';
+import navigationStructure from 'lib/node/platform-nav-config.json';
+import mdxComponents from 'lib/page-mdx/mdx-components';
+import getArticle from 'lib/page-mdx/page-fetching/get-article';
+import getArticleSlugs from 'lib/page-mdx/page-fetching/get-article-slugs';
 import {
   DocumentPostProps,
   NavigationArticle,
   StaticArticlePathParams,
-} from 'lib/mdx/types';
-import navigationStructure from 'lib/node/platform-nav-config.json';
+} from 'lib/page-mdx/types';
 
 const contentPagedir = 'platform';
 

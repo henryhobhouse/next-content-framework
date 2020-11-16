@@ -15,7 +15,7 @@ import {
   NavItemLink,
 } from './section-navigation.sc';
 
-import { SecondTierNavigationArticle } from 'lib/mdx/types';
+import { SecondTierNavigationArticle } from 'lib/page-mdx/types';
 
 interface ChildNavigationArticleProps {
   item: SecondTierNavigationArticle;

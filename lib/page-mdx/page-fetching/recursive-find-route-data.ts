@@ -13,9 +13,9 @@ import {
 } from '../mdx-parse';
 import { MdxRenderedToString, Resolve, TableOfContents } from '../types';
 
-import addRelativeImageLinks from 'lib/mdx/add-relative-links';
-import getTableOfContents from 'lib/mdx/get-table-of-contents';
-import mdxComponents from 'lib/mdx/mdx-components';
+import addRelativeImageLinks from 'lib/page-mdx/add-relative-links';
+import getTableOfContents from 'lib/page-mdx/get-table-of-contents';
+import mdxComponents from 'lib/page-mdx/mdx-components';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 interface RecursiveParseDirectoriesProps {

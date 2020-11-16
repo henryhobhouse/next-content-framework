@@ -1,4 +1,4 @@
-import React, { FC, useState, createContext, useEffect } from 'react';
+import { FC, useState, createContext, useEffect } from 'react';
 
 interface CurrentRouteContextProps {
   currentRoute: string;

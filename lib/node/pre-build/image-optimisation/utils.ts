@@ -7,7 +7,7 @@ import {
   staticImageDirectory,
   rootImageDirectory,
   articleImageSize,
-} from '../../../mdx/mdx-parse';
+} from '../../../page-mdx/mdx-parse';
 import { ImageConfig } from './get-images-to-optimise';
 
 const orderPartRegex = /^([0-9+]+)\./i;

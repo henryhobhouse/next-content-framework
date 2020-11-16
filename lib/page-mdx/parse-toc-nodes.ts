@@ -14,7 +14,8 @@ const getItems = (
 ): TableOfContents => {
   if (!node) {
     return {};
-  } else if (node.type === `paragraph`) {
+  }
+  if (node.type === `paragraph`) {
     visit(node, (item: Node) => {
       if (item.type === `link`) {
         current.url = item.url as string;
@@ -28,7 +29,8 @@ const getItems = (
   if (node.type === `list`) {
     current.items = node?.children?.map((i) => getItems(i, {}));
     return current;
-  } else if (node.type === `listItem`) {
+  }
+  if (node.type === `listItem`) {
     const heading = getItems((node?.children ?? [])[0], {});
     if (node?.children && node.children.length > 1) {
       getItems(node.children[1], heading);
@@ -99,7 +101,7 @@ const listItem = (): ParentNode => ({
 const parseTocNodes = (map: SearchMap[]) => {
   let minDepth = Infinity;
   let index = -1;
-  const length = map.length;
+  const { length } = map;
 
   // Find minimum depth.
   while (++index < length) {

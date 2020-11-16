@@ -11,7 +11,7 @@ import useGifFirstFrame from '../../lib/hooks/use-gif-first-frame';
 
 import { GifWrapper, PlayButton } from './gif-player.sc';
 
-import { articleImageSize } from 'lib/mdx/mdx-parse';
+import { articleImageSize } from 'lib/page-mdx/mdx-parse';
 
 interface Props extends HTMLAttributes<HTMLImageElement> {
   gifUrl: string;

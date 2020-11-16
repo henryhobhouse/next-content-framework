@@ -8,16 +8,16 @@ import ArticleWrapper from 'components/ArticleWrapper';
 import Connector from 'components/connector';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
 import SectionNavigation from 'components/SectionNavigation';
-import mdxComponents from 'lib/mdx/mdx-components';
-import getConnectorList from 'lib/mdx/page-fetching/get-connector-list';
-import getConnectorListConnectors from 'lib/mdx/page-fetching/get-connector-list-connectors';
-import getConnectorListSlugs from 'lib/mdx/page-fetching/get-connector-list-slugs';
+import navigationStructure from 'lib/node/platform-nav-config.json';
+import mdxComponents from 'lib/page-mdx/mdx-components';
+import getConnectorList from 'lib/page-mdx/page-fetching/get-connector-list';
+import getConnectorListConnectors from 'lib/page-mdx/page-fetching/get-connector-list-connectors';
+import getConnectorListSlugs from 'lib/page-mdx/page-fetching/get-connector-list-slugs';
 import {
   ConnectorListProps,
   NavigationArticle,
   StaticConnectorListPathParams,
-} from 'lib/mdx/types';
-import navigationStructure from 'lib/node/platform-nav-config.json';
+} from 'lib/page-mdx/types';
 import { TableOfContentStickyWrapper } from 'pages/embedded/[...articleSlug]';
 import { TableOfContentWrapper } from 'pages/platform/[...articleSlug]';
 

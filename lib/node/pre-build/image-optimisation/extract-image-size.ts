@@ -1,6 +1,6 @@
 import { Metadata } from 'sharp';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { orderPartRegex } from '../../../mdx/mdx-parse';
+import { orderPartRegex } from '../../../page-mdx/mdx-parse';
 import { ImageConfig } from './get-images-to-optimise';
 
 const imageSizeFilePath = `${process.cwd()}/images/meta-data.json`;

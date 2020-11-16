@@ -1,7 +1,11 @@
 import recursiveFindRouteData from './recursive-find-route-data';
 
-import { documentFilesBasePath } from 'lib/mdx/mdx-parse';
-import { Resolve, MdxRenderedToString, TableOfContents } from 'lib/mdx/types';
+import { documentFilesBasePath } from 'lib/page-mdx/mdx-parse';
+import {
+  Resolve,
+  MdxRenderedToString,
+  TableOfContents,
+} from 'lib/page-mdx/types';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 /**

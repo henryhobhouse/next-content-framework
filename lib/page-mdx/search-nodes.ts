@@ -22,7 +22,7 @@ const valueToString = (node: Node | Node[]): string => {
 
 const all = (values: Node[]): string => {
   const result = [];
-  const length = values.length;
+  const { length } = values;
   let index = -1;
 
   while (++index < length) {

@@ -8,7 +8,7 @@ import {
   articleImageSize,
   referenceImageSize,
   lazyLoadImageSize,
-} from '../../mdx/mdx-parse';
+} from '../../page-mdx/mdx-parse';
 import { removeOriginals } from './image-optimisation/utils';
 import resizeAndOptimiseImages from './image-optimisation/resize-and-optimise-images';
 

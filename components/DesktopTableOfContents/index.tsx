@@ -1,6 +1,6 @@
 import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 
 import useIntersectionTracker from '../../lib/hooks/use-intersection-tracker';
 
@@ -13,7 +13,7 @@ import {
   Anchor,
 } from './desktopTableOfContents.sc';
 
-import { TableOfContents } from 'lib/mdx/types';
+import { TableOfContents } from 'lib/page-mdx/types';
 
 interface SectionItemsProps {
   items: TableOfContents[];

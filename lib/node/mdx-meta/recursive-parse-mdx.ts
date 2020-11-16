@@ -13,7 +13,7 @@ import {
   orderPartRegex,
   orderRegex,
   pathRegex,
-} from '../../mdx/mdx-parse';
+} from '../../page-mdx/mdx-parse';
 import createNodeId from '../create-node-id';
 
 const navigationArticleDepth = 5;

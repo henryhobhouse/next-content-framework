@@ -2,7 +2,7 @@
 import { FC, useState } from 'react';
 import styled, { css } from 'styled-components';
 
-import { articleImageSize } from 'lib/mdx/mdx-parse';
+import { articleImageSize } from 'lib/page-mdx/mdx-parse';
 
 const BlurredImage = styled.img<{ $imageLoaded: boolean }>`
   position: relative;
