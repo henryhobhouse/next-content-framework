@@ -6,7 +6,6 @@ import {
   lazyLoadImageSize,
   staticImageDirectory,
   rootImageDirectory,
-  articleImageSize,
 } from '../../../page-mdx/mdx-parse';
 import { ImageConfig } from './get-images-to-optimise';
 
@@ -43,7 +42,7 @@ export const getWriteFilePath = (imageConfig: ImageConfig, width?: number) => {
     .toLowerCase();
   let writePath;
   if (width === referenceImageSize)
-    writePath = `${rootImageDirectory}/${originalFileDirectory}/${parentDirectoryName}`;
+    writePath = `${staticImageDirectory}/${originalFileDirectory}/${parentDirectoryName}`;
   else if (width === lazyLoadImageSize)
     writePath = `${staticImageDirectory}/${width}/${parentDirectoryName}`;
   else if (imageConfig.fileType === 'svg')
@@ -55,10 +54,9 @@ export const getWriteFilePath = (imageConfig: ImageConfig, width?: number) => {
 
 export const checkImageDirectories = () => {
   const dirsToCheck = [
-    `${staticImageDirectory}/${articleImageSize}`,
-    `${rootImageDirectory}/${originalFileDirectory}`,
+    `${staticImageDirectory}/${originalFileDirectory}`,
     `${rootImageDirectory}/${svgFileDirectory}`,
-    `${rootImageDirectory}/${lazyLoadImageSize}`,
+    `${staticImageDirectory}/${lazyLoadImageSize}`,
   ];
   dirsToCheck.forEach((dir) => {
     const fullDirPath = `${process.cwd()}/${dir}`;

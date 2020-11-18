@@ -47,7 +47,7 @@ const getImagesToOptimise = async (directoryPath: string) => {
             rawFileType === 'jpg' ? imageFileType.jpeg : rawFileType;
           if (fileType === imageFileType.svg) totalImagesToOptimise += 1;
           else if (fileType === imageFileType.gif) totalImagesToOptimise += 2;
-          else if (fileType) totalImagesToOptimise += 3;
+          else if (fileType) totalImagesToOptimise += 2;
 
           if (fileType) {
             const imageConfig = {

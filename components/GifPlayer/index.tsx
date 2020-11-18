@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import Image from 'next/image';
 import React, {
   useState,
   FC,
@@ -10,8 +11,6 @@ import React, {
 import useGifFirstFrame from '../../lib/hooks/use-gif-first-frame';
 
 import { GifWrapper, PlayButton } from './gif-player.sc';
-
-import { articleImageSize } from 'lib/page-mdx/mdx-parse';
 
 interface Props extends HTMLAttributes<HTMLImageElement> {
   gifUrl: string;
@@ -32,7 +31,7 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt, width, height }) => {
     }
   }, [imageRef?.height]);
 
-  const gifRelativePath = `/documentation/${articleImageSize}/${gifUrl}`;
+  const gifRelativePath = `/documentation/originals/${gifUrl}`;
 
   const { firstFrameImage } = useGifFirstFrame(gifRelativePath);
 
@@ -48,13 +47,7 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt, width, height }) => {
     >
       <PlayButton $playing={playing}>GIF</PlayButton>
       {playing ? (
-        <img
-          src={gifRelativePath}
-          alt={alt}
-          width={width}
-          height={height}
-          loading="lazy"
-        />
+        <Image src={gifRelativePath} alt={alt} width={width} height={300} />
       ) : (
         <img
           src={firstFrameImage}

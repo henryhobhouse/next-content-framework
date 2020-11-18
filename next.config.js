@@ -11,6 +11,9 @@ const redirectsConfig = require('./redirects');
 module.exports = {
   basePath: '/documentation',
   reactStrictMode: true,
+  images: {
+    path: '/documentation/_next/image',
+  },
   async redirects() {
     // TODO refactor to _app getStaticProps when available
     // issue https://github.com/vercel/next.js/discussions/10949#discussioncomment-110524

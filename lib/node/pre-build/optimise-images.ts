@@ -5,7 +5,6 @@ import { createReadStream } from 'fs';
 import getImagesToOptimise from './image-optimisation/get-images-to-optimise';
 import initialiseLogger from '../logger';
 import {
-  articleImageSize,
   referenceImageSize,
   lazyLoadImageSize,
 } from '../../page-mdx/mdx-parse';
@@ -15,7 +14,7 @@ import resizeAndOptimiseImages from './image-optimisation/resize-and-optimise-im
 const documentFilesBasePath = `${process.cwd()}/content/`;
 const errorLogFileName = 'image-optimisation-error.log';
 
-const imageSizes = [referenceImageSize, articleImageSize]; // Add to this if we need more options
+const imageSizes = [referenceImageSize]; // Add to this if we need more options
 const staticImageSizes = [...imageSizes, lazyLoadImageSize];
 const imagesSuccessfullyOptimised: string[] = [];
 // eslint-disable-next-line import/prefer-default-export

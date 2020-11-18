@@ -1,14 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import Image from 'next/image';
 import { FC, useState } from 'react';
 import styled, { css } from 'styled-components';
 
-import { articleImageSize } from 'lib/page-mdx/mdx-parse';
-
 const BlurredImage = styled.img<{ $imageLoaded: boolean }>`
-  position: relative;
   transition: opacity 500ms ease;
-  bottom: 0;
-  left: 0;
+
   opacity: 1;
   z-index: 1;
   ${({ $imageLoaded }) =>
@@ -16,13 +13,15 @@ const BlurredImage = styled.img<{ $imageLoaded: boolean }>`
     css`
       opacity: 0;
     `}
-`;
-
-const FullImage = styled.img`
   position: absolute;
   top: 0;
   left: 0;
   max-width: 600px;
+`;
+
+const FullImage = styled(Image)`
+  bottom: 0;
+  left: 0;
 `;
 
 const ImageContainer = styled.div`
@@ -56,10 +55,10 @@ const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt, width, height }) => {
       />
 
       <FullImage
-        src={`/documentation/${articleImageSize}/${imgUrl}`}
+        src={`/documentation/originals/${imgUrl}`}
         alt={alt}
         width={width}
-        height={height}
+        height={300}
         onLoad={() => setImageLoading(false)}
         loading="lazy"
       />
