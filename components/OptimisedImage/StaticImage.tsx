@@ -3,6 +3,8 @@ import Image from 'next/image';
 import { FC, useState } from 'react';
 import styled, { css } from 'styled-components';
 
+import { rootImageDirectory } from 'lib/page-mdx/mdx-parse';
+
 const BlurredImage = styled.img<{ $imageLoaded: boolean }>`
   transition: opacity 500ms ease;
 
@@ -59,7 +61,7 @@ const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt, width, height }) => {
       />
 
       <FullImage
-        src={`/documentation/originals/${imgUrl}`}
+        src={`/documentation/${rootImageDirectory}/${imgUrl}`}
         alt={alt}
         width={imageWidth}
         height={imageHeight}

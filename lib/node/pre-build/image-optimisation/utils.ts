@@ -1,11 +1,10 @@
 import { SingleBar } from 'cli-progress';
-import { existsSync, promises } from 'fs';
+import { existsSync } from 'fs';
 import mkdirp from 'mkdirp';
 import {
   referenceImageSize,
   lazyLoadImageSize,
   staticImageDirectory,
-  rootImageDirectory,
 } from '../../../page-mdx/mdx-parse';
 import { ImageConfig } from './get-images-to-optimise';
 
@@ -55,7 +54,7 @@ export const getWriteFilePath = (imageConfig: ImageConfig, width?: number) => {
 export const checkImageDirectories = () => {
   const dirsToCheck = [
     `${staticImageDirectory}/${originalFileDirectory}`,
-    `${rootImageDirectory}/${svgFileDirectory}`,
+    `${staticImageDirectory}/${svgFileDirectory}`,
     `${staticImageDirectory}/${lazyLoadImageSize}`,
   ];
   dirsToCheck.forEach((dir) => {

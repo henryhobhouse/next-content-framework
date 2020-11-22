@@ -4,6 +4,7 @@ import updateAlgoliaArticleIndex from './algolia/update-search-index';
 import createNavigationConfigs from './mdx-meta/create-navigation-configs';
 import recursiveParseMdx, { NodeData } from './mdx-meta/recursive-parse-mdx';
 import initialiseLogger from './logger';
+import moveImages, { ImageData } from './move-images';
 
 const basePath = process.cwd();
 const contentDir = `${basePath}/content`;
@@ -16,8 +17,10 @@ const createSiteMetaData = async () => {
   const parsedMdxCallback = async (
     contentRootNodesData: NodeData[],
     contentRoot: string,
+    imageDatas: ImageData[],
   ) => {
     allNodesData.push(...contentRootNodesData);
+    await moveImages(imageDatas);
     await createNavigationConfigs(contentRootNodesData, contentRoot, basePath);
     await updateAlgoliaArticleIndex({
       allNodesData: contentRootNodesData,

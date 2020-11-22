@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 import mdx from '@mdx-js/mdx';
 import { prune } from 'underscore.string';
 import visit from 'unist-util-visit';
+import { ImageData } from '../move-images';
 
 import {
   connectorsListRegex,
@@ -39,7 +40,7 @@ export interface NodeData {
 type ParsedMdxCallback = (
   args: NodeData[],
   contentRoot: string,
-  imagePaths: string[],
+  imageDatas: ImageData[],
 ) => void;
 
 const recursiveParseMdx = async (
@@ -48,7 +49,7 @@ const recursiveParseMdx = async (
   callback: ParsedMdxCallback,
 ): Promise<void> => {
   const allNodesData: NodeData[] = [];
-  const imagePaths: string[] = [];
+  const imageDatas: ImageData[] = [];
 
   const parseMdx = async (directory: string, currentDepth: number) => {
     const dirents = await await promises.readdir(directory, {
@@ -62,7 +63,12 @@ const recursiveParseMdx = async (
 
     dirents.forEach((dirent) => {
       if (dirent.name.match(/(gif|png|svg|jpe?g)$/i)) {
-        imagePaths.push(resolve(directory, dirent.name));
+        const imageData: ImageData = {
+          path: resolve(directory, dirent.name),
+          parentDirectory: directory,
+          name: dirent.name,
+        };
+        imageDatas.push(imageData);
       }
     });
 
@@ -172,7 +178,7 @@ const recursiveParseMdx = async (
 
   await parseMdx(rootDir, 0);
 
-  await callback(allNodesData, contentRoot, imagePaths);
+  await callback(allNodesData, contentRoot, imageDatas);
 };
 
 export default recursiveParseMdx;

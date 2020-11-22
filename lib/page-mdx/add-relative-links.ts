@@ -4,6 +4,7 @@ import {
   isHtmlImageRegex,
   isMdImageRegex,
   replaceLinkInContent,
+  rootImageDirectory,
   staticImageDirectory,
 } from './mdx-parse';
 
@@ -20,7 +21,7 @@ const checkFileExists = async (filePath: string, promises: FsPromises) => {
 
 const checkValidLink = async (imageLink: string, promises: FsPromises) =>
   checkFileExists(
-    `${process.cwd()}/${staticImageDirectory}/originals/${imageLink}`,
+    `${process.cwd()}/${staticImageDirectory}/${rootImageDirectory}/${imageLink}`,
     promises,
   );
 

@@ -6,6 +6,8 @@ import useGifFirstFrame from '../../lib/hooks/use-gif-first-frame';
 
 import { GifWrapper, PlayButton } from './gif-player.sc';
 
+import { rootImageDirectory } from 'lib/page-mdx/mdx-parse';
+
 interface Props extends HTMLAttributes<HTMLImageElement> {
   gifUrl: string;
   alt?: string;
@@ -20,7 +22,7 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt, width, height }) => {
 
   const imageHeight = height ? imageWidth / (width / height) : 300;
 
-  const gifRelativePath = `/documentation/originals/${gifUrl}`;
+  const gifRelativePath = `/documentation/${rootImageDirectory}/${gifUrl}`;
 
   const { firstFrameImage } = useGifFirstFrame(gifRelativePath);
 
@@ -29,11 +31,7 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt, width, height }) => {
   }, [setPlaying]);
 
   return (
-    <GifWrapper
-      onClick={togglePlay}
-      $height={height ?? imageHeight}
-      $width={imageWidth}
-    >
+    <GifWrapper onClick={togglePlay} $height={imageHeight} $width={imageWidth}>
       <PlayButton $playing={playing}>GIF</PlayButton>
       {playing ? (
         <Image
