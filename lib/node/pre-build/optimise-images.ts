@@ -4,17 +4,13 @@ import { createReadStream } from 'fs';
 
 import getImagesToOptimise from './image-optimisation/get-images-to-optimise';
 import initialiseLogger from '../logger';
-import {
-  referenceImageSize,
-  lazyLoadImageSize,
-} from '../../page-mdx/mdx-parse';
-import { removeOriginals } from './image-optimisation/utils';
+import { lazyLoadImageSize } from '../../page-mdx/mdx-parse';
 import resizeAndOptimiseImages from './image-optimisation/resize-and-optimise-images';
 
 const documentFilesBasePath = `${process.cwd()}/content/`;
 const errorLogFileName = 'image-optimisation-error.log';
 
-const imageSizes = [referenceImageSize]; // Add to this if we need more options
+const imageSizes = []; // Add to this if we need more options
 const staticImageSizes = [...imageSizes, lazyLoadImageSize];
 const imagesSuccessfullyOptimised: string[] = [];
 // eslint-disable-next-line import/prefer-default-export
@@ -67,7 +63,10 @@ const checkForErrors = () => {
     const {
       imagesPathsToOptimise,
       totalImagesToOptimise,
-    } = await getImagesToOptimise(documentFilesBasePath);
+    } = await getImagesToOptimise(
+      documentFilesBasePath,
+      staticImageSizes.length,
+    );
 
     if (imagesPathsToOptimise.length === 0) {
       logger.info('No new images to optimise.');
@@ -92,8 +91,6 @@ const checkForErrors = () => {
       staticImageSizes,
       progressBar,
     );
-
-    await removeOriginals(imagesSuccessfullyOptimised);
 
     progressBar.stop();
     if (imagesSuccessfullyOptimised.length > 0) {

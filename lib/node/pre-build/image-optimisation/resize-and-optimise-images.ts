@@ -61,16 +61,10 @@ const resizeAndOptimiseImages = async (
       await Promise.all(
         staticImageSizes.map(async (width) => {
           const clonedPipeline = pipeline.clone();
-          clonedPipeline
-            .resize({ width })
-            .png({
-              compressionLevel: 9,
-              force: imageConfig.fileType === imageFileType.png,
-            })
-            .webp({
-              quality: 80,
-              force: imageConfig.fileType === imageFileType.webp,
-            });
+          clonedPipeline.resize({ width }).png({
+            compressionLevel: 9,
+            force: imageConfig.fileType === imageFileType.png,
+          });
 
           if (imageConfig.fileType === imageFileType.png) {
             try {

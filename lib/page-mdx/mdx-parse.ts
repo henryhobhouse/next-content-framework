@@ -1,3 +1,5 @@
+import { ImageLinkMeta } from './add-relative-links';
+
 export const isPostFileRegex = /docs\.(mdx|md)$/gi;
 export const pathRegex = /([^/]*)(.*)\/docs\.(mdx|md)$/gi;
 export const orderRegex = /.*\/([0-9+]+)\.[^/]*\/docs\.(mdx|md)$/gi;
@@ -16,18 +18,34 @@ export const articleImageSize = 600; // px
 export const lazyLoadImageSize = 20; // px
 export const connectorListRelativePath = 'platform/50.connectors/1000.docs';
 
-export const replaceLinkInContent = (
-  imageLink: string,
-  revisedImageName: string,
-  content: string,
-) => {
+interface ReplaceLinkInContentProps {
+  imageLinkMeta: ImageLinkMeta;
+  revisedImageName: string;
+  content: string;
+  imageWidth?: number;
+  imageHeight?: number;
+}
+
+export const replaceLinkInContent = ({
+  imageLinkMeta,
+  revisedImageName,
+  content,
+  imageHeight,
+  imageWidth,
+}: ReplaceLinkInContentProps) => {
   // regex to catch all instances of the link in addition to check is prefixed
   // prefix to avoid `(foo-bar.png)` being captured when searching for "bar.png"
   const imageRegex = new RegExp(
-    `(?<=[(/'"])${imageLink.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}`,
+    `${imageLinkMeta.imageMdString.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}`,
     'g',
   );
-  return content.replace(imageRegex, revisedImageName);
+  const src = revisedImageName;
+  const alt = imageLinkMeta.altTitle;
+  // Create new HTML image string to include size meta data if available
+  const newImageString = `<img src="${src}" alt="${alt || ''}" ${
+    imageWidth ? `width="${imageWidth}"` : ''
+  } ${imageHeight ? `height="${imageHeight}"` : ''} />`;
+  return content.replace(imageRegex, newImageString);
 };
 
 // inherited function. Need to work out props types but left as any for moment.

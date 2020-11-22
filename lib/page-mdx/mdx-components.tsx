@@ -8,7 +8,6 @@ import DynamicBlock from 'components/DynamicBlock';
 import Highlight from 'components/Highlight';
 import MdxAnchor from 'components/MdxAnchor';
 import OptimisedImage from 'components/OptimisedImage';
-
 /**
  * Options: https://mdxjs.com/table-of-components
  */

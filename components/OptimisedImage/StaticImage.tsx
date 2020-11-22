@@ -16,7 +16,7 @@ const BlurredImage = styled.img<{ $imageLoaded: boolean }>`
   position: absolute;
   top: 0;
   left: 0;
-  max-width: 600px;
+  width: 100%;
 `;
 
 const FullImage = styled(Image)`
@@ -44,21 +44,25 @@ const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt, width, height }) => {
 
   if (!imgUrl) return null;
 
+  const imageWidth = width && width < 599 ? width : 600;
+
+  const imageHeight = height ? imageWidth / (width / height) : 300;
+
   return (
     <ImageContainer>
       <BlurredImage
         src={`/documentation/20/${imgUrl}`}
         $imageLoaded={!imageLoading}
-        width={width}
-        height={height}
+        width={imageWidth}
+        height={imageHeight}
         loading="eager"
       />
 
       <FullImage
         src={`/documentation/originals/${imgUrl}`}
         alt={alt}
-        width={width}
-        height={300}
+        width={imageWidth}
+        height={imageHeight}
         onLoad={() => setImageLoading(false)}
         loading="lazy"
       />

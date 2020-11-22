@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import Image from 'next/image';
-import React, {
-  useState,
-  FC,
-  HTMLAttributes,
-  useCallback,
-  useEffect,
-} from 'react';
+import React, { useState, FC, HTMLAttributes, useCallback } from 'react';
 
 import useGifFirstFrame from '../../lib/hooks/use-gif-first-frame';
 
@@ -21,15 +15,10 @@ interface Props extends HTMLAttributes<HTMLImageElement> {
 
 const GifPlayerContainer: FC<Props> = ({ gifUrl, alt, width, height }) => {
   const [playing, setPlaying] = useState(false);
-  const [imageHeight, setImageHeight] = useState<number>();
-  const [imageRef, setImageRef] = useState<HTMLImageElement | null>();
 
-  useEffect(() => {
-    // if greater than height of play button set it to wrapper
-    if (imageRef?.height && imageRef?.height > 56) {
-      setImageHeight(imageRef?.height);
-    }
-  }, [imageRef?.height]);
+  const imageWidth = width && width < 599 ? width : 600;
+
+  const imageHeight = height ? imageWidth / (width / height) : 300;
 
   const gifRelativePath = `/documentation/originals/${gifUrl}`;
 
@@ -43,18 +32,22 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt, width, height }) => {
     <GifWrapper
       onClick={togglePlay}
       $height={height ?? imageHeight}
-      $width={width}
+      $width={imageWidth}
     >
       <PlayButton $playing={playing}>GIF</PlayButton>
       {playing ? (
-        <Image src={gifRelativePath} alt={alt} width={width} height={300} />
+        <Image
+          src={gifRelativePath}
+          alt={alt}
+          width={imageWidth}
+          height={imageHeight}
+        />
       ) : (
         <img
           src={firstFrameImage}
           alt={alt}
-          ref={setImageRef}
-          width={width}
-          height={height}
+          width={imageWidth}
+          height={imageHeight}
           loading="lazy"
         />
       )}

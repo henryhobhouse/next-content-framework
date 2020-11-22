@@ -63,18 +63,3 @@ export const checkImageDirectories = () => {
     if (!existsSync(fullDirPath)) mkdirp.sync(fullDirPath);
   });
 };
-
-/**
- * Remove originals (in lieu of reference images) and replace with empty
- * placeholders for content writers to know what is available
- */
-export const removeOriginals = async (
-  imagesSuccessfullyOptimised: string[],
-) => {
-  Promise.all(
-    imagesSuccessfullyOptimised.map(async (filePath) => {
-      await promises.unlink(filePath);
-      await promises.writeFile(`${filePath}.optimised`, '');
-    }),
-  );
-};

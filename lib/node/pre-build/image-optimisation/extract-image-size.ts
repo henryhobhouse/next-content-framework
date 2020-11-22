@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { orderPartRegex } from '../../../page-mdx/mdx-parse';
 import { ImageConfig } from './get-images-to-optimise';
 
-const imageSizeFilePath = `${process.cwd()}/images/meta-data.json`;
+const imageSizeFilePath = `${process.cwd()}/lib/image-meta-data.json`;
 
 const extractImageSize = (metaData: Metadata, imageConfig: ImageConfig) => {
   const imageAttributes = {

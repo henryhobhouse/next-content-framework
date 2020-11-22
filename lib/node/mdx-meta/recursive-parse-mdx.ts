@@ -36,7 +36,11 @@ export interface NodeData {
   streamlineIcon?: string;
 }
 
-type ParsedMdxCallback = (args: NodeData[], contentRoot: string) => void;
+type ParsedMdxCallback = (
+  args: NodeData[],
+  contentRoot: string,
+  imagePaths: string[],
+) => void;
 
 const recursiveParseMdx = async (
   rootDir: string,
@@ -44,6 +48,7 @@ const recursiveParseMdx = async (
   callback: ParsedMdxCallback,
 ): Promise<void> => {
   const allNodesData: NodeData[] = [];
+  const imagePaths: string[] = [];
 
   const parseMdx = async (directory: string, currentDepth: number) => {
     const dirents = await await promises.readdir(directory, {
@@ -54,6 +59,12 @@ const recursiveParseMdx = async (
     const docsFile = dirents.find(
       (dirent) => !!dirent.name.match(isPostFileRegex),
     );
+
+    dirents.forEach((dirent) => {
+      if (dirent.name.match(/(gif|png|svg|jpe?g)$/i)) {
+        imagePaths.push(resolve(directory, dirent.name));
+      }
+    });
 
     if (docsFile) {
       const markdownPath = resolve(directory, docsFile.name);
@@ -161,7 +172,7 @@ const recursiveParseMdx = async (
 
   await parseMdx(rootDir, 0);
 
-  await callback(allNodesData, contentRoot);
+  await callback(allNodesData, contentRoot, imagePaths);
 };
 
 export default recursiveParseMdx;

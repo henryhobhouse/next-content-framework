@@ -1,3 +1,5 @@
+import imageSizeMetaData from '../image-meta-data.json';
+
 import {
   isHtmlImageRegex,
   isMdImageRegex,
@@ -27,9 +29,11 @@ enum LinkType {
   html,
 }
 
-export interface ImageLink {
-  link: string;
+export interface ImageLinkMeta {
+  imageUrl: string;
   type: LinkType;
+  imageMdString: string;
+  altTitle?: string;
 }
 
 /**
@@ -42,7 +46,7 @@ const addRelativeImageLinks = async (
   parentDirectoryRelativePath: string,
   promises: FsPromises,
 ) => {
-  const imageLinksToUpdate: ImageLink[] = [];
+  const imageLinksToUpdate: ImageLinkMeta[] = [];
   let result: RegExpExecArray | null;
 
   // default newContent is just the content. i.e. all the links are absolute and don't need updating
@@ -54,14 +58,30 @@ const addRelativeImageLinks = async (
 
   // look for md image links in content and each time find one add to fileNamesToUpdate
   while ((result = mdImageRegCheck.exec(mdxContent)) !== null) {
-    if (result[2])
-      imageLinksToUpdate.push({ link: result[2], type: LinkType.md });
+    if (result[2]) {
+      // remove the ![ prefix and ]( postfix from string to get alt title
+      const altTitle = result[1].replace(/(^!\[)|(]\($)/gi, '');
+      imageLinksToUpdate.push({
+        imageUrl: result[2],
+        type: LinkType.md,
+        imageMdString: result[0],
+        altTitle,
+      });
+    }
   }
 
   // look for html image links in content and each time find one add to fileNamesToUpdate
   while ((result = htmlImageRegCheck.exec(mdxContent)) !== null) {
-    if (result[2])
-      imageLinksToUpdate.push({ link: result[2], type: LinkType.html });
+    if (result[2]) {
+      const altTitleArray = result[0].match(/(?<=alt=")\S+(?=")/gi);
+      const altTitle = altTitleArray ? altTitleArray[0] : undefined;
+      imageLinksToUpdate.push({
+        imageUrl: result[2],
+        type: LinkType.html,
+        imageMdString: result[0],
+        altTitle,
+      });
+    }
   }
 
   const nonDupedImageLinks = imageLinksToUpdate.filter(
@@ -70,9 +90,9 @@ const addRelativeImageLinks = async (
 
   // iterate through image links to parse relative path
   await Promise.all(
-    nonDupedImageLinks.map(async (imageLink) => {
+    nonDupedImageLinks.map(async (imageLinkMeta) => {
       // remove any path prefixes (./ or /) from beginning of link
-      const nonRelativeLink = imageLink.link.replace(/^(.\/|\/)/, '');
+      const nonRelativeLink = imageLinkMeta.imageUrl.replace(/^(.\/|\/)/, '');
       const imageLinkDirectories = nonRelativeLink.split('/');
       const fileName = imageLinkDirectories[
         imageLinkDirectories.length - 1
@@ -91,27 +111,35 @@ const addRelativeImageLinks = async (
       const parentSlug = parentDirectory
         ?.replace(/([0-9+]+)\./, '')
         .toLowerCase();
-      const optimisedFileName = `${parentSlug}-${fileName}`;
+      const revisedImageName = `${parentSlug}-${fileName}` as keyof typeof imageSizeMetaData;
+      const imageWidth = imageSizeMetaData[revisedImageName]?.width;
+      const imageHeight = imageSizeMetaData[revisedImageName]?.height;
 
-      const isValidLink = await checkValidLink(optimisedFileName, promises);
+      const isValidLink = await checkValidLink(revisedImageName, promises);
 
       if (isValidLink) {
-        enhancedContent = replaceLinkInContent(
-          imageLink.link,
-          optimisedFileName,
-          enhancedContent,
-        );
+        enhancedContent = replaceLinkInContent({
+          imageLinkMeta,
+          revisedImageName,
+          content: enhancedContent,
+          imageWidth,
+          imageHeight,
+        });
       }
 
       if (!isValidLink) {
         // eslint-disable-next-line no-console
         console.warn(
-          `WARNING: The image "${imageLink.link}" referenced in "${parentDirectoryRelativePath}/docs.mdx|md" does not exist.`,
+          `WARNING: The image "${imageLinkMeta.imageUrl}" referenced in "${parentDirectoryRelativePath}/docs.mdx|md" does not exist.`,
         );
         const links = enhancedContent.match(
-          imageLink.type === LinkType.md ? isMdImageRegex : isHtmlImageRegex,
+          imageLinkMeta.type === LinkType.md
+            ? isMdImageRegex
+            : isHtmlImageRegex,
         );
-        const badLink = links?.find((link) => link.includes(imageLink.link));
+        const badLink = links?.find((link) =>
+          link.includes(imageLinkMeta.imageUrl),
+        );
         if (badLink) {
           // escape all special characters from link and make global in case multiple instances
           const linkRegex = new RegExp(

@@ -24,7 +24,10 @@ const imageFileTypeRegex = /(?<=\.)(gif|png|svg|jpe?g)$/i;
  * Recurrisively iterate through all content directories and add any accepted image files
  * to a list.
  */
-const getImagesToOptimise = async (directoryPath: string) => {
+const getImagesToOptimise = async (
+  directoryPath: string,
+  numberOfImageSizes: number,
+) => {
   let totalImagesToOptimise = 0;
   const imagesPathsToOptimise: ImageConfig[] = [];
 
@@ -46,8 +49,10 @@ const getImagesToOptimise = async (directoryPath: string) => {
           const fileType =
             rawFileType === 'jpg' ? imageFileType.jpeg : rawFileType;
           if (fileType === imageFileType.svg) totalImagesToOptimise += 1;
-          else if (fileType === imageFileType.gif) totalImagesToOptimise += 2;
-          else if (fileType) totalImagesToOptimise += 2;
+          else if (fileType === imageFileType.gif) {
+            // gif don't need thumbnails so can remove one of the image sizes
+            totalImagesToOptimise += numberOfImageSizes - 1;
+          } else if (fileType) totalImagesToOptimise += numberOfImageSizes;
 
           if (fileType) {
             const imageConfig = {
