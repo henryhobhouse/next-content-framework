@@ -17,7 +17,7 @@ const imagesSuccessfullyOptimised: string[] = [];
 export const progressBar = new cliProgress.SingleBar({
   format: `|${colors.magenta(
     '{bar}',
-  )}| {percentage}% || {value}/{total} Image variants || ETA: {eta}s`,
+  )}| {percentage}% || {value}/{total} Images to be optimised || ETA: {eta}s`,
   barCompleteChar: '\u2588',
   barIncompleteChar: '\u2591',
   hideCursor: true,
@@ -73,7 +73,7 @@ const checkForErrors = () => {
       return;
     }
 
-    logger.info(`${imagesPathsToOptimise.length} total images to optimise`);
+    logger.info(`${imagesPathsToOptimise.length} total images`);
 
     progressBar.start(totalImagesToOptimise, 0, {
       speed: 'N/A',

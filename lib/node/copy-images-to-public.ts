@@ -4,6 +4,7 @@ import {
   rootImageDirectory,
   staticImageDirectory,
 } from '../page-mdx/mdx-parse';
+import { getOptimisedImageFileName } from './utils';
 
 export interface ImageData {
   path: string;
@@ -20,16 +21,12 @@ const syncImagesWithPublic = async (imageDatas: ImageData[]) => {
   checkImageDirExists();
   await Promise.allSettled(
     imageDatas.map(async (imageData) => {
-      const imagePathDirectories = imageData.path.split('/');
-      const parentDirectoryName = imagePathDirectories[
-        imagePathDirectories.length - 2
-      ]
-        .replace(/^([0-9+]+)\./i, '')
-        .toLowerCase();
+      const optimiseImageName = getOptimisedImageFileName(
+        imageData.name,
+        imageData.path,
+      );
 
-      const desitinationPath = `${process.cwd()}/${staticImageDirectory}/${rootImageDirectory}/${parentDirectoryName}-${
-        imageData.name
-      }`;
+      const desitinationPath = `${process.cwd()}/${staticImageDirectory}/${rootImageDirectory}/${optimiseImageName}`;
 
       if (!existsSync(desitinationPath)) {
         await promises.copyFile(imageData.path, desitinationPath);
