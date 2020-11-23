@@ -1,4 +1,5 @@
 import { promises, existsSync } from 'fs';
+import mkdirp from 'mkdirp';
 import {
   rootImageDirectory,
   staticImageDirectory,
@@ -10,7 +11,13 @@ export interface ImageData {
   name: string;
 }
 
+const checkImageDirExists = () => {
+  const fullDirPath = `${process.cwd()}/${staticImageDirectory}/${rootImageDirectory}`;
+  if (!existsSync(fullDirPath)) mkdirp.sync(fullDirPath);
+};
+
 const copyImagesToPublic = async (imageDatas: ImageData[]) => {
+  checkImageDirExists();
   await Promise.allSettled(
     imageDatas.map(async (imageData) => {
       const imagePathDirectories = imageData.path.split('/');
