@@ -1,5 +1,6 @@
 import recursiveFindRouteData from './recursive-find-route-data';
 
+import initialiseLogger from 'lib/node/logger';
 import { documentFilesBasePath } from 'lib/page-mdx/mdx-parse';
 import {
   Resolve,
@@ -25,6 +26,8 @@ const getConnectorLists = async (
   // with in the connectors-list and connectors pages
   const maxDepthToTraverse = 4;
   const documentPathRootSection = 'platform';
+
+  initialiseLogger({ metaData: { script: 'create-connector-list-page' } });
 
   const productDocumentsPath = `${documentFilesBasePath}/${documentPathRootSection}`;
   const connectorListSlug = `/${documentPathRootSection}/connectors/docs/${currentConnectorSection}`;

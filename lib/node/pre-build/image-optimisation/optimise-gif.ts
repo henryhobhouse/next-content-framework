@@ -15,7 +15,7 @@ const optimiseGif = async (
   imagesSuccessfullyOptimised: string[],
   progressBar: SingleBar,
 ) => {
-  await Promise.all(
+  await Promise.allSettled(
     imageSizes.map(async (width) => {
       try {
         const gifDataBuffer = await promises.readFile(imageConfig.filePath);

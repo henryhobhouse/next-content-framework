@@ -10,7 +10,7 @@ import resizeAndOptimiseImages from './image-optimisation/resize-and-optimise-im
 const documentFilesBasePath = `${process.cwd()}/content/`;
 const errorLogFileName = 'image-optimisation-error.log';
 
-const imageSizes = []; // Add to this if we need more options
+const imageSizes: number[] = []; // Add to this if we need more options
 const staticImageSizes = [...imageSizes, lazyLoadImageSize];
 const imagesSuccessfullyOptimised: string[] = [];
 // eslint-disable-next-line import/prefer-default-export

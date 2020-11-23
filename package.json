@@ -16,7 +16,7 @@
     "optimise-images": "NODE_OPTIONS='--max-old-space-size=16384' yarn local-ts-node ./lib/node/pre-build/optimise-images.ts"
   },
   "resolutions": {
-    "webpack": "^5.4.0"
+    "webpack": "^5.6.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
@@ -27,8 +27,7 @@
     "framer-motion": "^2.9.4",
     "gray-matter": "^4.0.2",
     "lodash": "^4.17.20",
-    "next": "^10.0.1",
-    "next-images": "^1.6.0",
+    "next": "^10.0.2",
     "next-mdx-remote": "^1.0.0",
     "next-transpile-modules": "^4.1.0",
     "prism-react-renderer": "^1.1.1",
@@ -41,7 +40,8 @@
     "remark-unwrap-images": "^2.0.0",
     "sass": "^1.27.0",
     "styled-components": "^5.2.1",
-    "underscore.string": "^3.3.5"
+    "underscore.string": "^3.3.5",
+    "webpack": "^5.6.0"
   },
   "devDependencies": {
     "@algolia/client-search": "^4.5.1",

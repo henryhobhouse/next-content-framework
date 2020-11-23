@@ -21,7 +21,7 @@ const resizeAndOptimiseImages = async (
   progressBar: SingleBar,
 ) => {
   checkImageDirectories();
-  await Promise.all(
+  await Promise.allSettled(
     imagesPathsToOptimise.map(async (imageConfig) => {
       // initialise sharp with image
       const pipeline = sharp(imageConfig.filePath);
@@ -58,7 +58,7 @@ const resizeAndOptimiseImages = async (
       }
 
       // handle all static images
-      await Promise.all(
+      await Promise.allSettled(
         staticImageSizes.map(async (width) => {
           const clonedPipeline = pipeline.clone();
           clonedPipeline.resize({ width }).png({

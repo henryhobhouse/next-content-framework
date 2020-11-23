@@ -4,7 +4,7 @@ import matter from 'gray-matter';
 import mdx from '@mdx-js/mdx';
 import { prune } from 'underscore.string';
 import visit from 'unist-util-visit';
-import { ImageData } from '../move-images';
+import { ImageData } from '../copy-images-to-public';
 
 import {
   connectorsListRegex,
@@ -165,7 +165,7 @@ const recursiveParseMdx = async (
         });
       }
     }
-    await Promise.all(
+    await Promise.allSettled(
       dirents.map(async (dirent) => {
         const isCompleted = currentDepth > navigationArticleDepth;
         if (dirent.isDirectory() && !isCompleted) {

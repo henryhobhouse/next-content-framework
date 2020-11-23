@@ -1,5 +1,6 @@
 import recursiveFindRouteData from './recursive-find-route-data';
 
+import initialiseLogger from 'lib/node/logger';
 import { documentFilesBasePath } from 'lib/page-mdx/mdx-parse';
 import {
   Resolve,
@@ -25,6 +26,8 @@ const getArticle = async (
   // as all articles docs mdx files are the first 4 layers of nested directories then only retrieve those.
   // (connectors being level 5 and 6 (relative to root) and dealt with in the connectors-list and connectors pages
   const maxDepthToTraverse = 4;
+
+  initialiseLogger({ metaData: { script: 'create-article-page' } });
 
   const productDocumentsPath = `${documentFilesBasePath}/${contentPagedir}`;
   const articleSlug = `/${contentPagedir}/${currentSlugSections.join('/')}`;

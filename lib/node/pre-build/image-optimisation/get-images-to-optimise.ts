@@ -39,7 +39,7 @@ const getImagesToOptimise = async (
       dirent.name.match(imageFilesPostfixesRegex),
     );
     if (imageDirents.length)
-      await Promise.all(
+      await Promise.allSettled(
         imageDirents.map(async (imageDirent) => {
           const imageFileLocation = resolve(path, imageDirent.name);
           const rawFileTypeArray = imageDirent.name.match(imageFileTypeRegex);
@@ -65,7 +65,7 @@ const getImagesToOptimise = async (
         }),
       );
 
-    await Promise.all(
+    await Promise.allSettled(
       dirents.map(async (dirent) => {
         const filePath = resolve(path, dirent.name);
         const isDirectory = dirent.isDirectory();

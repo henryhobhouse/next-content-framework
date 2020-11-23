@@ -69,7 +69,7 @@ const getArticleSlugs = async (
         }
       }
     }
-    await Promise.all(
+    await Promise.allSettled(
       dirents.map(async (dirent) => {
         if (dirent.isDirectory() && currentDepth <= maxDepthToTraverse) {
           const directoryPath = resolve(directory, dirent.name);

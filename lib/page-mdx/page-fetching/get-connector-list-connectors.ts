@@ -58,7 +58,7 @@ const getConnectorListConnectors = async (
         }
       }
     }
-    await Promise.all(
+    await Promise.allSettled(
       dirents.map(async (dirent) => {
         if (dirent.isDirectory()) {
           const directoryPath = resolve(directory, dirent.name);

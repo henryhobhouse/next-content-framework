@@ -17,10 +17,11 @@ const isProduction = process.env.NODE_ENV === 'production';
 const updateAlgoliaArticleIndex = async ({
   allNodesData,
   indexQueries,
+  contentRoot,
   enablePartialUpdates = true,
   chunkSize = 1000,
 }: UpdateIndexOptions) => {
-  if (!isProduction) return;
+  if (!isProduction || !allNodesData.length) return;
   if (!algoliaApiKey || !algoliaAppId) {
     throw new Error(
       '"ALGOLIA_APP_ID" or "ALGOLIA_API_KEY" not added to env variables',
@@ -28,7 +29,7 @@ const updateAlgoliaArticleIndex = async ({
   }
   logger.info(`Updating ${indexQueries.length} Algolia Indexes`);
   const algoliaClient = algoliasearch(algoliaAppId, algoliaApiKey);
-  await Promise.all(
+  await Promise.allSettled(
     indexQueries.map(async (indexQuery) => {
       const { indexName, transformer, matchFields = [] } = indexQuery;
 
@@ -57,7 +58,7 @@ const updateAlgoliaArticleIndex = async ({
       })) as (TransformedObject & { objectID: string })[];
 
       logger.info(
-        `Index query for ${indexQuery.indexName} has resulted in ${nodeObjects.length} results`,
+        `Index query for ${indexQuery.indexName} for content in "${contentRoot}" has resulted in ${nodeObjects.length} results`,
       );
 
       let hasChanged = nodeObjects;
@@ -123,7 +124,7 @@ const updateAlgoliaArticleIndex = async ({
           await indexToUse.saveObjects(chunked);
         });
 
-        await Promise.all(chunkJobs);
+        await Promise.allSettled(chunkJobs);
       } else {
         logger.info('No changes; skipping');
       }
@@ -144,7 +145,7 @@ const updateAlgoliaArticleIndex = async ({
         await moveIndex(algoliaClient, indexToUse, index);
       }
 
-      logger.log('success', 'Done!');
+      logger.log('success', `Content in ${contentRoot}: Done!`);
 
       // eslint-disable-next-line consistent-return
       return {

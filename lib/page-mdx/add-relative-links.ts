@@ -90,7 +90,7 @@ const addRelativeImageLinks = async (
   );
 
   // iterate through image links to parse relative path
-  await Promise.all(
+  await Promise.allSettled(
     nonDupedImageLinks.map(async (imageLinkMeta) => {
       // remove any path prefixes (./ or /) from beginning of link
       const nonRelativeLink = imageLinkMeta.imageUrl.replace(/^(.\/|\/)/, '');
@@ -129,10 +129,14 @@ const addRelativeImageLinks = async (
       }
 
       if (!isValidLink) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `WARNING: The image "${imageLinkMeta.imageUrl}" referenced in "${parentDirectoryRelativePath}/docs.mdx|md" does not exist.`,
-        );
+        // eslint-disable-next-line no-undef
+        logger.warn(`${imageLinkMeta.imageUrl} does not exist. See error log`);
+        // eslint-disable-next-line no-undef
+        logger.log({
+          noConsole: true,
+          level: 'error',
+          message: `WARNING: The image "${imageLinkMeta.imageUrl}" referenced in "${parentDirectoryRelativePath}/docs.mdx|md" does not exist.`,
+        });
         const links = enhancedContent.match(
           imageLinkMeta.type === LinkType.md
             ? isMdImageRegex

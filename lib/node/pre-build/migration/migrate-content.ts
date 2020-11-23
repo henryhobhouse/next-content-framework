@@ -93,7 +93,7 @@ const migrateContent = async (
       }
     }
   }
-  await Promise.all(
+  await Promise.allSettled(
     dirents.map(async (dirent) => {
       const directPath = resolve(dir, dirent.name);
       const isDirectory = dirent.isDirectory();
