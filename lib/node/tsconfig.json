@@ -18,6 +18,7 @@
     "isolatedModules": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "resolveJsonModule": true,
     "noEmit": true,
     "typeRoots": ["./types"],
   },

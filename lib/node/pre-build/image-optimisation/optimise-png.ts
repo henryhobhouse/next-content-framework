@@ -2,8 +2,8 @@ import { SingleBar } from 'cli-progress';
 import imagemin from 'imagemin';
 import imageminPngquant from 'imagemin-pngquant';
 import { Sharp } from 'sharp';
+import { ImageConfig } from '../../types/image-optimisation';
 
-import { ImageConfig } from './get-images-to-optimise';
 import { writeOptimisedImage, writeFromPipeline } from './write-to-system';
 
 /**

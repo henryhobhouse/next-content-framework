@@ -1,12 +1,13 @@
 import { SingleBar } from 'cli-progress';
 import { existsSync } from 'fs';
 import mkdirp from 'mkdirp';
+// eslint-disable-next-line import/no-cycle
 import {
   referenceImageSize,
   lazyLoadImageSize,
   staticImageDirectory,
-} from '../../../page-mdx/mdx-parse';
-import { ImageConfig } from './get-images-to-optimise';
+} from '../page-mdx/mdx-parse';
+import { ImageConfig } from './types/image-optimisation';
 
 const orderPartRegex = /^([0-9+]+)\./i;
 export const originalFileDirectory = 'originals';
@@ -53,7 +54,6 @@ export const getWriteFilePath = (imageConfig: ImageConfig, width?: number) => {
 
 export const checkImageDirectories = () => {
   const dirsToCheck = [
-    `${staticImageDirectory}/${originalFileDirectory}`,
     `${staticImageDirectory}/${svgFileDirectory}`,
     `${staticImageDirectory}/${lazyLoadImageSize}`,
   ];
@@ -61,4 +61,19 @@ export const checkImageDirectories = () => {
     const fullDirPath = `${process.cwd()}/${dir}`;
     if (!existsSync(fullDirPath)) mkdirp.sync(fullDirPath);
   });
+};
+
+export const numberPrefixRegex = /^([0-9+]+)\./i;
+
+export const getOptimisedImageFileName = (
+  fileName: string,
+  imagePath: string,
+) => {
+  const imagePathDirectories = imagePath.split('/');
+  const parentDirectoryName = imagePathDirectories[
+    imagePathDirectories.length - 2
+  ]
+    .replace(numberPrefixRegex, '')
+    .toLowerCase();
+  return `${parentDirectoryName}-${fileName.toLowerCase()}`;
 };

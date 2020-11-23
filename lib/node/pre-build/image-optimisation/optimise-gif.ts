@@ -3,8 +3,8 @@ import gifResize from '@gumlet/gif-resize';
 import { promises } from 'fs';
 import { SingleBar } from 'cli-progress';
 
-import { ImageConfig } from './get-images-to-optimise';
 import { writeOptimisedImage } from './write-to-system';
+import { ImageConfig } from '../../types/image-optimisation';
 
 /**
  * Resize and optimised GIF images

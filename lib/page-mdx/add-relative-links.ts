@@ -8,6 +8,7 @@ import {
   staticImageDirectory,
 } from './mdx-parse';
 
+import { numberPrefixRegex } from 'lib/node/utils';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 const checkFileExists = async (filePath: string, promises: FsPromises) => {
@@ -110,7 +111,7 @@ const addRelativeImageLinks = async (
           ? nonRelativeLinkSegments[nonRelativeLinkSegments.length - 2]
           : relativePathSegments[relativePathSegments.length - 1];
       const parentSlug = parentDirectory
-        ?.replace(/([0-9+]+)\./, '')
+        ?.replace(numberPrefixRegex, '')
         .toLowerCase();
       const revisedImageName = `${parentSlug}-${fileName}` as keyof typeof imageSizeMetaData;
       const imageWidth = imageSizeMetaData[revisedImageName]?.width;

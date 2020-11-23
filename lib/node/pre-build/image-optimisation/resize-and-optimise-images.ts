@@ -1,14 +1,14 @@
 import { SingleBar } from 'cli-progress';
 import { promises } from 'fs';
 import sharp from 'sharp';
-import { ImageConfig, imageFileType } from './get-images-to-optimise';
 import optimiseGif from './optimise-gif';
 import optimiseJpeg from './optimise-jpeg';
 import optimisePng from './optimise-png';
 import optimiseSvg from './optimise-svg';
 import extractImageSize from './extract-image-size';
-import { checkImageDirectories } from './utils';
+import { checkImageDirectories } from '../../utils';
 import { writeOptimisedImage, writeFromPipeline } from './write-to-system';
+import { ImageConfig, imageFileType } from '../../types/image-optimisation';
 
 /**
  * Resize, optimise and extract size metadata for PNG, JPEG, SVG and GIF images

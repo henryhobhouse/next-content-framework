@@ -1,7 +1,7 @@
 import { SingleBar } from 'cli-progress';
 import { promises } from 'fs';
 import imageminSvgo from 'imagemin-svgo';
-import { ImageConfig } from './get-images-to-optimise';
+import { ImageConfig } from '../../types/image-optimisation';
 import { writeOptimisedImage } from './write-to-system';
 
 /**

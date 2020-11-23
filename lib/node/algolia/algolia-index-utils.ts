@@ -2,8 +2,7 @@ import { Settings, SearchOptions } from '@algolia/client-search';
 import { SearchIndex, SearchClient } from 'algoliasearch';
 
 import { NodeData } from '../mdx-meta/recursive-parse-mdx';
-
-import { SearchHit, IndexQuery } from './types';
+import { SearchHit, IndexQuery } from '../types/algolia';
 
 /**
  * Does an Algolia index exist already

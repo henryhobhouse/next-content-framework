@@ -1,9 +1,8 @@
 import { SingleBar } from 'cli-progress';
 import { writeFileSync } from 'fs';
 import { Sharp } from 'sharp';
-
-import { ImageConfig } from './get-images-to-optimise';
-import { getWriteFilePath, logSuccess } from './utils';
+import { ImageConfig } from '../../types/image-optimisation';
+import { getWriteFilePath, logSuccess } from '../../utils';
 
 /**
  * Write optimised image data to a file in the system

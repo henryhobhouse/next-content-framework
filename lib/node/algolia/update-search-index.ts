@@ -1,5 +1,10 @@
 import algoliasearch from 'algoliasearch';
 import chunk from 'lodash/chunk';
+import {
+  UpdateIndexOptions,
+  SearchHit,
+  TransformedObject,
+} from '../types/algolia';
 
 import {
   fetchAlgoliaNodes,
@@ -8,7 +13,6 @@ import {
   getSettingsToApply,
   moveIndex,
 } from './algolia-index-utils';
-import { UpdateIndexOptions, SearchHit, TransformedObject } from './types';
 
 const algoliaAppId = process.env.ALGOLIA_APP_ID;
 const algoliaApiKey = process.env.ALGOLIA_API_KEY;

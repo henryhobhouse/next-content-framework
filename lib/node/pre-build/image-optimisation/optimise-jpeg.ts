@@ -2,7 +2,7 @@ import { SingleBar } from 'cli-progress';
 import imagemin from 'imagemin';
 import imageminMozjpeg from 'imagemin-mozjpeg';
 import { Sharp } from 'sharp';
-import { ImageConfig } from './get-images-to-optimise';
+import { ImageConfig } from '../../types/image-optimisation';
 import { writeOptimisedImage, writeFromPipeline } from './write-to-system';
 
 /**

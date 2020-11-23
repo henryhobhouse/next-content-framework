@@ -1,21 +1,14 @@
 import { promises } from 'fs';
 import { resolve } from 'path';
+import {
+  ImageConfig,
+  ImageFileType,
+  imageFileType,
+} from '../../types/image-optimisation';
 
-export const imageFileType = {
-  svg: 'svg',
-  jpeg: 'jpeg',
-  png: 'png',
-  gif: 'gif',
-  webp: 'webp',
-} as const;
+import { getOptimisedImageFileName } from '../../utils';
 
-export type ImageFileType = keyof typeof imageFileType;
-
-export interface ImageConfig {
-  filePath: string;
-  name: string;
-  fileType: keyof typeof imageFileType;
-}
+import preOptimisedImageMetas from '../../../image-meta-data.json';
 
 const imageFilesPostfixesRegex = /(gif|png|svg|jpe?g)$/i;
 const imageFileTypeRegex = /(?<=\.)(gif|png|svg|jpe?g)$/i;
@@ -53,6 +46,21 @@ const getImagesToOptimise = async ({
           const rawFileType = Array.isArray(rawFileTypeArray)
             ? rawFileTypeArray[0]
             : '';
+
+          if (rawFileType) {
+            const optimisedImageName = getOptimisedImageFileName(
+              imageDirent.name,
+              imageFileLocation,
+            );
+            // if image has already being optimised then don't add to the list to be optimised
+            if (
+              preOptimisedImageMetas[
+                optimisedImageName as keyof typeof preOptimisedImageMetas
+              ]
+            )
+              return;
+          }
+
           const fileType =
             rawFileType === 'jpg' ? imageFileType.jpeg : rawFileType;
           if (fileType === imageFileType.svg) totalImagesToOptimise += 1;

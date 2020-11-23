@@ -1,7 +1,7 @@
 import { Metadata } from 'sharp';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { orderPartRegex } from '../../../page-mdx/mdx-parse';
-import { ImageConfig } from './get-images-to-optimise';
+import { getOptimisedImageFileName } from '../../utils';
+import { ImageConfig } from '../../types/image-optimisation';
 
 const imageSizeFilePath = `${process.cwd()}/lib/image-meta-data.json`;
 
@@ -11,15 +11,10 @@ const extractImageSize = (metaData: Metadata, imageConfig: ImageConfig) => {
     height: metaData.height,
   };
 
-  const imagePathDirectories = imageConfig.filePath
-    .replace(orderPartRegex, '/')
-    .split('/');
-
-  const parentDirectoryName = imagePathDirectories[
-    imagePathDirectories.length - 2
-  ].toLowerCase();
-
-  const imageFileName = `${parentDirectoryName}-${imageConfig.name}`;
+  const imageFileName = getOptimisedImageFileName(
+    imageConfig.name,
+    imageConfig.filePath,
+  );
 
   // if image size file doesn't exist yet create it
   if (!existsSync(imageSizeFilePath)) {
