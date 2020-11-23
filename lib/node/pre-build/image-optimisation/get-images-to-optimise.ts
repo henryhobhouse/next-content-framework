@@ -40,9 +40,11 @@ const getImagesToOptimise = async ({
     const dirents = await promises.readdir(path, {
       withFileTypes: true,
     });
+
     const imageDirents = dirents.filter((dirent) =>
       dirent.name.match(imageFilesPostfixesRegex),
     );
+
     if (imageDirents.length)
       await Promise.allSettled(
         imageDirents.map(async (imageDirent) => {

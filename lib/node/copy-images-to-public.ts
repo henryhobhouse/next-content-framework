@@ -16,7 +16,7 @@ const checkImageDirExists = () => {
   if (!existsSync(fullDirPath)) mkdirp.sync(fullDirPath);
 };
 
-const copyImagesToPublic = async (imageDatas: ImageData[]) => {
+const syncImagesWithPublic = async (imageDatas: ImageData[]) => {
   checkImageDirExists();
   await Promise.allSettled(
     imageDatas.map(async (imageData) => {
@@ -38,4 +38,4 @@ const copyImagesToPublic = async (imageDatas: ImageData[]) => {
   );
 };
 
-export default copyImagesToPublic;
+export default syncImagesWithPublic;

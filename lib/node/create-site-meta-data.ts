@@ -4,7 +4,7 @@ import updateAlgoliaArticleIndex from './algolia/update-search-index';
 import createNavigationConfigs from './mdx-meta/create-navigation-configs';
 import recursiveParseMdx, { NodeData } from './mdx-meta/recursive-parse-mdx';
 import initialiseLogger from './logger';
-import copyImagesToPublic, { ImageData } from './copy-images-to-public';
+import syncImagesWithPublic, { ImageData } from './copy-images-to-public';
 
 const basePath = process.cwd();
 const contentDir = `${basePath}/content`;
@@ -20,7 +20,7 @@ const createSiteMetaData = async () => {
     imageDatas: ImageData[],
   ) => {
     allNodesData.push(...contentRootNodesData);
-    await copyImagesToPublic(imageDatas);
+    await syncImagesWithPublic(imageDatas);
     await createNavigationConfigs(contentRootNodesData, contentRoot, basePath);
     await updateAlgoliaArticleIndex({
       allNodesData: contentRootNodesData,
