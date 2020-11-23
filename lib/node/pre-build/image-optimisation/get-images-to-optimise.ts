@@ -20,14 +20,19 @@ export interface ImageConfig {
 const imageFilesPostfixesRegex = /(gif|png|svg|jpe?g)$/i;
 const imageFileTypeRegex = /(?<=\.)(gif|png|svg|jpe?g)$/i;
 
+interface GetImagesToOptimiseProps {
+  directoryPath: string;
+  numberOfImageSizes: number;
+}
+
 /**
  * Recurrisively iterate through all content directories and add any accepted image files
  * to a list.
  */
-const getImagesToOptimise = async (
-  directoryPath: string,
-  numberOfImageSizes: number,
-) => {
+const getImagesToOptimise = async ({
+  directoryPath,
+  numberOfImageSizes,
+}: GetImagesToOptimiseProps) => {
   let totalImagesToOptimise = 0;
   const imagesPathsToOptimise: ImageConfig[] = [];
 

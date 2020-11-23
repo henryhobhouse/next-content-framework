@@ -27,7 +27,7 @@ const getConnector = async (
   const maxDepthToTraverse = 5;
   const documentPathRootSection = 'platform';
 
-  initialiseLogger({ metaData: { script: 'create-connector-page' } });
+  await initialiseLogger({ metaData: { script: 'create-connector-page' } });
 
   const productDocumentsPath = `${documentFilesBasePath}/${documentPathRootSection}`;
   const connectorSlug = `/${documentPathRootSection}/connectors/docs/${currentSectionConnectorPath}`;

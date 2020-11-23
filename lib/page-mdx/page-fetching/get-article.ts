@@ -27,7 +27,7 @@ const getArticle = async (
   // (connectors being level 5 and 6 (relative to root) and dealt with in the connectors-list and connectors pages
   const maxDepthToTraverse = 4;
 
-  initialiseLogger({ metaData: { script: 'create-article-page' } });
+  await initialiseLogger({ metaData: { script: 'create-article-page' } });
 
   const productDocumentsPath = `${documentFilesBasePath}/${contentPagedir}`;
   const articleSlug = `/${contentPagedir}/${currentSlugSections.join('/')}`;

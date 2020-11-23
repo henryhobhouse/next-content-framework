@@ -12,7 +12,7 @@ const contentRoots = ['platform', 'embedded', 'images'];
 
 const createSiteMetaData = async () => {
   const allNodesData: NodeData[] = [];
-  initialiseLogger({ metaData: { script: 'create-site-meta-data' } });
+  await initialiseLogger({ metaData: { script: 'create-site-meta-data' } });
 
   const parsedMdxCallback = async (
     contentRootNodesData: NodeData[],

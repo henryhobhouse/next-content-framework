@@ -63,10 +63,10 @@ const checkForErrors = () => {
     const {
       imagesPathsToOptimise,
       totalImagesToOptimise,
-    } = await getImagesToOptimise(
-      documentFilesBasePath,
-      staticImageSizes.length,
-    );
+    } = await getImagesToOptimise({
+      directoryPath: documentFilesBasePath,
+      numberOfImageSizes: staticImageSizes.length,
+    });
 
     if (imagesPathsToOptimise.length === 0) {
       logger.info('No new images to optimise.');
@@ -79,8 +79,6 @@ const checkForErrors = () => {
       speed: 'N/A',
     });
 
-    // TOOD: feat push images sizes to config object to be used at build time to add size meta data to html
-    // TODO: tweak image quality/compression levels to bring inline with Gatsby Images (currently over compressed slighlty)
     // TODO: add functionality to check if placeholder has being removed (from reference files) and delete all assocaited
     // images accordingly.
 
