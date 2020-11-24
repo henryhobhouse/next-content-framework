@@ -15,7 +15,7 @@ import {
   orderRegex,
   pathRegex,
 } from '../../page-mdx/mdx-parse';
-import createNodeId from '../create-node-id';
+import createNodeId from './create-node-id';
 
 const navigationArticleDepth = 5;
 
