@@ -7,7 +7,7 @@ import {
   lazyLoadImageSize,
   staticImageDirectory,
 } from '../page-mdx/mdx-parse';
-import { ImageConfig } from './types/image-optimisation';
+import { ImageMeta } from './types/image-optimisation';
 
 const orderPartRegex = /^([0-9+]+)\./i;
 export const originalFileDirectory = 'originals';
@@ -33,8 +33,8 @@ export const logSuccess = (
  * images directory along with svgs and small size variants for lazy loading.
  * The rest go into the public folder to be delivered statically.
  */
-export const getWriteFilePath = (imageConfig: ImageConfig, width?: number) => {
-  const imagePathDirectories = imageConfig.filePath.split('/');
+export const getWriteFilePath = (imageMeta: ImageMeta, width?: number) => {
+  const imagePathDirectories = imageMeta.filePath.split('/');
   const parentDirectoryName = imagePathDirectories[
     imagePathDirectories.length - 2
   ]
@@ -45,7 +45,7 @@ export const getWriteFilePath = (imageConfig: ImageConfig, width?: number) => {
     writePath = `${staticImageDirectory}/${originalFileDirectory}/${parentDirectoryName}`;
   else if (width === lazyLoadImageSize)
     writePath = `${staticImageDirectory}/${width}/${parentDirectoryName}`;
-  else if (imageConfig.fileType === 'svg')
+  else if (imageMeta.fileType === 'svg')
     writePath = `${staticImageDirectory}/${svgFileDirectory}/${parentDirectoryName}`;
   else writePath = `${staticImageDirectory}/${width}/${parentDirectoryName}`;
 

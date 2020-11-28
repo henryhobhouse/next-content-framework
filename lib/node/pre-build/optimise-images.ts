@@ -6,12 +6,13 @@ import getImagesToOptimise from './image-optimisation/get-images-to-optimise';
 import initialiseLogger from '../logger';
 import { lazyLoadImageSize } from '../../page-mdx/mdx-parse';
 import resizeAndOptimiseImages from './image-optimisation/resize-and-optimise-images';
+import checkForDeletedImages from './image-optimisation/check-for-deleted-images';
 
 const documentFilesBasePath = `${process.cwd()}/content/`;
 const errorLogFileName = 'image-optimisation-error.log';
 
 const imageSizes: number[] = []; // Add to this if we need more options
-const staticImageSizes = [...imageSizes, lazyLoadImageSize];
+export const staticImageSizes = [...imageSizes, lazyLoadImageSize];
 const imagesSuccessfullyOptimised: string[] = [];
 // eslint-disable-next-line import/prefer-default-export
 export const progressBar = new cliProgress.SingleBar({
@@ -81,7 +82,6 @@ const checkForErrors = () => {
 
     // TODO: add functionality to check if placeholder has being removed (from reference files) and delete all assocaited
     // images accordingly.
-
     await resizeAndOptimiseImages(
       imagesPathsToOptimise,
       imagesSuccessfullyOptimised,
@@ -89,6 +89,8 @@ const checkForErrors = () => {
       staticImageSizes,
       progressBar,
     );
+
+    await checkForDeletedImages(imagesPathsToOptimise, staticImageSizes);
 
     progressBar.stop();
     if (imagesSuccessfullyOptimised.length > 0) {

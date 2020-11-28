@@ -8,13 +8,13 @@ import optimiseSvg from './optimise-svg';
 import extractImageSize from './extract-image-size';
 import { checkImageDirectories } from '../../utils';
 import { writeOptimisedImage, writeFromPipeline } from './write-to-system';
-import { ImageConfig, imageFileType } from '../../types/image-optimisation';
+import { ImageMeta, imageFileType } from '../../types/image-optimisation';
 
 /**
  * Resize, optimise and extract size metadata for PNG, JPEG, SVG and GIF images
  */
 const resizeAndOptimiseImages = async (
-  imagesPathsToOptimise: ImageConfig[],
+  imagesPathsToOptimise: ImageMeta[],
   imagesSuccessfullyOptimised: string[],
   imageSizes: number[],
   staticImageSizes: number[],
@@ -22,14 +22,14 @@ const resizeAndOptimiseImages = async (
 ) => {
   checkImageDirectories();
   await Promise.allSettled(
-    imagesPathsToOptimise.map(async (imageConfig) => {
+    imagesPathsToOptimise.map(async (imageMeta) => {
       // initialise sharp with image
-      const pipeline = sharp(imageConfig.filePath);
+      const pipeline = sharp(imageMeta.filePath);
 
       // get image size metadata and save to file system for use in build
       pipeline
         .metadata()
-        .then((metaData) => extractImageSize(metaData, imageConfig))
+        .then((metaData) => extractImageSize(metaData, imageMeta))
         .catch((error) =>
           logger.log({
             level: 'error',
@@ -38,9 +38,9 @@ const resizeAndOptimiseImages = async (
           }),
         );
 
-      if (imageConfig.fileType === imageFileType.gif) {
+      if (imageMeta.fileType === imageFileType.gif) {
         await optimiseGif(
-          imageConfig,
+          imageMeta,
           imageSizes,
           imagesSuccessfullyOptimised,
           progressBar,
@@ -48,12 +48,8 @@ const resizeAndOptimiseImages = async (
         return;
       }
 
-      if (imageConfig.fileType === imageFileType.svg) {
-        await optimiseSvg(
-          imageConfig,
-          imagesSuccessfullyOptimised,
-          progressBar,
-        );
+      if (imageMeta.fileType === imageFileType.svg) {
+        await optimiseSvg(imageMeta, imagesSuccessfullyOptimised, progressBar);
         return;
       }
 
@@ -63,13 +59,13 @@ const resizeAndOptimiseImages = async (
           const clonedPipeline = pipeline.clone();
           clonedPipeline.resize({ width }).png({
             compressionLevel: 9,
-            force: imageConfig.fileType === imageFileType.png,
+            force: imageMeta.fileType === imageFileType.png,
           });
 
-          if (imageConfig.fileType === imageFileType.png) {
+          if (imageMeta.fileType === imageFileType.png) {
             try {
               await optimisePng(
-                imageConfig,
+                imageMeta,
                 clonedPipeline,
                 width,
                 imagesSuccessfullyOptimised,
@@ -79,13 +75,11 @@ const resizeAndOptimiseImages = async (
               logger.log({
                 level: 'error',
                 noConsole: true,
-                message: `As ${imageConfig.fileType} ${imageConfig.filePath} cannot be optimised and/or resized. We will use the orginal instead. PLEASE check if original works to avoid issues in the app`,
+                message: `As ${imageMeta.fileType} ${imageMeta.filePath} cannot be optimised and/or resized. We will use the orginal instead. PLEASE check if original works to avoid issues in the app`,
               });
-              const originalFile = await promises.readFile(
-                imageConfig.filePath,
-              );
+              const originalFile = await promises.readFile(imageMeta.filePath);
               await writeOptimisedImage(
-                imageConfig,
+                imageMeta,
                 originalFile,
                 imagesSuccessfullyOptimised,
                 progressBar,
@@ -95,10 +89,10 @@ const resizeAndOptimiseImages = async (
             return;
           }
 
-          if (imageConfig.fileType === imageFileType.jpeg) {
+          if (imageMeta.fileType === imageFileType.jpeg) {
             try {
               await optimiseJpeg(
-                imageConfig,
+                imageMeta,
                 clonedPipeline,
                 width,
                 imagesSuccessfullyOptimised,
@@ -108,13 +102,11 @@ const resizeAndOptimiseImages = async (
               logger.log({
                 level: 'error',
                 noConsole: true,
-                message: `As ${imageConfig.fileType} ${imageConfig.filePath} cannot be optimised and/or resized. We will use the orginal instead. PLEASE check if original works to avoid issues in the app`,
+                message: `As ${imageMeta.fileType} ${imageMeta.filePath} cannot be optimised and/or resized. We will use the orginal instead. PLEASE check if original works to avoid issues in the app`,
               });
-              const originalFile = await promises.readFile(
-                imageConfig.filePath,
-              );
+              const originalFile = await promises.readFile(imageMeta.filePath);
               await writeOptimisedImage(
-                imageConfig,
+                imageMeta,
                 originalFile,
                 imagesSuccessfullyOptimised,
                 progressBar,
@@ -125,7 +117,7 @@ const resizeAndOptimiseImages = async (
           }
 
           await writeFromPipeline(
-            imageConfig,
+            imageMeta,
             clonedPipeline,
             imagesSuccessfullyOptimised,
             progressBar,

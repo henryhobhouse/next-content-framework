@@ -1,7 +1,7 @@
 import { promises } from 'fs';
 import { resolve } from 'path';
 import {
-  ImageConfig,
+  ImageMeta,
   ImageFileType,
   imageFileType,
 } from '../../types/image-optimisation';
@@ -27,7 +27,7 @@ const getImagesToOptimise = async ({
   numberOfImageSizes,
 }: GetImagesToOptimiseProps) => {
   let totalImagesToOptimise = 0;
-  const imagesPathsToOptimise: ImageConfig[] = [];
+  const imagesPathsToOptimise: ImageMeta[] = [];
 
   const searchContentDirectory = async (path: string) => {
     const dirents = await promises.readdir(path, {
@@ -47,11 +47,12 @@ const getImagesToOptimise = async ({
             ? rawFileTypeArray[0]
             : '';
 
+          const optimisedImageName = getOptimisedImageFileName(
+            imageDirent.name,
+            imageFileLocation,
+          );
+
           if (rawFileType) {
-            const optimisedImageName = getOptimisedImageFileName(
-              imageDirent.name,
-              imageFileLocation,
-            );
             // if image has already being optimised then don't add to the list to be optimised
             if (
               preOptimisedImageMetas[
@@ -70,12 +71,13 @@ const getImagesToOptimise = async ({
           } else if (fileType) totalImagesToOptimise += numberOfImageSizes;
 
           if (fileType) {
-            const imageConfig = {
+            const imageMeta = {
               filePath: imageFileLocation,
               name: imageDirent.name,
+              optimisedImageName,
               fileType: fileType as ImageFileType,
             };
-            imagesPathsToOptimise.push(imageConfig);
+            imagesPathsToOptimise.push(imageMeta);
           }
         }),
       );

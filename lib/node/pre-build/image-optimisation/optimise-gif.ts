@@ -4,13 +4,13 @@ import { promises } from 'fs';
 import { SingleBar } from 'cli-progress';
 
 import { writeOptimisedImage } from './write-to-system';
-import { ImageConfig } from '../../types/image-optimisation';
+import { ImageMeta } from '../../types/image-optimisation';
 
 /**
  * Resize and optimised GIF images
  */
 const optimiseGif = async (
-  imageConfig: ImageConfig,
+  imageMeta: ImageMeta,
   imageSizes: number[],
   imagesSuccessfullyOptimised: string[],
   progressBar: SingleBar,
@@ -18,7 +18,7 @@ const optimiseGif = async (
   await Promise.allSettled(
     imageSizes.map(async (width) => {
       try {
-        const gifDataBuffer = await promises.readFile(imageConfig.filePath);
+        const gifDataBuffer = await promises.readFile(imageMeta.filePath);
 
         // resize image
         const resizedOptimisedGif = await gifResize({
@@ -32,7 +32,7 @@ const optimiseGif = async (
             optimizationLevel: 3,
           })(resizedOptimisedGif);
           writeOptimisedImage(
-            imageConfig,
+            imageMeta,
             optimisedGif,
             imagesSuccessfullyOptimised,
             progressBar,
@@ -43,13 +43,13 @@ const optimiseGif = async (
           logger.log({
             level: 'error',
             noConsole: true,
-            message: `Cannot optimise GIF ${imageConfig.filePath.replace(
+            message: `Cannot optimise GIF ${imageMeta.filePath.replace(
               process.cwd(),
               '',
             )}, will use resized image only. ${err.message}`,
           });
           writeOptimisedImage(
-            imageConfig,
+            imageMeta,
             resizedOptimisedGif,
             imagesSuccessfullyOptimised,
             progressBar,
@@ -61,7 +61,7 @@ const optimiseGif = async (
         logger.log({
           level: 'error',
           noConsole: true,
-          message: `Error resizing gif ${imageConfig.filePath.replace(
+          message: `Error resizing gif ${imageMeta.filePath.replace(
             process.cwd(),
             '',
           )}. Please check it. ${err.message}`,

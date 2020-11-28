@@ -2,14 +2,14 @@ import { SingleBar } from 'cli-progress';
 import imagemin from 'imagemin';
 import imageminMozjpeg from 'imagemin-mozjpeg';
 import { Sharp } from 'sharp';
-import { ImageConfig } from '../../types/image-optimisation';
+import { ImageMeta } from '../../types/image-optimisation';
 import { writeOptimisedImage, writeFromPipeline } from './write-to-system';
 
 /**
  * Optimised already resized JPEG images
  */
 const optimiseJpeg = async (
-  imageConfig: ImageConfig,
+  imageMeta: ImageMeta,
   pipeline: Sharp,
   width: number,
   imagesSuccessfullyOptimised: string[],
@@ -27,7 +27,7 @@ const optimiseJpeg = async (
     });
 
     writeOptimisedImage(
-      imageConfig,
+      imageMeta,
       optimisedJpeg,
       imagesSuccessfullyOptimised,
       progressBar,
@@ -37,13 +37,13 @@ const optimiseJpeg = async (
     logger.log({
       level: 'error',
       noConsole: true,
-      message: `Cannot optimise JPEG ${imageConfig.filePath.replace(
+      message: `Cannot optimise JPEG ${imageMeta.filePath.replace(
         process.cwd(),
         '',
       )}, will use resized image only. ${err.message}`,
     });
     writeFromPipeline(
-      imageConfig,
+      imageMeta,
       pipeline,
       imagesSuccessfullyOptimised,
       progressBar,

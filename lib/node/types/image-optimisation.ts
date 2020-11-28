@@ -8,8 +8,9 @@ export const imageFileType = {
 
 export type ImageFileType = keyof typeof imageFileType;
 
-export interface ImageConfig {
+export interface ImageMeta {
   filePath: string;
+  optimisedImageName: string;
   name: string;
   fileType: keyof typeof imageFileType;
 }

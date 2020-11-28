@@ -1,22 +1,22 @@
 import { SingleBar } from 'cli-progress';
 import { promises } from 'fs';
 import imageminSvgo from 'imagemin-svgo';
-import { ImageConfig } from '../../types/image-optimisation';
+import { ImageMeta } from '../../types/image-optimisation';
 import { writeOptimisedImage } from './write-to-system';
 
 /**
  * Optimised SVG images
  */
 const optimiseSvg = async (
-  imageConfig: ImageConfig,
+  imageMeta: ImageMeta,
   imagesSuccessfullyOptimised: string[],
   progressBar: SingleBar,
 ) => {
   try {
-    const svgDataBuffer = await promises.readFile(imageConfig.filePath);
+    const svgDataBuffer = await promises.readFile(imageMeta.filePath);
     const optimisedSvg = await imageminSvgo({})(svgDataBuffer);
     writeOptimisedImage(
-      imageConfig,
+      imageMeta,
       optimisedSvg,
       imagesSuccessfullyOptimised,
       progressBar,
@@ -25,7 +25,7 @@ const optimiseSvg = async (
     logger.log({
       level: 'error',
       noConsole: true,
-      message: `Cannot optimise SVG ${imageConfig.filePath.replace(
+      message: `Cannot optimise SVG ${imageMeta.filePath.replace(
         process.cwd(),
         '',
       )}, will use resized image only. ${err.message}`,

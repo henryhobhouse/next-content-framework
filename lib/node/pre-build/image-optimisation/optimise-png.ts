@@ -2,7 +2,7 @@ import { SingleBar } from 'cli-progress';
 import imagemin from 'imagemin';
 import imageminPngquant from 'imagemin-pngquant';
 import { Sharp } from 'sharp';
-import { ImageConfig } from '../../types/image-optimisation';
+import { ImageMeta } from '../../types/image-optimisation';
 
 import { writeOptimisedImage, writeFromPipeline } from './write-to-system';
 
@@ -10,7 +10,7 @@ import { writeOptimisedImage, writeFromPipeline } from './write-to-system';
  * Optimised already resized GIF images
  */
 const optimisePng = async (
-  imageConfig: ImageConfig,
+  imageMeta: ImageMeta,
   pipeline: Sharp,
   width: number,
   imagesSuccessfullyOptimised: string[],
@@ -30,7 +30,7 @@ const optimisePng = async (
     });
 
     writeOptimisedImage(
-      imageConfig,
+      imageMeta,
       optimisedPng,
       imagesSuccessfullyOptimised,
       progressBar,
@@ -40,13 +40,13 @@ const optimisePng = async (
     logger.log({
       level: 'error',
       noConsole: true,
-      message: `Cannot optimise PNG ${imageConfig.filePath.replace(
+      message: `Cannot optimise PNG ${imageMeta.filePath.replace(
         process.cwd(),
         '',
       )}, will use resized image only. ${err.message}`,
     });
     writeFromPipeline(
-      imageConfig,
+      imageMeta,
       pipeline,
       imagesSuccessfullyOptimised,
       progressBar,
