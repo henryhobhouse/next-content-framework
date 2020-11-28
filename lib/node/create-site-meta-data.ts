@@ -5,6 +5,7 @@ import createNavigationConfigs from './mdx-meta/create-navigation-configs';
 import recursiveParseMdx, { NodeData } from './mdx-meta/recursive-parse-mdx';
 import initialiseLogger from './logger';
 import syncImagesWithPublic, { ImageData } from './copy-images-to-public';
+import createSitemap from './mdx-meta/create-sitemap';
 
 const basePath = process.cwd();
 const contentDir = `${basePath}/content`;
@@ -27,7 +28,7 @@ const createSiteMetaData = async () => {
       indexQueries: algoliaIndexConfigs,
       contentRoot,
     });
-    // TODO: Create sitemap
+    await createSitemap(contentRootNodesData);
   };
 
   await Promise.allSettled(
