@@ -28,6 +28,7 @@ const getImagesToOptimise = async ({
 }: GetImagesToOptimiseProps) => {
   let totalImagesToOptimise = 0;
   const imagesPathsToOptimise: ImageMeta[] = [];
+  const allOptimisedImageNames: string[] = [];
 
   const searchContentDirectory = async (path: string) => {
     const dirents = await promises.readdir(path, {
@@ -51,6 +52,8 @@ const getImagesToOptimise = async ({
             imageDirent.name,
             imageFileLocation,
           );
+
+          allOptimisedImageNames.push(optimisedImageName);
 
           if (rawFileType) {
             // if image has already being optimised then don't add to the list to be optimised
@@ -96,6 +99,7 @@ const getImagesToOptimise = async ({
   return {
     totalImagesToOptimise,
     imagesPathsToOptimise,
+    allOptimisedImageNames,
   };
 };
 

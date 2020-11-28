@@ -64,10 +64,13 @@ const checkForErrors = () => {
     const {
       imagesPathsToOptimise,
       totalImagesToOptimise,
+      allOptimisedImageNames,
     } = await getImagesToOptimise({
       directoryPath: documentFilesBasePath,
       numberOfImageSizes: staticImageSizes.length,
     });
+
+    await checkForDeletedImages(allOptimisedImageNames, staticImageSizes);
 
     if (imagesPathsToOptimise.length === 0) {
       logger.info('No new images to optimise.');
@@ -89,8 +92,6 @@ const checkForErrors = () => {
       staticImageSizes,
       progressBar,
     );
-
-    await checkForDeletedImages(imagesPathsToOptimise, staticImageSizes);
 
     progressBar.stop();
     if (imagesSuccessfullyOptimised.length > 0) {
