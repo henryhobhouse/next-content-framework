@@ -5,7 +5,7 @@ import {
   isMdImageRegex,
   replaceLinkInContent,
   rootImageDirectory,
-  staticImageDirectory,
+  nextPublicDirectory,
 } from './mdx-parse';
 
 import { numberPrefixRegex } from 'lib/node/utils';
@@ -22,7 +22,7 @@ const checkFileExists = async (filePath: string, promises: FsPromises) => {
 
 const checkValidLink = async (imageLink: string, promises: FsPromises) =>
   checkFileExists(
-    `${process.cwd()}/${staticImageDirectory}/${rootImageDirectory}/${imageLink}`,
+    `${process.cwd()}/${nextPublicDirectory}/${rootImageDirectory}/${imageLink}`,
     promises,
   );
 

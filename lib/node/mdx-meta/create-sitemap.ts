@@ -1,5 +1,5 @@
 import { promises } from 'fs';
-import { staticImageDirectory } from '../../page-mdx/mdx-parse';
+import { nextPublicDirectory } from '../../page-mdx/mdx-parse';
 import { NodeData } from './recursive-parse-mdx';
 
 const sitemapHeader =
@@ -7,7 +7,7 @@ const sitemapHeader =
 const sitemapFooter = '</urlset>';
 const appUrl = 'https://tray.io/documentation';
 const sitemapFileName = 'sitemap.xml';
-const sitemapPath = `${process.cwd()}/${staticImageDirectory}/${sitemapFileName}`;
+const sitemapPath = `${process.cwd()}/${nextPublicDirectory}/${sitemapFileName}`;
 
 const createSitemap = async (contentRootNodesData: NodeData[]) => {
   if (process.env.VERCEL_ENV !== 'production') return;

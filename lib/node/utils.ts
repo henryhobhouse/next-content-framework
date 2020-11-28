@@ -5,7 +5,7 @@ import mkdirp from 'mkdirp';
 import {
   referenceImageSize,
   lazyLoadImageSize,
-  staticImageDirectory,
+  nextPublicDirectory,
 } from '../page-mdx/mdx-parse';
 import { ImageMeta } from './types/image-optimisation';
 
@@ -42,20 +42,20 @@ export const getWriteFilePath = (imageMeta: ImageMeta, width?: number) => {
     .toLowerCase();
   let writePath;
   if (width === referenceImageSize)
-    writePath = `${staticImageDirectory}/${originalFileDirectory}/${parentDirectoryName}`;
+    writePath = `${nextPublicDirectory}/${originalFileDirectory}/${parentDirectoryName}`;
   else if (width === lazyLoadImageSize)
-    writePath = `${staticImageDirectory}/${width}/${parentDirectoryName}`;
+    writePath = `${nextPublicDirectory}/${width}/${parentDirectoryName}`;
   else if (imageMeta.fileType === 'svg')
-    writePath = `${staticImageDirectory}/${svgFileDirectory}/${parentDirectoryName}`;
-  else writePath = `${staticImageDirectory}/${width}/${parentDirectoryName}`;
+    writePath = `${nextPublicDirectory}/${svgFileDirectory}/${parentDirectoryName}`;
+  else writePath = `${nextPublicDirectory}/${width}/${parentDirectoryName}`;
 
   return writePath;
 };
 
 export const checkImageDirectories = () => {
   const dirsToCheck = [
-    `${staticImageDirectory}/${svgFileDirectory}`,
-    `${staticImageDirectory}/${lazyLoadImageSize}`,
+    `${nextPublicDirectory}/${svgFileDirectory}`,
+    `${nextPublicDirectory}/${lazyLoadImageSize}`,
   ];
   dirsToCheck.forEach((dir) => {
     const fullDirPath = `${process.cwd()}/${dir}`;

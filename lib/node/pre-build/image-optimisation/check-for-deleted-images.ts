@@ -1,6 +1,6 @@
 import { promises, existsSync, writeFileSync } from 'fs';
 import imageSizeMetaData from '../../../image-meta-data.json';
-import { staticImageDirectory } from '../../../page-mdx/mdx-parse';
+import { nextPublicDirectory } from '../../../page-mdx/mdx-parse';
 import { imageSizeFilePath } from './extract-image-size';
 
 const deleteStaticImages = async (
@@ -9,7 +9,7 @@ const deleteStaticImages = async (
 ) => {
   await Promise.allSettled(
     staticImageSizes.map(async (imageSize) => {
-      const fullImagePath = `${process.cwd()}/${staticImageDirectory}/${imageSize}/${imageName}`;
+      const fullImagePath = `${process.cwd()}/${nextPublicDirectory}/${imageSize}/${imageName}`;
       if (existsSync(fullImagePath)) {
         await promises.unlink(fullImagePath);
       }
