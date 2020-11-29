@@ -6,9 +6,10 @@ import recursiveParseMdx, { NodeData } from './mdx-meta/recursive-parse-mdx';
 import initialiseLogger from './logger';
 import syncImagesWithPublic, { ImageData } from './copy-images-to-public';
 import createSitemap from './mdx-meta/create-sitemap';
+import createBreadcrumbs from './mdx-meta/create-breadcrumbs';
 
-const basePath = process.cwd();
-const contentDir = `${basePath}/content`;
+const currentWorkingDirectory = process.cwd();
+const contentDir = `${currentWorkingDirectory}/content`;
 const contentRoots = ['platform', 'embedded', 'images'];
 
 const createSiteMetaData = async () => {
@@ -22,13 +23,18 @@ const createSiteMetaData = async () => {
   ) => {
     allNodesData.push(...contentRootNodesData);
     await syncImagesWithPublic(imageDatas);
-    await createNavigationConfigs(contentRootNodesData, contentRoot, basePath);
+    await createNavigationConfigs(
+      contentRootNodesData,
+      contentRoot,
+      currentWorkingDirectory,
+    );
     await updateAlgoliaArticleIndex({
       allNodesData: contentRootNodesData,
       indexQueries: algoliaIndexConfigs,
       contentRoot,
     });
     await createSitemap(contentRootNodesData);
+    await createBreadcrumbs(contentRootNodesData, contentRoot);
   };
 
   await Promise.allSettled(

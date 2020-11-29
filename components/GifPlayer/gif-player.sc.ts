@@ -9,6 +9,7 @@ export const GifWrapper = styled.div<{ $height?: number; $width: number }>`
   margin-left: auto;
   margin-right: auto;
   width: ${({ $width }) => `${$width}px`};
+  height: ${({ $height }) => `${$height}px`};
 
   img {
     ${({ $height }) =>
@@ -17,6 +18,11 @@ export const GifWrapper = styled.div<{ $height?: number; $width: number }>`
         height: ${$height}px;
       `}
   }
+`;
+
+export const FirstFrameImage = styled.img`
+  max-width: 100%;
+  display: block;
 `;
 
 export const PlayButton = styled.div<{ $playing: boolean }>`

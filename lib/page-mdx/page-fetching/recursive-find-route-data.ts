@@ -108,8 +108,6 @@ const recursiveFindRouteData = async ({
           });
 
           currentPageTocData = getTableOfContents(transformedContent);
-
-          // TODO: add breacrumbs parsing.
         }
       }
     }

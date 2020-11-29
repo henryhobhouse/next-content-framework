@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import Image from 'next/image';
 import { FC, useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { lazyLoadImageSize, rootImageDirectory } from 'lib/page-mdx/mdx-parse';
 
@@ -9,13 +9,8 @@ const BlurredImage = styled.img<{ $imageLoaded: boolean; $maxWidth: number }>`
   transition: opacity 500ms ease;
   position: absolute;
   top: 0;
-  opacity: 1;
+  opacity: ${({ $imageLoaded }) => ($imageLoaded ? 0 : 1)};
   z-index: 1;
-  ${({ $imageLoaded }) =>
-    $imageLoaded &&
-    css`
-      opacity: 0;
-    `}
   width: 100%;
   height: 100%;
   padding-bottom: 20px;
@@ -62,18 +57,26 @@ const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt, width, height }) => {
     }
   }, [loadEvents]);
 
-  if (!imgUrl) return null;
+  if (!imgUrl || !width || !height) return null;
 
-  const imageWidth = width && width < 599 ? width : 600;
+  // TODO: set article width as single constant in the article component so this updates
+  // automatically if ever changed.
+  const imageWithinArticleWidth = width <= 600;
 
-  const imageHeight = height ? imageWidth / (width / height) : 300;
+  // if image is less than article width then to use orginal width. Otherwise limit to
+  // 600px
+  const imageWidth = imageWithinArticleWidth ? width : 600;
+
+  const imageHeight = imageWithinArticleWidth
+    ? height
+    : imageWidth / (width / height);
 
   return (
     <ImageContainer>
       <BlurredImage
         src={`/documentation/${lazyLoadImageSize}/${imgUrl}`}
         $imageLoaded={!imageLoading}
-        aria-hidden={true}
+        aria-hidden="true"
         $maxWidth={imageWidth}
         role="presentation"
         loading="eager"

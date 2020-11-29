@@ -9,6 +9,7 @@ const ArticleWrapper = styled.div`
   color: #0a0d36;
   box-sizing: border-box;
   max-width: 37.5rem;
+  min-width: 31.25rem;
   width: 100%;
 `;
 

@@ -4,7 +4,7 @@ import React, { useState, FC, HTMLAttributes, useCallback } from 'react';
 
 import useGifFirstFrame from '../../lib/hooks/use-gif-first-frame';
 
-import { GifWrapper, PlayButton } from './gif-player.sc';
+import { GifWrapper, PlayButton, FirstFrameImage } from './gif-player.sc';
 
 import { rootImageDirectory } from 'lib/page-mdx/mdx-parse';
 
@@ -16,11 +16,8 @@ interface Props extends HTMLAttributes<HTMLImageElement> {
 }
 
 const GifPlayerContainer: FC<Props> = ({ gifUrl, alt, width, height }) => {
-  const [playing, setPlaying] = useState(false);
-
-  const imageWidth = width && width < 599 ? width : 600;
-
-  const imageHeight = height ? imageWidth / (width / height) : 300;
+  const [isPlaying, setPlaying] = useState(false);
+  const [firstFrameLoaded, setFirstFrameLoaded] = useState(false);
 
   const gifRelativePath = `/documentation/${rootImageDirectory}/${gifUrl}`;
 
@@ -30,10 +27,24 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt, width, height }) => {
     setPlaying((prevPlaying) => !prevPlaying);
   }, [setPlaying]);
 
+  if (!width || !height) return null;
+
+  // TODO: set article width as single constant in the article component so this updates
+  // automatically if ever changed.
+  const imageWithinArticleWidth = width <= 600;
+
+  // if image is less than article width then to use orginal width. Otherwise limit to
+  // 600px
+  const imageWidth = imageWithinArticleWidth ? width : 600;
+
+  const imageHeight = imageWithinArticleWidth
+    ? height
+    : Math.round(imageWidth / (width / height));
+
   return (
     <GifWrapper onClick={togglePlay} $height={imageHeight} $width={imageWidth}>
-      <PlayButton $playing={playing}>GIF</PlayButton>
-      {playing ? (
+      {firstFrameLoaded && <PlayButton $playing={isPlaying}>GIF</PlayButton>}
+      {isPlaying ? (
         <Image
           src={gifRelativePath}
           alt={alt}
@@ -41,12 +52,13 @@ const GifPlayerContainer: FC<Props> = ({ gifUrl, alt, width, height }) => {
           height={imageHeight}
         />
       ) : (
-        <img
+        <FirstFrameImage
           src={firstFrameImage}
           alt={alt}
           width={imageWidth}
           height={imageHeight}
-          loading="lazy"
+          onLoad={() => setFirstFrameLoaded(true)}
+          loading="eager"
         />
       )}
     </GifWrapper>

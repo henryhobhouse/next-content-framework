@@ -36,5 +36,6 @@ yarn-error.log*
 .vscode
 
 lib/node/*-nav-config.json
+lib/node/bread-crumbs.json
 
 **/*.log
