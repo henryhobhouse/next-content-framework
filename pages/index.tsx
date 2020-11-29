@@ -1,4 +1,7 @@
+import React from 'react';
 import styled from 'styled-components';
+
+import PortalHead from 'components/DocsHead';
 
 const LinkWrapper = styled.div`
   display: flex;
@@ -11,6 +14,11 @@ const LinkWrapper = styled.div`
 /**
  * Entry (home) page for the app
  */
-const Home = () => <LinkWrapper>This is the home page!</LinkWrapper>;
+const Home = () => (
+  <>
+    <PortalHead />
+    <LinkWrapper>This is the home page!</LinkWrapper>
+  </>
+);
 
 export default Home;

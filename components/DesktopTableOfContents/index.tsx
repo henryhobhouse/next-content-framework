@@ -1,5 +1,3 @@
-import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, memo } from 'react';
 
 import useIntersectionTracker from '../../lib/hooks/use-intersection-tracker';
@@ -73,7 +71,6 @@ const DesktopTableOfContents: FC<{ tableOfContents: TableOfContents }> = ({
     <UnorderedList>
       {sectionList.map((section, index) => {
         const active = `#${activeSectionId}` === section.url;
-        const firstSection = index === 0;
 
         return (
           <ListItem key={`${section.url}-${index}`}>
@@ -83,13 +80,7 @@ const DesktopTableOfContents: FC<{ tableOfContents: TableOfContents }> = ({
                 href={section.url ?? ''}
                 title={section.title}
               >
-                {!active && firstSection ? (
-                  <>
-                    <FontAwesomeIcon icon={faArrowUp} color="#5C5C70" /> TOP
-                  </>
-                ) : (
-                  section.title
-                )}
+                {section.title}
               </Anchor>
             </Row>
             <SectionItems

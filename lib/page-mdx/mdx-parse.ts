@@ -9,7 +9,7 @@ export const isHtmlImageRegex = /(<img .*src=["'])(\S*?)(?=("|'))(.*\/>)/gi;
 export const connectorsRegex = /^\/platform\/connectors\/docs\/([^/]*)\/([^/]*)/gi;
 export const connectorsListRegex = /^\/platform\/connectors\/docs\/([^/]*)\/$/gi;
 
-export const documentFilesBasePath = `${process.cwd()}/content/`;
+export const documentFilesBasePath = `${process.cwd()}/content`;
 export const connectorDocsRelativePath = '/connectors/docs';
 export const rootImageDirectory = 'images';
 export const nextPublicDirectory = 'public';

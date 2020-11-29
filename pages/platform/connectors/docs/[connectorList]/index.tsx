@@ -2,11 +2,12 @@ import { promises } from 'fs';
 import { resolve } from 'path';
 
 import hydrate from 'next-mdx-remote/hydrate';
-import { FC, useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import ArticleWrapper from 'components/ArticleWrapper';
 import Connector from 'components/connector';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
+import PortalHead from 'components/DocsHead';
 import SectionNavigation from 'components/SectionNavigation';
 import navigationStructure from 'lib/node/platform-nav-config.json';
 import mdxComponents from 'lib/page-mdx/mdx-components';
@@ -40,6 +41,12 @@ const ConnectorList: FC<ConnectorListProps> = ({
 
   return (
     <>
+      <PortalHead
+        title={frontmatter?.title}
+        description={frontmatter?.description}
+        image={frontmatter?.image}
+      />
+
       <SectionNavigation
         items={(navigationStructure as { config: NavigationArticle[] }).config}
       />

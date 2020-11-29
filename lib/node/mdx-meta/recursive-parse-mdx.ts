@@ -74,7 +74,10 @@ const recursiveParseMdx = async (
 
     if (docsFile) {
       const markdownPath = resolve(directory, docsFile.name);
-      const relativePath = markdownPath.replace(documentFilesBasePath, '');
+      const relativePath = markdownPath.replace(
+        `${documentFilesBasePath}/`,
+        '',
+      );
 
       // as exec is global we need to reset the index each iteration of the loop
       pathRegex.lastIndex = 0;

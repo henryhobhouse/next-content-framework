@@ -44,7 +44,10 @@ const getArticleSlugs = async (
 
     if (articleFile) {
       const markdownPath = resolve(directory, articleFile.name);
-      const relativePath = markdownPath.replace(documentFilesBasePath, '');
+      const relativePath = markdownPath.replace(
+        `${documentFilesBasePath}/`,
+        '',
+      );
       const isConnectorListPage = relativePath.includes(
         connectorDocsRelativePath,
       );

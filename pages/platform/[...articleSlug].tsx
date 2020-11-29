@@ -7,6 +7,7 @@ import styled from 'styled-components';
 
 import ArticleWrapper from 'components/ArticleWrapper';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
+import PortalHead from 'components/DocsHead';
 import SectionNavigation from 'components/SectionNavigation';
 import navigationStructure from 'lib/node/platform-nav-config.json';
 import mdxComponents from 'lib/page-mdx/mdx-components';
@@ -43,6 +44,12 @@ const PlatformPosts: FC<DocumentPostProps> = ({
 
   return (
     <>
+      <PortalHead
+        title={frontmatter?.title}
+        description={frontmatter?.description}
+        image={frontmatter?.image}
+      />
+
       <SectionNavigation
         items={(navigationStructure as { config: NavigationArticle[] }).config}
       />

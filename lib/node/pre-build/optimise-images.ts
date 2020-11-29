@@ -4,11 +4,13 @@ import { createReadStream } from 'fs';
 
 import getImagesToOptimise from './image-optimisation/get-images-to-optimise';
 import initialiseLogger from '../logger';
-import { lazyLoadImageSize } from '../../page-mdx/mdx-parse';
+import {
+  documentFilesBasePath,
+  lazyLoadImageSize,
+} from '../../page-mdx/mdx-parse';
 import resizeAndOptimiseImages from './image-optimisation/resize-and-optimise-images';
 import checkForDeletedImages from './image-optimisation/check-for-deleted-images';
 
-const documentFilesBasePath = `${process.cwd()}/content/`;
 const errorLogFileName = 'image-optimisation-error.log';
 
 const imageSizes: number[] = []; // Add to this if we need more options

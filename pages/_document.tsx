@@ -1,4 +1,10 @@
-import Document, { DocumentContext } from 'next/document';
+import Document, {
+  DocumentContext,
+  Head,
+  Main,
+  Html,
+  NextScript,
+} from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
 import GlobalStyle from '../lib/styles';
@@ -10,7 +16,7 @@ import GlobalStyle from '../lib/styles';
  *
  * https://nextjs.org/docs/advanced-features/custom-document
  */
-export default class MyDocument extends Document {
+class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
@@ -41,4 +47,16 @@ export default class MyDocument extends Document {
       sheet.seal();
     }
   }
+
+  public render = () => (
+    <Html lang="en">
+      <Head />
+      <body>
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  );
 }
+
+export default MyDocument;

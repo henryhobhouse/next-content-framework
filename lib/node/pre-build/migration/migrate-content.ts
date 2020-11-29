@@ -13,8 +13,8 @@ import {
   removeRedirectLink,
   setNextRedirects,
 } from './migrate-utils';
+import { documentFilesBasePath } from '../../../page-mdx/mdx-parse';
 
-const documentFilesBasePath = `${process.cwd()}/content/`;
 const isPostFileRegex = /docs\.(mdx|md)$/gi;
 const orderPartRegex = /\/([0-9+]+)\./g;
 const pathRegex = /([^/]*)(.*)\/docs\.(mdx|md)$/gi;

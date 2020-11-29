@@ -18,7 +18,7 @@ import { FsPromises } from 'pages/embedded/[...articleSlug]';
 const getConnectorSlugs = async (promises: FsPromises, resolve: Resolve) => {
   const connectorDirPath = 'platform/50.connectors/1000.docs';
   const paths: StaticConnectorPathParams[] = [];
-  const platformDocumentsPath = `${documentFilesBasePath}${connectorDirPath}`;
+  const platformDocumentsPath = `${documentFilesBasePath}/${connectorDirPath}`;
   // as articles is only 3 layers deep then only retrieve those. (connectors being level 4 and 5 and dealt
   // with in the connectors-list and connectors pages
   const maxDepthToTraverse = 3;
@@ -35,7 +35,10 @@ const getConnectorSlugs = async (promises: FsPromises, resolve: Resolve) => {
 
     if (postFile) {
       const markdownPath = resolve(directory, postFile.name);
-      const relativePath = markdownPath.replace(documentFilesBasePath, '');
+      const relativePath = markdownPath.replace(
+        `${documentFilesBasePath}/`,
+        '',
+      );
 
       // as exec is global we need to reset the index each iteration of the loop
       pathRegex.lastIndex = 0;

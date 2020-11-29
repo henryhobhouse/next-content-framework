@@ -21,7 +21,7 @@ const getConnectorListSlugs = async (
   resolve: Resolve,
 ) => {
   const paths: StaticConnectorListPathParams[] = [];
-  const connectorListsPath = `${documentFilesBasePath}${connectorListRelativePath}`;
+  const connectorListsPath = `${documentFilesBasePath}/${connectorListRelativePath}`;
 
   const dirents = await promises.readdir(connectorListsPath, {
     withFileTypes: true,

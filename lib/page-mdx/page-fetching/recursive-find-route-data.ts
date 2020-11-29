@@ -66,7 +66,10 @@ const recursiveFindRouteData = async ({
 
     if (articleFile) {
       const markdownPath = resolve(directory, articleFile.name);
-      const relativePath = markdownPath.replace(documentFilesBasePath, '');
+      const relativePath = markdownPath.replace(
+        `${documentFilesBasePath}/`,
+        '',
+      );
 
       // as exec is global we need to reset the index each iteration of the loop
       pathRegex.lastIndex = 0;
