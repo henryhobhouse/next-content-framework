@@ -6,7 +6,7 @@ import React, { FC, useState } from 'react';
 
 import ArticleWrapper from 'components/ArticleWrapper';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
-import PortalHead from 'components/DocsHead';
+import DocsHead from 'components/DocsHead';
 import SectionNavigation from 'components/SectionNavigation';
 import navigationStructure from 'lib/node/platform-nav-config.json';
 import mdxComponents from 'lib/page-mdx/mdx-components';
@@ -44,7 +44,7 @@ const Connector: FC<ConnectorListProps> = ({
 
   return (
     <>
-      <PortalHead
+      <DocsHead
         title={frontmatter?.title}
         description={frontmatter?.description}
         image={frontmatter?.image}

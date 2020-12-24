@@ -18,7 +18,7 @@ const isDeployedBranch = false;
 /**
  * HTML page header to include title, description and favicons
  */
-const PortalHead: FC<Props> = ({
+const DocsHead: FC<Props> = ({
   title,
   description,
   keywords,
@@ -96,4 +96,4 @@ const PortalHead: FC<Props> = ({
   );
 };
 
-export default PortalHead;
+export default DocsHead;

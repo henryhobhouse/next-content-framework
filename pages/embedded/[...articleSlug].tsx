@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 import ArticleWrapper from 'components/ArticleWrapper';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
-import PortalHead from 'components/DocsHead';
+import DocsHead from 'components/DocsHead';
 import SectionNavigation from 'components/SectionNavigation';
 import navigationStructure from 'lib/node/embedded-nav-config.json';
 import mdxComponents from 'lib/page-mdx/mdx-components';
@@ -41,7 +41,7 @@ const EmbeddedPosts: FC<DocumentPostProps> = ({
 
   return (
     <>
-      <PortalHead
+      <DocsHead
         title={frontmatter?.title}
         description={frontmatter?.description}
         image={frontmatter?.image}

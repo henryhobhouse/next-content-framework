@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import PortalHead from 'components/DocsHead';
+import DocsHead from 'components/DocsHead';
 
 const LinkWrapper = styled.div`
   display: flex;
@@ -16,7 +16,7 @@ const LinkWrapper = styled.div`
  */
 const Home = () => (
   <>
-    <PortalHead />
+    <DocsHead />
     <LinkWrapper>This is the home page!</LinkWrapper>
   </>
 );
