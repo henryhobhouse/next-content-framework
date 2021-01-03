@@ -1,29 +1,29 @@
 import {
-  connectorListRelativePath,
-  documentFilesBasePath,
+  connectorSectionRelativePath,
+  contentRootPath,
   isPostFileRegex,
   orderPartRegex,
   pathRegex,
 } from 'lib/page-mdx/mdx-parse';
-import { Resolve, StaticConnectorListPathParams } from 'lib/page-mdx/types';
+import { Resolve, StaticConnectorSectionPathParams } from 'lib/page-mdx/types';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 /**
- * Get Connector List Slugs as part of the static pre render (https://nextjs.org/docs/basic-features/data-fetching#getstaticpaths-static-generation)
+ * Gets Connector List Slugs as part of the static pre-render (static compilation by webpack) stage of the build (https://nextjs.org/docs/basic-features/data-fetching#getstaticpaths-static-generation)
  *
  * Traverse through all directories in the connector docs directory (platform/50.connectors/1000.docs).
  * Determines slugs from all directories there-in and ensures that each directory has a docs.md|mdx file/page.
  *
  * Returns an array of all slugs.
  */
-const getConnectorListSlugs = async (
+const getConnectorSectionSlugs = async (
   promises: FsPromises,
   resolve: Resolve,
 ) => {
-  const paths: StaticConnectorListPathParams[] = [];
-  const connectorListsPath = `${documentFilesBasePath}/${connectorListRelativePath}`;
+  const paths: StaticConnectorSectionPathParams[] = [];
+  const connectorSectionsPath = `${contentRootPath}/${connectorSectionRelativePath}`;
 
-  const dirents = await promises.readdir(connectorListsPath, {
+  const dirents = await promises.readdir(connectorSectionsPath, {
     withFileTypes: true,
   });
 
@@ -34,11 +34,11 @@ const getConnectorListSlugs = async (
     await Promise.allSettled(
       docDirectories.map(async (docDirectory) => {
         const childDirectoryPath = resolve(
-          connectorListsPath,
+          connectorSectionsPath,
           docDirectory.name,
         );
 
-        const childDirents = await promises.readdir(connectorListsPath, {
+        const childDirents = await promises.readdir(connectorSectionsPath, {
           withFileTypes: true,
         });
 
@@ -48,18 +48,24 @@ const getConnectorListSlugs = async (
         );
 
         if (hasDocsFiles) {
-          const relativePath = childDirectoryPath.replace(
-            connectorListsPath,
+          // as connectors sections has currently a artificially created name we only want the name of
+          // the section here so that we can create the path ourselves. This can be reverted to match the other
+          // page patterns once the connectors are moved to the root of the content directory.
+          const orderedSectionName = childDirectoryPath.replace(
+            connectorSectionsPath,
             '',
           );
           // as exec is global we need to reset the index each iteration of the loop
           pathRegex.lastIndex = 0;
-          const localPath = relativePath
-            .replace(orderPartRegex, '')
-            .replace('/docs', '');
+
+          const unOrderedSectionName = orderedSectionName.replace(
+            orderPartRegex,
+            '',
+          );
+
           paths.push({
             params: {
-              connectorList: localPath,
+              connectorSection: unOrderedSectionName,
             },
           });
         }
@@ -70,4 +76,4 @@ const getConnectorListSlugs = async (
   return paths;
 };
 
-export default getConnectorListSlugs;
+export default getConnectorSectionSlugs;

@@ -13,7 +13,7 @@ import {
   removeRedirectLink,
   setNextRedirects,
 } from './migrate-utils';
-import { documentFilesBasePath } from '../../../page-mdx/mdx-parse';
+import { contentRootPath } from '../../../page-mdx/mdx-parse';
 
 const isPostFileRegex = /docs\.(mdx|md)$/gi;
 const orderPartRegex = /\/([0-9+]+)\./g;
@@ -106,7 +106,7 @@ const migrateContent = async (
   const contentDirStructure = dirTree('content/', {
     extensions: /\.fake$/,
   });
-  await migrateContent(documentFilesBasePath, contentDirStructure);
+  await migrateContent(contentRootPath, contentDirStructure);
   if (redirectLinks.length) {
     await setNextRedirects(redirectLinks);
   }

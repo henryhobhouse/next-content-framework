@@ -19,7 +19,7 @@ import {
   StaticArticlePathParams,
 } from 'lib/page-mdx/types';
 
-const contentPagedir = 'platform';
+const sectionContentDir = 'platform';
 
 export const TableOfContentWrapper = styled.div`
   width: 200px;
@@ -73,7 +73,7 @@ const PlatformPosts: FC<DocumentPostProps> = ({
  * Create all the slugs (paths) for this page
  */
 export const getStaticPaths = async () => {
-  const paths = await getArticleSlugs(contentPagedir, promises, resolve);
+  const paths = await getArticleSlugs(sectionContentDir, promises, resolve);
 
   return {
     paths,
@@ -91,7 +91,7 @@ export const getStaticProps = async ({
 }: StaticArticlePathParams) => {
   const { pageContent, frontMatterData, currentPageTocData } = await getArticle(
     articleSlug,
-    contentPagedir,
+    sectionContentDir,
     promises,
     resolve,
   );

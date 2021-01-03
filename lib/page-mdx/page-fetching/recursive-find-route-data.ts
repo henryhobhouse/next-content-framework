@@ -5,7 +5,7 @@ import rehypeSlug from 'rehype-slug';
 import remarkUnwrapImages from 'remark-unwrap-images';
 
 import {
-  documentFilesBasePath,
+  contentRootPath,
   isPostFileRegex,
   orderPartRegex,
   orderRegex,
@@ -21,7 +21,7 @@ import { FsPromises } from 'pages/embedded/[...articleSlug]';
 interface RecursiveParseDirectoriesProps {
   rootDir: string;
   currentPageSlug: string;
-  contentPageDir: string;
+  sectionContentDir: string;
   maxDepthToTraverse: number;
   promises: FsPromises;
   resolve: Resolve;
@@ -30,7 +30,7 @@ interface RecursiveParseDirectoriesProps {
 /**
  * Recursive Parse Directories.
  *
- * Recurisively traverse content directories.
+ * Recursively traverse content directories.
  *
  * In each directory check if docs.md|mdx and if so derive slug from directory path and
  * check if current page. If current page then:
@@ -43,11 +43,12 @@ interface RecursiveParseDirectoriesProps {
 const recursiveFindRouteData = async ({
   rootDir,
   currentPageSlug,
-  contentPageDir,
+  sectionContentDir,
   maxDepthToTraverse,
   promises,
   resolve,
 }: RecursiveParseDirectoriesProps) => {
+  // This can be removed once the connectors are moved to the content directory root.
   const navigationArticleDepth = 3;
 
   let pageContent: MdxRenderedToString | undefined;
@@ -66,10 +67,7 @@ const recursiveFindRouteData = async ({
 
     if (articleFile) {
       const markdownPath = resolve(directory, articleFile.name);
-      const relativePath = markdownPath.replace(
-        `${documentFilesBasePath}/`,
-        '',
-      );
+      const relativePath = markdownPath.replace(`${contentRootPath}/`, '');
 
       // as exec is global we need to reset the index each iteration of the loop
       pathRegex.lastIndex = 0;
@@ -80,7 +78,7 @@ const recursiveFindRouteData = async ({
       if (pathComponents) {
         const path = pathComponents[2];
         const localPath = path.replace(orderPartRegex, '/');
-        const slug = `/${contentPageDir}${localPath}`;
+        const slug = `/${sectionContentDir}${localPath}`;
 
         if (slug === currentPageSlug) {
           const markdownData = await promises.readFile(markdownPath, 'utf8');

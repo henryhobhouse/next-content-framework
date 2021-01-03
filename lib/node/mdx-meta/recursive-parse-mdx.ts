@@ -9,7 +9,7 @@ import { ImageData } from '../copy-images-to-public';
 import {
   connectorsListRegex,
   connectorsRegex,
-  documentFilesBasePath,
+  contentRootPath,
   isPostFileRegex,
   orderPartRegex,
   orderRegex,
@@ -75,10 +75,7 @@ const recursiveParseMdx = async (
 
     if (docsFile) {
       const markdownPath = resolve(directory, docsFile.name);
-      const relativePath = markdownPath.replace(
-        `${documentFilesBasePath}/`,
-        '',
-      );
+      const relativePath = markdownPath.replace(`${contentRootPath}/`, '');
 
       // as exec is global we need to reset the index each iteration of the loop
       pathRegex.lastIndex = 0;
@@ -93,13 +90,13 @@ const recursiveParseMdx = async (
         const section = pathComponents[1];
         const path = pathComponents[2];
         const localPath = path.replace(orderPartRegex, '/');
-        const connectorListComponents = connectorsListRegex.exec(localPath);
-        const isConnectorList =
-          !!connectorListComponents || localPath === '/connectors/docs';
-        const filteredLocalPath = isConnectorList
+        const connectorSectionComponents = connectorsListRegex.exec(localPath);
+        const isConnectorSection =
+          !!connectorSectionComponents || localPath === '/connectors/docs';
+        const filteredLocalPath = isConnectorSection
           ? localPath.replace('/docs', '')
           : localPath;
-        const slug = isConnectorList
+        const slug = isConnectorSection
           ? filteredLocalPath
           : `/${contentRoot}${filteredLocalPath}`;
         const level =
@@ -117,9 +114,9 @@ const recursiveParseMdx = async (
           if (connectorsComponents) {
             // eslint-disable-next-line prefer-destructuring
             connectorSection = connectorsComponents[1];
-          } else if (connectorListComponents) {
+          } else if (connectorSectionComponents) {
             // eslint-disable-next-line prefer-destructuring
-            connectorSection = connectorListComponents[1];
+            connectorSection = connectorSectionComponents[1];
           }
         }
 
@@ -129,9 +126,9 @@ const recursiveParseMdx = async (
           );
 
         let docType: ArticleType = 'article';
-        if (!isConnectorList && (isConnector || data.connector)) {
+        if (!isConnectorSection && (isConnector || data.connector)) {
           docType = 'connector';
-        } else if (isConnectorList) {
+        } else if (isConnectorSection) {
           docType = 'connector-list';
         }
 

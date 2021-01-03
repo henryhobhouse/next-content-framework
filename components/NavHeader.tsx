@@ -59,6 +59,9 @@ const NavHeader: FC = () => (
         <Link href="/platform/getting-started/overview" passHref>
           <ContentLinks>Platform</ContentLinks>
         </Link>
+        <Link href="/connectors/service" passHref>
+          <ContentLinks>Connectors</ContentLinks>
+        </Link>
         <Link href="/embedded/getting-started/overview" passHref>
           <ContentLinks>Embedded</ContentLinks>
         </Link>

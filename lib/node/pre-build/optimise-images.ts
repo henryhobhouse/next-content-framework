@@ -4,10 +4,7 @@ import { createReadStream } from 'fs';
 
 import getImagesToOptimise from './image-optimisation/get-images-to-optimise';
 import initialiseLogger from '../logger';
-import {
-  documentFilesBasePath,
-  lazyLoadImageSize,
-} from '../../page-mdx/mdx-parse';
+import { contentRootPath, lazyLoadImageSize } from '../../page-mdx/mdx-parse';
 import resizeAndOptimiseImages from './image-optimisation/resize-and-optimise-images';
 import checkForDeletedImages from './image-optimisation/check-for-deleted-images';
 
@@ -68,7 +65,7 @@ const checkForErrors = () => {
       totalImagesToOptimise,
       allOptimisedImageNames,
     } = await getImagesToOptimise({
-      directoryPath: documentFilesBasePath,
+      directoryPath: contentRootPath,
       numberOfImageSizes: staticImageSizes.length,
     });
 

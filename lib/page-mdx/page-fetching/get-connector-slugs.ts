@@ -1,5 +1,5 @@
 import {
-  documentFilesBasePath,
+  contentRootPath,
   isPostFileRegex,
   orderPartRegex,
   pathRegex,
@@ -12,14 +12,14 @@ const connectorDirPath = 'platform/50.connectors/1000.docs';
 /**
  * Get Connector Slugs as part of the static pre render (https://nextjs.org/docs/basic-features/data-fetching#getstaticpaths-static-generation)
  *
- * Recurrively traverse through all directories in the contentor docs directory to a depth of 2.
- * Upon finding a doc.md|mdx file to determing markdown slug by removing order numbering from directory path and setting as the slug.
+ * Recursively traverse through all directories in the connector docs directory to a depth of 2.
+ * Upon finding a doc.md|mdx file to determining markdown slug by removing order numbering from directory path and setting as the slug.
  *
  * Returns an array of all slugs.
  */
 const getConnectorSlugs = async (promises: FsPromises, resolve: Resolve) => {
   const paths: StaticConnectorPathParams[] = [];
-  const platformDocumentsPath = `${documentFilesBasePath}/${connectorDirPath}`;
+  const platformDocumentsPath = `${contentRootPath}/${connectorDirPath}`;
   // as articles is only 3 layers deep then only retrieve those. (connectors being level 4 and 5 and dealt
   // with in the connectors-list and connectors pages
   const maxDepthToTraverse = 3;
@@ -36,10 +36,7 @@ const getConnectorSlugs = async (promises: FsPromises, resolve: Resolve) => {
 
     if (postFile) {
       const markdownPath = resolve(directory, postFile.name);
-      const relativePath = markdownPath.replace(
-        `${documentFilesBasePath}/`,
-        '',
-      );
+      const relativePath = markdownPath.replace(`${contentRootPath}/`, '');
 
       // as exec is global we need to reset the index each iteration of the loop
       pathRegex.lastIndex = 0;
@@ -48,14 +45,14 @@ const getConnectorSlugs = async (promises: FsPromises, resolve: Resolve) => {
 
       if (pathComponents && currentDepth === 3) {
         const path = pathComponents[2];
-        const localPath = path.replace(orderPartRegex, '/');
-        const pathSegments = localPath
-          .replace('/docs', '')
-          .split('/')
-          .filter(Boolean);
+        const connectorMarkdownFilePath = path.replace(orderPartRegex, '/');
+        // removes docs from path. This can be removed when connectors are moved to the root
+        // of the content directory
+        const slugWithOutDocs = connectorMarkdownFilePath.replace('/docs', '');
+        const pathSegments = slugWithOutDocs.split('/').filter(Boolean);
         paths.push({
           params: {
-            connectorList: pathSegments[pathSegments.length - 2],
+            connectorSection: pathSegments[pathSegments.length - 2],
             connector: pathSegments[pathSegments.length - 1],
           },
         });

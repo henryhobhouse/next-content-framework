@@ -2,38 +2,50 @@ import visit from 'unist-util-visit';
 
 import { SearchMap, ParentNode, Node, TableOfContents } from './types';
 
-const LIST = 'list';
-const LIST_ITEM = 'listItem';
-const PARAGRAPH = 'paragraph';
-const LINK = 'link';
-const TEXT = 'text';
+const list = 'list';
+const listItem = 'listItem';
+const header = 'header';
+const link = 'link';
+const title = 'title';
 
-const getItems = (
+// Create an empty node list.
+const createEmptyList = (): ParentNode => ({ type: list, children: [] });
+
+// Create an empty node list item.
+const createEmptyListItem = (): ParentNode => ({
+  type: listItem,
+  children: [],
+});
+
+const createTocFromNodeList = (
   node: ParentNode,
   current: TableOfContents,
 ): TableOfContents => {
   if (!node) {
     return {};
   }
-  if (node.type === `paragraph`) {
+
+  if (node.type === header) {
     visit(node, (item: Node) => {
-      if (item.type === `link`) {
+      if (item.type === link) {
         current.url = item.url as string;
       }
-      if (item.type === `text`) {
+      if (item.type === title) {
         current.title = item.value as string;
       }
     });
     return current;
   }
-  if (node.type === `list`) {
-    current.items = node?.children?.map((i) => getItems(i, {}));
+
+  if (node.type === list) {
+    current.items = node?.children?.map((i) => createTocFromNodeList(i, {}));
     return current;
   }
-  if (node.type === `listItem`) {
-    const heading = getItems((node?.children ?? [])[0], {});
+
+  if (node.type === listItem) {
+    const heading = createTocFromNodeList((node?.children ?? [])[0], {});
     if (node?.children && node.children.length > 1) {
-      getItems(node.children[1], heading);
+      createTocFromNodeList(node.children[1], heading);
     }
     return heading;
   }
@@ -41,63 +53,65 @@ const getItems = (
   return {};
 };
 
-// Insert a `node` into a `parent`.
-const insert = (node: Node, parent: ParentNode) => {
+// Recursively iterate through the nodes and map according to hierarchy (node list -> children: node list item array -> child node list -> etc)
+const recursiveMapNodesToList = (node: Node, parent: ParentNode) => {
   const children = parent.children ?? [];
   const length = children?.length ?? 0;
   const last = children[length - 1];
   let item: ParentNode;
 
   if (node.depth === 1) {
-    item = listItem();
+    item = createEmptyListItem();
 
     if (item.children) {
       item.children.push({
-        type: PARAGRAPH,
+        type: header,
         children: [
           {
-            type: LINK,
+            type: link,
             title: null,
             url: `#${node.id}`,
-            children: [{ type: TEXT, value: node.value }],
+            children: [{ type: title, value: node.value }],
           },
         ],
       });
 
       children.push(item);
     }
-  } else if (last && last.type === LIST_ITEM) {
-    insert(node, last);
-  } else if (last && last.type === LIST) {
+  } else if (last && last.type === listItem) {
+    // if last item is a list item then simply populate using
+    // recursiveMapNodesToList
+    recursiveMapNodesToList(node, last);
+  } else if (last && last.type === list) {
+    // if list item is a list then populate but move node depth one
+    // level up
     if (node.depth) node.depth--;
+    recursiveMapNodesToList(node, last);
+  } else if (parent.type === list) {
+    // if not first or last of list in current depth then create
+    // a new list item and populate using recursiveMapNodesToList
+    item = createEmptyListItem();
 
-    insert(node, last);
-  } else if (parent.type === LIST) {
-    item = listItem();
-
-    insert(node, item);
+    recursiveMapNodesToList(node, item);
 
     children.push(item);
   } else {
-    item = list();
+    // if not the first, or last item and parent is not a list item then assume item
+    // should be a list and create a new list one level up (sibling of current list item)
+    item = createEmptyList();
     if (node.depth) node.depth--;
 
-    insert(node, item);
+    recursiveMapNodesToList(node, item);
 
     children.push(item);
   }
 };
 
-// Create a list.
-const list = (): ParentNode => ({ type: LIST, children: [] });
-
-// Create a list item.
-const listItem = (): ParentNode => ({
-  type: LIST_ITEM,
-  children: [],
-});
-
-// Transform a list of heading objects to a markdown list.
+/**
+ * Transform an array of heading objects to a hierarchical Toc Object. Logic inspired by Gatsby code
+ * which transforms the TOC to the same format (and hence works with current presentation layer without any
+ * changes)
+ */
 const parseTocNodes = (map: SearchMap[]) => {
   let minDepth = Infinity;
   let index = -1;
@@ -118,16 +132,16 @@ const parseTocNodes = (map: SearchMap[]) => {
   }
 
   // Construct the main list.
-  const table = list();
+  const hierarchicalNodeList = createEmptyList();
 
-  // Add TOC to list.
   index = -1;
 
+  // Add the Table of contents to list.
   while (++index < length) {
-    insert(map[index], table);
+    recursiveMapNodesToList(map[index], hierarchicalNodeList);
   }
 
-  return getItems(table, {});
+  return createTocFromNodeList(hierarchicalNodeList, {});
 };
 
 export default parseTocNodes;

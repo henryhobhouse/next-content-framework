@@ -100,16 +100,16 @@ export interface StaticArticlePathParams {
   };
 }
 
-export interface StaticConnectorListPathParams {
+export interface StaticConnectorSectionPathParams {
   params: {
-    connectorList: string;
+    connectorSection: string;
   };
 }
 
 export interface StaticConnectorPathParams {
   params: {
     connector: string;
-    connectorList: string;
+    connectorSection: string;
   };
 }
 
@@ -124,12 +124,13 @@ export interface ConnectorMetaData {
   slug: string;
 }
 
-export interface ConnectorListProps {
+export interface ConnectorSectionProps {
   content?: MdxRenderedToString;
   frontmatter?: Record<string, string>;
   tableOfContents: TableOfContents;
   connectors: ConnectorMetaData[];
-  connectorListSection: 'trigger' | 'core' | 'helper' | 'service';
+  // it maybe safer to use just string here as harder for content contributors to extend
+  connectorSectionName: 'trigger' | 'core' | 'helper' | 'service';
 }
 
 export interface DocumentPostProps {

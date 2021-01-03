@@ -1,7 +1,7 @@
 import recursiveFindRouteData from './recursive-find-route-data';
 
 import initialiseLogger from 'lib/node/logger';
-import { documentFilesBasePath } from 'lib/page-mdx/mdx-parse';
+import { contentRootPath } from 'lib/page-mdx/mdx-parse';
 import {
   Resolve,
   MdxRenderedToString,
@@ -10,7 +10,9 @@ import {
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 /**
- * Recurrively iterate through all markdown files in the in the content folder and parse the data
+ * Gets connectors as part of the static pre-render (static compilation by webpack) stage of the build (https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation)
+ *
+ * Recursively iterate through all markdown files in the in the content folder and parse the data
  * To include meta data in both frontmatter but equally ordering for the side navigation.
  */
 const getConnector = async (
@@ -29,8 +31,10 @@ const getConnector = async (
 
   await initialiseLogger({ metaData: { script: 'create-connector-page' } });
 
-  const productDocumentsPath = `${documentFilesBasePath}/${documentPathRootSection}`;
-  const connectorSlug = `/${documentPathRootSection}/connectors/docs/${currentSectionConnectorPath}`;
+  const productDocumentsPath = `${contentRootPath}/${documentPathRootSection}`;
+  // as connectors slugs are unique in that they don't match the file path we have to artificially revert between the two
+  // when creating slugs and getting said slugs actual contents from associated markdown file.
+  const connectorDirectoryPath = `/${documentPathRootSection}/connectors/docs/${currentSectionConnectorPath}`;
 
   const {
     currentPageTocData,
@@ -38,8 +42,8 @@ const getConnector = async (
     pageContent,
   } = await recursiveFindRouteData({
     rootDir: productDocumentsPath,
-    currentPageSlug: connectorSlug,
-    contentPageDir: documentPathRootSection,
+    currentPageSlug: connectorDirectoryPath,
+    sectionContentDir: documentPathRootSection,
     maxDepthToTraverse,
     promises,
     resolve,

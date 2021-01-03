@@ -12,7 +12,7 @@ const getTableOfContents = (mdxContent: string): TableOfContents => {
   const mdAst: ParentNode = compiler.parse(mdxContent);
   // create array of header nodes from AST
   const headerNodes = searchNodes(mdAst, smallestHeaderSizeOfToc);
-  // parse header nodes in to TOC format (heirarchal)
+  // parse header nodes in to TOC format (hierarchical)
   const tableOfContents = parseTocNodes(headerNodes as SearchMap[]);
 
   return tableOfContents;

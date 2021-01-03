@@ -1,6 +1,6 @@
 import {
   connectorDocsRelativePath,
-  documentFilesBasePath,
+  contentRootPath,
   isPostFileRegex,
   orderPartRegex,
   pathRegex,
@@ -9,26 +9,28 @@ import { Resolve, StaticArticlePathParams } from 'lib/page-mdx/types';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 /**
- * Get Article Slugs as part of the static pre render (https://nextjs.org/docs/basic-features/data-fetching#getstaticpaths-static-generation)
+ * Get Article Slugs as part of the static pre render (static compilation by webpack) stage of the build (https://nextjs.org/docs/basic-features/data-fetching#getstaticpaths-static-generation)
  *
- * Recurrively traverse through all directories in the content directory to a depth of 3 (as all articles
- * are in directory depths 1-3. Upon finding a doc.md|mdx file to determing markdown slug by removing order
+ * Recursively traverse through all directories in the content directory to a depth of 3 (as all articles
+ * are in directory depths 1-3. Upon finding a doc.md|mdx file to determining markdown slug by removing order
  * numbering from directory path and setting as the slug.
  *
- * The only exception is the markdown files in the connector docs (platorm/50.connectors/1000.docs) directory
+ * The only exception is the markdown files in the connector docs (platform/50.connectors/1000.docs) directory
  * as these are handled by the connector list page templates.
  *
  * Returns an array of all slugs.
  */
 const getArticleSlugs = async (
-  contentPagedir: string,
+  sectionContentDir: string,
   promises: FsPromises,
   resolve: Resolve,
 ) => {
   const paths: StaticArticlePathParams[] = [];
-  const platformDocumentsPath = `${documentFilesBasePath}/${contentPagedir}`;
+  // determine root directory of article files
+  const articleSectionPath = `${contentRootPath}/${sectionContentDir}`;
   // as articles is only 3 layers deep then only retrieve those. (connectors being level 4 and 5 and dealt
-  // with in the connectors-list and connectors pages
+  // with in the connectors-list and connectors pages. This can be removed when connectors are moved to the root of
+  // the content directory
   const maxDepthToTraverse = 3;
 
   const parseDirectories = async (directory: string, currentDepth: number) => {
@@ -43,30 +45,42 @@ const getArticleSlugs = async (
     );
 
     if (articleFile) {
-      const markdownPath = resolve(directory, articleFile.name);
-      const relativePath = markdownPath.replace(
-        `${documentFilesBasePath}/`,
+      const docsFileAbsolutePath = resolve(directory, articleFile.name);
+      const docsFileRelativePath = docsFileAbsolutePath.replace(
+        `${contentRootPath}/`,
         '',
       );
-      const isConnectorListPage = relativePath.includes(
+
+      // this can be removed when connectors are moved to root of content directory
+      const isConnectorSectionPage = docsFileRelativePath.includes(
         connectorDocsRelativePath,
       );
 
       // as exec is global we need to reset the index each iteration of the loop
       pathRegex.lastIndex = 0;
 
-      const pathComponents = pathRegex.exec(relativePath);
+      const pathComponents = pathRegex.exec(docsFileRelativePath);
 
-      if (pathComponents && !isConnectorListPage) {
-        const path = pathComponents[2];
-        const localPath = path.replace(orderPartRegex, '/');
-        const isConnectorListPage = localPath.startsWith(
+      if (pathComponents && !isConnectorSectionPage) {
+        const relativePath = pathComponents[2];
+        const nonOrderedRelativePath = relativePath.replace(
+          orderPartRegex,
+          '/',
+        );
+
+        // Checks if connector section page. Can be removed once connectors are moved to root of content
+        const isConnectorSectionPage = nonOrderedRelativePath.startsWith(
           connectorDocsRelativePath,
         );
-        if (!isConnectorListPage) {
+
+        // if not connector section page then to pass the relative path segments as string array to denote
+        // slug path to Next
+        if (!isConnectorSectionPage) {
           paths.push({
             params: {
-              articleSlug: [...localPath.split('/').filter(Boolean)],
+              articleSlug: [
+                ...nonOrderedRelativePath.split('/').filter(Boolean),
+              ],
             },
           });
         }
@@ -81,7 +95,10 @@ const getArticleSlugs = async (
       }),
     );
   };
-  await parseDirectories(platformDocumentsPath, 1);
+
+  // kick of recursive search of article directory from root
+  await parseDirectories(articleSectionPath, 1);
+
   return paths;
 };
 

@@ -2,36 +2,33 @@ import { promises } from 'fs';
 import { resolve } from 'path';
 
 import hydrate from 'next-mdx-remote/hydrate';
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 
 import ArticleWrapper from 'components/ArticleWrapper';
 import Connector from 'components/connector';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
-import DocsHead from 'components/DocsHead';
+import PortalHead from 'components/DocsHead';
 import SectionNavigation from 'components/SectionNavigation';
-import navigationStructure from 'lib/node/platform-nav-config.json';
+import navigationStructure from 'lib/node/connectors-nav-config.json';
 import mdxComponents from 'lib/page-mdx/mdx-components';
-import getConnectorList from 'lib/page-mdx/page-fetching/get-connector-list';
-import getConnectorListConnectors from 'lib/page-mdx/page-fetching/get-connector-list-connectors';
-import getConnectorListSlugs from 'lib/page-mdx/page-fetching/get-connector-list-slugs';
+import getConnectorSection from 'lib/page-mdx/page-fetching/get-connector-section';
+import getConnectorSectionConnectors from 'lib/page-mdx/page-fetching/get-connector-section-connectors';
+import getConnectorSectionSlugs from 'lib/page-mdx/page-fetching/get-connector-section-slugs';
 import {
-  ConnectorListProps,
+  ConnectorSectionProps,
   NavigationArticle,
-  StaticConnectorListPathParams,
+  StaticConnectorSectionPathParams,
 } from 'lib/page-mdx/types';
 import { TableOfContentStickyWrapper } from 'pages/embedded/[...articleSlug]';
 import { TableOfContentWrapper } from 'pages/platform/[...articleSlug]';
 
-const ConnectorList: FC<ConnectorListProps> = ({
+const ConnectorSection: FC<ConnectorSectionProps> = ({
   content,
   frontmatter,
   tableOfContents,
-  connectorListSection,
+  connectorSectionName,
   connectors,
 }) => {
-  // prevents immedaite re-render causing SC errors for miss-match classnames
-  const [toc] = useState(tableOfContents);
-
   // for client side rendering
   const hydratedContent =
     content &&
@@ -41,7 +38,7 @@ const ConnectorList: FC<ConnectorListProps> = ({
 
   return (
     <>
-      <DocsHead
+      <PortalHead
         title={frontmatter?.title}
         description={frontmatter?.description}
         image={frontmatter?.image}
@@ -60,7 +57,7 @@ const ConnectorList: FC<ConnectorListProps> = ({
             <Connector
               key={index}
               slug={connector.slug}
-              connectorSection={connectorListSection}
+              connectorSection={connectorSectionName}
               data={connector.frontmatter}
             />
           ))}
@@ -69,7 +66,7 @@ const ConnectorList: FC<ConnectorListProps> = ({
 
       <TableOfContentWrapper>
         <TableOfContentStickyWrapper>
-          <DesktopTableOfContents tableOfContents={toc} />
+          <DesktopTableOfContents tableOfContents={tableOfContents} />
         </TableOfContentStickyWrapper>
       </TableOfContentWrapper>
     </>
@@ -80,7 +77,7 @@ const ConnectorList: FC<ConnectorListProps> = ({
  * Create all the slugs (paths) for this page
  */
 export const getStaticPaths = async () => {
-  const paths = await getConnectorListSlugs(promises, resolve);
+  const paths = await getConnectorSectionSlugs(promises, resolve);
 
   return {
     paths,
@@ -94,16 +91,16 @@ export const getStaticPaths = async () => {
  * much much easier.
  */
 export const getStaticProps = async ({
-  params: { connectorList },
-}: StaticConnectorListPathParams) => {
+  params: { connectorSection },
+}: StaticConnectorSectionPathParams) => {
   const {
     pageContent,
     frontMatterData,
     currentPageTocData,
-  } = await getConnectorList(connectorList, promises, resolve);
+  } = await getConnectorSection(connectorSection, promises, resolve);
 
-  const { connectors } = await getConnectorListConnectors(
-    connectorList,
+  const { connectors } = await getConnectorSectionConnectors(
+    connectorSection,
     promises,
     resolve,
   );
@@ -113,10 +110,10 @@ export const getStaticProps = async ({
       content: pageContent,
       frontmatter: frontMatterData,
       tableOfContents: currentPageTocData,
-      connectorListSection: connectorList,
+      connectorSectionName: connectorSection,
       connectors,
     },
   };
 };
 
-export default ConnectorList;
+export default ConnectorSection;

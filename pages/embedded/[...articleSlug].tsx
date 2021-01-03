@@ -15,7 +15,7 @@ import getArticle from 'lib/page-mdx/page-fetching/get-article';
 import getArticleSlugs from 'lib/page-mdx/page-fetching/get-article-slugs';
 import { DocumentPostProps, StaticArticlePathParams } from 'lib/page-mdx/types';
 
-const contentPagedir = 'embedded';
+const sectionContentDir = 'embedded';
 export type FsPromises = typeof promises;
 
 const TableOfContentWrapper = styled.div`
@@ -68,7 +68,7 @@ const EmbeddedPosts: FC<DocumentPostProps> = ({
  * Create all the slugs (paths) for this page
  */
 export const getStaticPaths = async () => {
-  const paths = await getArticleSlugs(contentPagedir, promises, resolve);
+  const paths = await getArticleSlugs(sectionContentDir, promises, resolve);
 
   return {
     paths,
@@ -86,7 +86,7 @@ export const getStaticProps = async ({
 }: StaticArticlePathParams): Promise<{ props: DocumentPostProps }> => {
   const { pageContent, frontMatterData, currentPageTocData } = await getArticle(
     articleSlug,
-    contentPagedir,
+    sectionContentDir,
     promises,
     resolve,
   );

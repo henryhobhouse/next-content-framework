@@ -2,13 +2,13 @@ import { promises } from 'fs';
 import { resolve } from 'path';
 
 import hydrate from 'next-mdx-remote/hydrate';
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 
 import ArticleWrapper from 'components/ArticleWrapper';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
-import DocsHead from 'components/DocsHead';
+import PortalHead from 'components/DocsHead';
 import SectionNavigation from 'components/SectionNavigation';
-import navigationStructure from 'lib/node/platform-nav-config.json';
+import navigationStructure from 'lib/node/connectors-nav-config.json';
 import mdxComponents from 'lib/page-mdx/mdx-components';
 import getConnector from 'lib/page-mdx/page-fetching/get-connector';
 import getConnectorSlugs from 'lib/page-mdx/page-fetching/get-connector-slugs';
@@ -21,20 +21,17 @@ import {
 import { TableOfContentStickyWrapper } from 'pages/embedded/[...articleSlug]';
 import { TableOfContentWrapper } from 'pages/platform/[...articleSlug]';
 
-interface ConnectorListProps {
+interface ConnectorSectionProps {
   content?: MdxRenderedToString;
   frontmatter?: Record<string, string>;
   tableOfContents: TableOfContents;
 }
 
-const Connector: FC<ConnectorListProps> = ({
+const Connector: FC<ConnectorSectionProps> = ({
   content,
   frontmatter,
   tableOfContents,
 }) => {
-  // prevents immedaite re-render causing SC errors for miss-match classnames
-  const [toc] = useState(tableOfContents);
-
   // for client side rendering
   const hydratedContent =
     content &&
@@ -44,7 +41,7 @@ const Connector: FC<ConnectorListProps> = ({
 
   return (
     <>
-      <DocsHead
+      <PortalHead
         title={frontmatter?.title}
         description={frontmatter?.description}
         image={frontmatter?.image}
@@ -62,7 +59,7 @@ const Connector: FC<ConnectorListProps> = ({
 
       <TableOfContentWrapper>
         <TableOfContentStickyWrapper>
-          <DesktopTableOfContents tableOfContents={toc} />
+          <DesktopTableOfContents tableOfContents={tableOfContents} />
         </TableOfContentStickyWrapper>
       </TableOfContentWrapper>
     </>
@@ -87,13 +84,13 @@ export const getStaticPaths = async () => {
  * much much easier.
  */
 export const getStaticProps = async ({
-  params: { connector, connectorList },
+  params: { connector, connectorSection },
 }: StaticConnectorPathParams) => {
   const {
     pageContent,
     frontMatterData,
     currentPageTocData,
-  } = await getConnector(`${connectorList}/${connector}`, promises, resolve);
+  } = await getConnector(`${connectorSection}/${connector}`, promises, resolve);
   return {
     props: {
       content: pageContent,

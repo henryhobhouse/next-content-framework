@@ -40,7 +40,7 @@ const searchNodes = (root: ParentNode, headingDepth: number) => {
 
   slugs.reset();
 
-  const onheading = (child: Node, _: number, parent?: ParentNode) => {
+  const onHeading = (child: Node, _: number, parent?: ParentNode) => {
     const value = valueToString(child);
     const id = child?.data?.hProperties?.id;
 
@@ -58,9 +58,9 @@ const searchNodes = (root: ParentNode, headingDepth: number) => {
     }
   };
 
-  // Visit all headings in `root`.  We `slug` all headings (to account for
-  // duplicates), but only create a TOC from top-level headings.
-  visit(root, headingTitle, onheading);
+  // Visit all headings in `root`.  We `slug` all the headings (to account for
+  // duplicates), but only create a TOC from heads as set by the heading depth param.
+  visit(root, headingTitle, onHeading);
 
   return map;
 };

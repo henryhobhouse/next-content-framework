@@ -1,7 +1,7 @@
 import recursiveFindRouteData from './recursive-find-route-data';
 
 import initialiseLogger from 'lib/node/logger';
-import { documentFilesBasePath } from 'lib/page-mdx/mdx-parse';
+import { contentRootPath } from 'lib/page-mdx/mdx-parse';
 import {
   Resolve,
   MdxRenderedToString,
@@ -10,10 +10,12 @@ import {
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 /**
- * Recurrively iterate through all markdown files in the in the content folder and parse the data
+ * Gets connector section as part of the static pre-render (static compilation by webpack) stage of the build (https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation)
+ *
+ * Recursively iterate through all markdown files in the in the content folder and parse the data
  * To include meta data in both frontmatter but equally ordering for the side navigation.
  */
-const getConnectorLists = async (
+const getConnectorSection = async (
   currentConnectorSection: string,
   promises: FsPromises,
   resolve: Resolve,
@@ -30,8 +32,15 @@ const getConnectorLists = async (
     metaData: { script: 'create-connector-list-page' },
   });
 
-  const productDocumentsPath = `${documentFilesBasePath}`;
-  const connectorListSlug = `//connectors/${currentConnectorSection}`;
+  const productDocumentsPath = `${contentRootPath}`;
+  const connectorSectionSlug = `//connectors/${currentConnectorSection}`;
+  // Adds docs back into the path so that the 'recursiveFindRouteData' function can match against its search within
+  // the content directory. This can be removed once the connectors are moved to the root of the content directory as the
+  // slug will accurately reflect the document path.
+  const connectorSectionFilePath = connectorSectionSlug.replace(
+    'connectors',
+    'connectors/docs',
+  );
 
   const {
     currentPageTocData,
@@ -39,8 +48,8 @@ const getConnectorLists = async (
     pageContent,
   } = await recursiveFindRouteData({
     rootDir: productDocumentsPath,
-    currentPageSlug: connectorListSlug.replace('connectors', 'connectors/docs'),
-    contentPageDir: '',
+    currentPageSlug: connectorSectionFilePath,
+    sectionContentDir: '',
     maxDepthToTraverse,
     promises,
     resolve,
@@ -53,4 +62,4 @@ const getConnectorLists = async (
   };
 };
 
-export default getConnectorLists;
+export default getConnectorSection;

@@ -1,7 +1,7 @@
 import matter from 'gray-matter';
 
 import {
-  documentFilesBasePath,
+  contentRootPath,
   isPostFileRegex,
   orderPartRegex,
   orderRegex,
@@ -10,7 +10,13 @@ import {
 import { Resolve, ConnectorMetaData } from 'lib/page-mdx/types';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
-const getConnectorListConnectors = async (
+/**
+ * Gets connector section connectors as part of the static pre-render (static compilation by webpack) stage of the build (https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation)
+ *
+ * Finds all child directories of within the connectors sections directory and if has
+ * a docs markdown file returns the parsed contents.
+ */
+const getConnectorSectionConnectors = async (
   currentConnectorSection: string,
   promises: FsPromises,
   resolve: Resolve,
@@ -20,8 +26,8 @@ const getConnectorListConnectors = async (
   const connectors: ConnectorMetaData[] = [];
   const documentPathRootSection = 'platform';
 
-  const connectorListPath = `${documentFilesBasePath}/${documentPathRootSection}/50.connectors/1000.docs`;
-  const connectorListSlug = `/connectors/${currentConnectorSection}`;
+  const connectorSectionPath = `${contentRootPath}/${documentPathRootSection}/50.connectors/1000.docs`;
+  const connectorSectionSlug = `/connectors/${currentConnectorSection}`;
 
   const parse = async (directory: string, currentDepth: number) => {
     const dirents = await await promises.readdir(directory, {
@@ -35,10 +41,7 @@ const getConnectorListConnectors = async (
 
     if (docsFile) {
       const markdownPath = resolve(directory, docsFile.name);
-      const relativePath = markdownPath.replace(
-        `${documentFilesBasePath}/`,
-        '',
-      );
+      const relativePath = markdownPath.replace(`${contentRootPath}/`, '');
 
       // as exec is global we need to reset the index each iteration of the loop
       pathRegex.lastIndex = 0;
@@ -51,7 +54,7 @@ const getConnectorListConnectors = async (
         const localPath = path.replace(orderPartRegex, '/');
         const slug = localPath.replace('/docs', '');
 
-        if (slug.startsWith(connectorListSlug) && currentDepth >= 2) {
+        if (slug.startsWith(connectorSectionSlug) && currentDepth >= 2) {
           const markdownData = await promises.readFile(markdownPath, 'utf8');
           const { data } = matter(markdownData);
           connectors.push({
@@ -71,11 +74,11 @@ const getConnectorListConnectors = async (
     );
   };
 
-  await parse(connectorListPath, 0);
+  await parse(connectorSectionPath, 0);
 
   return {
     connectors,
   };
 };
 
-export default getConnectorListConnectors;
+export default getConnectorSectionConnectors;

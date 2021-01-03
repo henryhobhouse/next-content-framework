@@ -9,14 +9,14 @@ export const isHtmlImageRegex = /(<img .*src=["'])(\S*?)(?=("|'))(.*\/>)/gi;
 export const connectorsRegex = /^\/connectors\/docs\/([^/]*)\/([^/]*)/gi;
 export const connectorsListRegex = /^\/connectors\/docs\/([^/]*)$/gi;
 
-export const documentFilesBasePath = `${process.cwd()}/content`;
+export const contentRootPath = `${process.cwd()}/content`;
 export const connectorDocsRelativePath = '/connectors/docs';
 export const rootImageDirectory = 'images';
 export const nextPublicDirectory = 'public';
 export const referenceImageSize = 2000; // px
 export const articleImageSize = 600; // px
 export const lazyLoadImageSize = 20; // px
-export const connectorListRelativePath = 'platform/50.connectors/1000.docs';
+export const connectorSectionRelativePath = 'platform/50.connectors/1000.docs';
 
 interface ReplaceLinkInContentProps {
   imageLinkMeta: ImageLinkMeta;
