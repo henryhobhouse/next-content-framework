@@ -21,7 +21,7 @@ const getConnectorListConnectors = async (
   const documentPathRootSection = 'platform';
 
   const connectorListPath = `${documentFilesBasePath}/${documentPathRootSection}/50.connectors/1000.docs`;
-  const connectorListSlug = `/${documentPathRootSection}/connectors/docs/${currentConnectorSection}`;
+  const connectorListSlug = `/connectors/${currentConnectorSection}`;
 
   const parse = async (directory: string, currentDepth: number) => {
     const dirents = await await promises.readdir(directory, {
@@ -49,7 +49,7 @@ const getConnectorListConnectors = async (
       if (pathComponents) {
         const path = pathComponents[2];
         const localPath = path.replace(orderPartRegex, '/');
-        const slug = `/platform${localPath}`;
+        const slug = localPath.replace('/docs', '');
 
         if (slug.startsWith(connectorListSlug) && currentDepth >= 2) {
           const markdownData = await promises.readFile(markdownPath, 'utf8');

@@ -7,6 +7,8 @@ import {
 import { Resolve, StaticConnectorPathParams } from 'lib/page-mdx/types';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
+const connectorDirPath = 'platform/50.connectors/1000.docs';
+
 /**
  * Get Connector Slugs as part of the static pre render (https://nextjs.org/docs/basic-features/data-fetching#getstaticpaths-static-generation)
  *
@@ -16,7 +18,6 @@ import { FsPromises } from 'pages/embedded/[...articleSlug]';
  * Returns an array of all slugs.
  */
 const getConnectorSlugs = async (promises: FsPromises, resolve: Resolve) => {
-  const connectorDirPath = 'platform/50.connectors/1000.docs';
   const paths: StaticConnectorPathParams[] = [];
   const platformDocumentsPath = `${documentFilesBasePath}/${connectorDirPath}`;
   // as articles is only 3 layers deep then only retrieve those. (connectors being level 4 and 5 and dealt
@@ -48,7 +49,10 @@ const getConnectorSlugs = async (promises: FsPromises, resolve: Resolve) => {
       if (pathComponents && currentDepth === 3) {
         const path = pathComponents[2];
         const localPath = path.replace(orderPartRegex, '/');
-        const pathSegments = localPath.split('/').filter(Boolean);
+        const pathSegments = localPath
+          .replace('/docs', '')
+          .split('/')
+          .filter(Boolean);
         paths.push({
           params: {
             connectorList: pathSegments[pathSegments.length - 2],

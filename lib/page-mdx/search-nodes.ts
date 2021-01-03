@@ -11,13 +11,11 @@ const valueToString = (node: Node | Node[]): string => {
   if (Array.isArray(node)) {
     return all(node);
   }
-  return (
-    (node?.value as string) ||
-    (node?.alt as string) ||
-    (node?.title as string) ||
+  return (node?.value ||
+    node?.alt ||
+    node?.title ||
     (node?.children && all(node.children as Node[])) ||
-    ''
-  );
+    '') as string;
 };
 
 const all = (values: Node[]): string => {

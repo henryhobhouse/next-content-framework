@@ -15,7 +15,7 @@ import { FsPromises } from 'pages/embedded/[...articleSlug]';
  */
 const getArticle = async (
   currentSlugSections: string[],
-  contentPagedir: string,
+  contentPageDir: string,
   promises: FsPromises,
   resolve: Resolve,
 ): Promise<{
@@ -29,8 +29,8 @@ const getArticle = async (
 
   await initialiseLogger({ metaData: { script: 'create-article-page' } });
 
-  const productDocumentsPath = `${documentFilesBasePath}/${contentPagedir}`;
-  const articleSlug = `/${contentPagedir}/${currentSlugSections.join('/')}`;
+  const productDocumentsPath = `${documentFilesBasePath}/${contentPageDir}`;
+  const articleSlug = `/${contentPageDir}/${currentSlugSections.join('/')}`;
 
   const {
     currentPageTocData,
@@ -39,7 +39,7 @@ const getArticle = async (
   } = await recursiveFindRouteData({
     rootDir: productDocumentsPath,
     currentPageSlug: articleSlug,
-    contentPagedir,
+    contentPageDir,
     maxDepthToTraverse,
     promises,
     resolve,

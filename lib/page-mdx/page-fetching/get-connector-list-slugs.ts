@@ -54,7 +54,9 @@ const getConnectorListSlugs = async (
           );
           // as exec is global we need to reset the index each iteration of the loop
           pathRegex.lastIndex = 0;
-          const localPath = relativePath.replace(orderPartRegex, '');
+          const localPath = relativePath
+            .replace(orderPartRegex, '')
+            .replace('/docs', '');
           paths.push({
             params: {
               connectorList: localPath,

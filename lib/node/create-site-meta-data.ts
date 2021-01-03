@@ -10,7 +10,9 @@ import createBreadcrumbs from './mdx-meta/create-breadcrumbs';
 
 const currentWorkingDirectory = process.cwd();
 const contentDir = `${currentWorkingDirectory}/content`;
-const contentRoots = ['platform', 'embedded', 'images'];
+const contentRoots = ['platform', 'embedded', 'images'] as const;
+
+export type ContentRoot = typeof contentRoots[number];
 
 const createSiteMetaData = async () => {
   const allNodesData: NodeData[] = [];

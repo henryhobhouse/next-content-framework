@@ -19,6 +19,7 @@ import createNodeId from './create-node-id';
 
 const navigationArticleDepth = 5;
 
+type ArticleType = 'connector' | 'connector-list' | 'article';
 export interface NodeData {
   id: string;
   title: string;
@@ -32,7 +33,7 @@ export interface NodeData {
   order: number;
   connectorSection?: string;
   parentSlug: string;
-  type: string;
+  type: ArticleType;
   imageIcon?: string;
   streamlineIcon?: string;
 }
@@ -92,14 +93,21 @@ const recursiveParseMdx = async (
         const section = pathComponents[1];
         const path = pathComponents[2];
         const localPath = path.replace(orderPartRegex, '/');
-        const slug = `/${contentRoot}${localPath}`;
-        const level = (localPath && localPath.match(/\//g)?.length) || 1;
+        const connectorListComponents = connectorsListRegex.exec(localPath);
+        const isConnectorList =
+          !!connectorListComponents || localPath === '/connectors/docs';
+        const filteredLocalPath = isConnectorList
+          ? localPath.replace('/docs', '')
+          : localPath;
+        const slug = isConnectorList
+          ? filteredLocalPath
+          : `/${contentRoot}${filteredLocalPath}`;
+        const level =
+          (filteredLocalPath && filteredLocalPath.match(/\//g)?.length) || 1;
         const order = orderComponents ? parseInt(orderComponents[1], 10) : 0;
         const parentSlug = slug.replace(/\/[a-zA-Z0-9-]+$/, '');
         const connectorsComponents = connectorsRegex.exec(slug);
         const isConnector = !!connectorsComponents;
-        const connectorListComponents = connectorsListRegex.exec(slug);
-        const isConnectorList = !!connectorListComponents;
 
         const markdownData = await promises.readFile(markdownPath, 'utf8');
         const { data, content } = matter(markdownData);
@@ -120,15 +128,10 @@ const recursiveParseMdx = async (
             `Connector at "${path}" does not have a connector name in the frontmatter`,
           );
 
-        let docType = 'article';
+        let docType: ArticleType = 'article';
         if (!isConnectorList && (isConnector || data.connector)) {
           docType = 'connector';
         } else if (isConnectorList) {
-          docType = 'connector-list';
-        }
-
-        // Check the path for the all connectors list
-        if (slug === '/platform/connectors/docs/') {
           docType = 'connector-list';
         }
 

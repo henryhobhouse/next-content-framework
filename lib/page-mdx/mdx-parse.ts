@@ -6,8 +6,8 @@ export const orderRegex = /.*\/([0-9+]+)\.[^/]*\/docs\.(mdx|md)$/gi;
 export const orderPartRegex = /\/([0-9+]+)\./g;
 export const isMdImageRegex = /(!\[.*?\]\()(\S*?)(?=\))\)/g;
 export const isHtmlImageRegex = /(<img .*src=["'])(\S*?)(?=("|'))(.*\/>)/gi;
-export const connectorsRegex = /^\/platform\/connectors\/docs\/([^/]*)\/([^/]*)/gi;
-export const connectorsListRegex = /^\/platform\/connectors\/docs\/([^/]*)\/$/gi;
+export const connectorsRegex = /^\/connectors\/docs\/([^/]*)\/([^/]*)/gi;
+export const connectorsListRegex = /^\/connectors\/docs\/([^/]*)$/gi;
 
 export const documentFilesBasePath = `${process.cwd()}/content`;
 export const connectorDocsRelativePath = '/connectors/docs';

@@ -21,7 +21,7 @@ import { FsPromises } from 'pages/embedded/[...articleSlug]';
 interface RecursiveParseDirectoriesProps {
   rootDir: string;
   currentPageSlug: string;
-  contentPagedir: string;
+  contentPageDir: string;
   maxDepthToTraverse: number;
   promises: FsPromises;
   resolve: Resolve;
@@ -43,7 +43,7 @@ interface RecursiveParseDirectoriesProps {
 const recursiveFindRouteData = async ({
   rootDir,
   currentPageSlug,
-  contentPagedir,
+  contentPageDir,
   maxDepthToTraverse,
   promises,
   resolve,
@@ -80,7 +80,7 @@ const recursiveFindRouteData = async ({
       if (pathComponents) {
         const path = pathComponents[2];
         const localPath = path.replace(orderPartRegex, '/');
-        const slug = `/${contentPagedir}${localPath}`;
+        const slug = `/${contentPageDir}${localPath}`;
 
         if (slug === currentPageSlug) {
           const markdownData = await promises.readFile(markdownPath, 'utf8');

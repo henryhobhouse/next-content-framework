@@ -98,7 +98,7 @@ export const fetchAlgoliaNodes = async <T extends SearchHit>(
 ) => {
   const matchedHits: { [keyof: string]: T } = {};
   await index
-    .browseObjects({
+    .browseObjects<T>({
       attributesToRetrieve,
       batch: (hits) => {
         if (Array.isArray(hits)) {

@@ -39,7 +39,7 @@ const getConnector = async (
   } = await recursiveFindRouteData({
     rootDir: productDocumentsPath,
     currentPageSlug: connectorSlug,
-    contentPagedir: documentPathRootSection,
+    contentPageDir: documentPathRootSection,
     maxDepthToTraverse,
     promises,
     resolve,

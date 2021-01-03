@@ -1,7 +1,6 @@
 import { promises } from 'fs';
 import { resolve } from 'path';
 
-import navigationStructure from 'lib/node/platform-nav-config.json';
 import hydrate from 'next-mdx-remote/hydrate';
 import React, { FC } from 'react';
 import styled from 'styled-components';
@@ -10,6 +9,7 @@ import ArticleWrapper from 'components/ArticleWrapper';
 import DesktopTableOfContents from 'components/DesktopTableOfContents';
 import DocsHead from 'components/DocsHead';
 import SectionNavigation from 'components/SectionNavigation';
+import navigationStructure from 'lib/node/platform-nav-config.json';
 import mdxComponents from 'lib/page-mdx/mdx-components';
 import getArticle from 'lib/page-mdx/page-fetching/get-article';
 import getArticleSlugs from 'lib/page-mdx/page-fetching/get-article-slugs';

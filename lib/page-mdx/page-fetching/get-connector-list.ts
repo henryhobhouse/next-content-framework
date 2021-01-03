@@ -24,15 +24,14 @@ const getConnectorLists = async (
 }> => {
   // as articles is only 3 layers deep then only retrieve those. (connectors being level 4 and 5 and dealt
   // with in the connectors-list and connectors pages
-  const maxDepthToTraverse = 4;
-  const documentPathRootSection = 'platform';
+  const maxDepthToTraverse = 5;
 
   await initialiseLogger({
     metaData: { script: 'create-connector-list-page' },
   });
 
-  const productDocumentsPath = `${documentFilesBasePath}/${documentPathRootSection}`;
-  const connectorListSlug = `/${documentPathRootSection}/connectors/docs/${currentConnectorSection}`;
+  const productDocumentsPath = `${documentFilesBasePath}`;
+  const connectorListSlug = `//connectors/${currentConnectorSection}`;
 
   const {
     currentPageTocData,
@@ -40,8 +39,8 @@ const getConnectorLists = async (
     pageContent,
   } = await recursiveFindRouteData({
     rootDir: productDocumentsPath,
-    currentPageSlug: connectorListSlug,
-    contentPagedir: documentPathRootSection,
+    currentPageSlug: connectorListSlug.replace('connectors', 'connectors/docs'),
+    contentPageDir: '',
     maxDepthToTraverse,
     promises,
     resolve,

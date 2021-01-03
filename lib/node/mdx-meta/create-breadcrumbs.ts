@@ -7,7 +7,7 @@ const currentWorkingDirectory = process.cwd();
 const breadCrumbsFileName = 'bread-crumbs.json';
 const breadCrumbsFilePath = `${currentWorkingDirectory}/lib/node/${breadCrumbsFileName}`;
 
-const getContentSectionToProductName = (contentSection: string) => {
+const getContentSectionToProductName = (contentSection: string): string => {
   let productName;
   switch (contentSection) {
     case 'platform':
