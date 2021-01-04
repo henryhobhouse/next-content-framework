@@ -22,7 +22,7 @@ const updateAlgoliaArticleIndex = async ({
   allNodesData,
   indexQueries,
   contentRoot,
-  enablePartialUpdates = true,
+  enablePartialUpdates = false,
   chunkSize = 1000,
 }: UpdateIndexOptions) => {
   if (!isProduction || !allNodesData.length) return;
@@ -66,6 +66,10 @@ const updateAlgoliaArticleIndex = async ({
       );
 
       let hasChanged = nodeObjects;
+
+      // this is disabled by default. To enable we need to do two things. First add file last updated time to the metadata stored
+      // in the index and then compare against the new to decided if to update a file after change (it currently won't). Secondly we
+      // need to remove indexes that are no longer valid (source has been removed) as this will currently not do it.
       if (enablePartialUpdates) {
         logger.info(`Starting Partial updates...`);
 

@@ -10,7 +10,7 @@ const imageUrls = /(!\[.*?\]\()(\S*?)(?=\))/g;
 const isUrlRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[\w]*))?)/g;
 const isGifPlayerRegex = /(<GifPlayer)(.*)(\/>)/g;
 const isInlineStyleRegex = /(?<=style=)".*"/g;
-const redirectLinkRegex = /redirect_from:\s*-\s*[/\-\w]*/im;
+const redirectLinkRegex = /redirect_from:(\s*-\s*[/\-\w]*\n)*(?=---|\w{2,})/im;
 
 export const getLinksWithPaths = (markdownText: string) => {
   const links: string[] = [];
@@ -46,7 +46,7 @@ export const getInlineStyles = (markdownText: string) => {
 export const getRedirectLink = (markdownText: string) => {
   const regCheck = new RegExp(redirectLinkRegex);
   const redirectLink = regCheck.exec(markdownText);
-  return redirectLink?.length ? redirectLink[0] : '';
+  return Array.isArray(redirectLink) ? redirectLink[0] : '';
 };
 
 export const convertInlineToObjectStyles = async (

@@ -40,6 +40,7 @@ const noLogPrivateToFile = format((info) => {
 interface LoggerProps {
   errorLogFileName?: string;
   metaData?: Record<string, unknown>;
+  retainExistingLogs?: boolean;
 }
 
 type InitialiseLogger = (options?: LoggerProps) => Promise<void>;
@@ -57,7 +58,11 @@ const stringLineBreakRegex = /(\r\n|\n|\r)/gm;
 const initialiseLogger: InitialiseLogger = async (options) => {
   // if there is a custom error log file, delete it, to ensure only new errors are saved.
   const errorLogFilePath = `${process.cwd()}/${options?.errorLogFileName}`;
-  if (options?.errorLogFileName && existsSync(errorLogFilePath)) {
+  if (
+    options?.errorLogFileName &&
+    !options?.retainExistingLogs &&
+    existsSync(errorLogFilePath)
+  ) {
     await promises.unlink(errorLogFilePath);
   }
 

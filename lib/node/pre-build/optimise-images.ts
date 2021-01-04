@@ -55,6 +55,7 @@ const checkForErrors = () => {
   try {
     await initialiseLogger({
       errorLogFileName,
+      retainExistingLogs: true,
       metaData: { script: 'image-optimisation' },
     });
 

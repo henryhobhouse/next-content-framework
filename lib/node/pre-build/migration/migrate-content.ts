@@ -7,8 +7,6 @@ import {
   updateImageLinks,
   getOldGifPlayerJsx,
   updateGifJsx,
-  getInlineStyles,
-  convertInlineToObjectStyles,
   getRedirectLink,
   removeRedirectLink,
   setNextRedirects,
@@ -51,22 +49,13 @@ const migrateContent = async (
     if (gifPlayers.length)
       await updateGifJsx(gifPlayers, markdownText, markdownFileLocation);
 
-    // replace all inline string styles with objects to be JSX compatible
-    const inlineStyles = getInlineStyles(markdownText);
-    if (inlineStyles.length)
-      await convertInlineToObjectStyles(
-        inlineStyles,
-        markdownText,
-        markdownFileLocation,
-      );
-
     // assume only one redirect per file. Find, copy to next config, and remove original.
     // redirects setup as per (https://nextjs.org/docs/api-reference/next.config.js/redirects)
     const redirectLink = getRedirectLink(markdownText);
-    const sourceMatch = redirectLink?.match(/(?<=\s)(\S+$)/im);
-    const source = Array.isArray(sourceMatch)
-      ? sourceMatch[0].replace(/\/$/, '')
-      : '';
+    const sourceMatch = redirectLink?.match(/(?<=\s)(\S+$)/gim);
+    const redirectSources = Array.isArray(sourceMatch)
+      ? sourceMatch.map((rawSource) => rawSource.replace(/\/$/, ''))
+      : [];
 
     if (redirectLink) {
       const relativePath = markdownFileLocation.replace(
@@ -80,10 +69,12 @@ const migrateContent = async (
         const path = pathComponents[2];
         const localPath = path.replace(orderPartRegex, '/');
         const slug = `/${section}${localPath}`;
-        redirectLinks.push({
-          source,
-          destination: slug,
-          permanent: true,
+        redirectSources.forEach((redirectSource) => {
+          redirectLinks.push({
+            source: redirectSource,
+            destination: slug,
+            permanent: true,
+          });
         });
         await removeRedirectLink(
           redirectLink,
