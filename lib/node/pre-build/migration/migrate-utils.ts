@@ -1,6 +1,6 @@
 /* eslint-disable no-cond-assign */
 import { DirectoryTree } from 'directory-tree';
-import { promises } from 'fs';
+import { promises, writeFileSync } from 'fs';
 
 import _ from 'lodash';
 import { Redirect } from 'next/dist/lib/load-custom-routes';
@@ -139,7 +139,7 @@ export const getParsedLink = (
   return [...parsedLinkDirectories, fileName].join('/');
 };
 
-export const updateGifJsx = async (
+export const updateGifJsx = (
   gifPlayers: string[],
   markdownText: string,
   markdownFileLocation: string,
@@ -151,7 +151,7 @@ export const updateGifJsx = async (
       updatedContent = updatedContent.replace(player, `![Gif](${link[0]})`);
     }
   });
-  await promises.writeFile(markdownFileLocation, updatedContent);
+  writeFileSync(markdownFileLocation, updatedContent);
 };
 
 export const updateImageLinks = async (

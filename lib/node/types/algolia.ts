@@ -25,5 +25,4 @@ export interface UpdateIndexOptions {
   enablePartialUpdates?: boolean;
   chunkSize?: number;
   indexQueries: IndexQuery[];
-  contentRoot: string;
 }

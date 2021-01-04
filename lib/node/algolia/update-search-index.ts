@@ -21,7 +21,6 @@ const isProduction = process.env.NODE_ENV === 'production';
 const updateAlgoliaArticleIndex = async ({
   allNodesData,
   indexQueries,
-  contentRoot,
   enablePartialUpdates = false,
   chunkSize = 1000,
 }: UpdateIndexOptions) => {
@@ -62,7 +61,7 @@ const updateAlgoliaArticleIndex = async ({
       })) as (TransformedObject & { objectID: string })[];
 
       logger.info(
-        `Index query for ${indexQuery.indexName} for content in "${contentRoot}" has resulted in ${nodeObjects.length} results`,
+        `Index query for ${indexQuery.indexName} has resulted in ${nodeObjects.length} results`,
       );
 
       let hasChanged = nodeObjects;
@@ -153,7 +152,7 @@ const updateAlgoliaArticleIndex = async ({
         await moveIndex(algoliaClient, indexToUse, index);
       }
 
-      logger.log('success', `Content in ${contentRoot}: Done!`);
+      logger.log('success', `Algolia Index updated: Done!`);
 
       // eslint-disable-next-line consistent-return
       return {

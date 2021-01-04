@@ -47,7 +47,7 @@ const migrateContent = async (
     // deal with gifs and static images alike.
     const gifPlayers = getOldGifPlayerJsx(markdownText);
     if (gifPlayers.length)
-      await updateGifJsx(gifPlayers, markdownText, markdownFileLocation);
+      updateGifJsx(gifPlayers, markdownText, markdownFileLocation);
 
     // assume only one redirect per file. Find, copy to next config, and remove original.
     // redirects setup as per (https://nextjs.org/docs/api-reference/next.config.js/redirects)

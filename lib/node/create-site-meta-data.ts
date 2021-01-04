@@ -23,19 +23,19 @@ const createSiteMetaData = async () => {
     contentRoot: string,
     imageDatas: ImageData[],
   ) => {
+    // for functionality that requires all node data to aggregate into one array.
     allNodesData.push(...contentRootNodesData);
+
     await syncImagesWithPublic(imageDatas);
+
     await createNavigationConfigs(
       contentRootNodesData,
       contentRoot,
       currentWorkingDirectory,
     );
-    await updateAlgoliaArticleIndex({
-      allNodesData: contentRootNodesData,
-      indexQueries: algoliaIndexConfigs,
-      contentRoot,
-    });
+
     await createSitemap(contentRootNodesData);
+
     await createBreadcrumbs(contentRootNodesData, contentRoot);
   };
 
@@ -48,6 +48,11 @@ const createSiteMetaData = async () => {
       );
     }),
   );
+
+  await updateAlgoliaArticleIndex({
+    allNodesData,
+    indexQueries: algoliaIndexConfigs,
+  });
 };
 
 // needs to be exported in AMD as next config (which imports it) is in JS
