@@ -36,6 +36,7 @@ export interface NodeData {
   type: ArticleType;
   imageIcon?: string;
   streamlineIcon?: string;
+  connector?: string;
 }
 
 type ParsedMdxCallback = (
@@ -165,6 +166,7 @@ const recursiveParseMdx = async (
           parentSlug,
           imageIcon: data.imageIcon,
           streamlineIcon: data.streamlineIcon,
+          connector: data.connector,
         });
       }
     }

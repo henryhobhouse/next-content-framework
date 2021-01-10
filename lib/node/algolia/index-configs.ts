@@ -29,6 +29,29 @@ const algoliaIndexConfigs = [
       ],
     },
   },
+  {
+    transformer: (nodeDatas: NodeData[]) =>
+      nodeDatas
+        .filter((nodeData) => nodeData.type === 'connector')
+        .map((nodeData) => ({
+          id: nodeData.id,
+          title: nodeData.title,
+          description: nodeData.description,
+          excerpt: nodeData.excerpt,
+          section: nodeData.section,
+          slug: nodeData.slug,
+          type: nodeData.type,
+          connectorSection: nodeData.connectorSection,
+          imageIcon: nodeData.imageIcon,
+          streamlineIcon: nodeData.streamlineIcon,
+          connectorName: nodeData.connector,
+        })),
+    indexName: process.env.ALGOLIA_CONNECTORS_INDEX_NAME,
+    settings: {
+      attributesForFaceting: ['type', 'filterOnly(connectorName)'],
+      ranking: ['asc(title)'],
+    },
+  },
 ];
 
 export default algoliaIndexConfigs;
