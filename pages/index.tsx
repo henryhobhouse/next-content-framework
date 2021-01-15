@@ -23,9 +23,11 @@ interface Props {
 const Home: FC<Props> = ({ algoliaConnectors }) => (
   <>
     <DocsHead />
-    {algoliaConnectors.map((connector) => (
-      <div>{connector.title}</div>
-    ))}
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {algoliaConnectors.map((connector) => (
+        <div key={connector.id}>{connector.title}</div>
+      ))}
+    </div>
     <LinkWrapper>This is the home page!</LinkWrapper>
   </>
 );

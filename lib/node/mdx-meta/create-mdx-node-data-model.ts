@@ -45,7 +45,24 @@ type ParsedMdxCallback = (
   imagesMetaData: ImageData[],
 ) => void;
 
-const recursiveParseMdx = async (
+/**
+ * Create MDX NodeData model.
+ *
+ * Recursively traverse content directories. Much of the logic is derived from how gatsby is
+ * configured in gatsby-node.js file.
+ *
+ * In each directory check if docs.md|mdx and if so derive slug from directory path and
+ * check if current page. If current page then:
+ *  * Get docs.md/mdx content and frontmatter
+ *  * Create NodeData model of the markdown file (node)
+ *
+ * Additionally in each directory, if any images to get image meta data and return along with
+ * NodeData array.
+ *
+ * TODO: Consider if we can share logic with recursiveFindRouteData
+ * (/lib/page-mdx/page-fetching/recursive-find-route-data.ts)
+ */
+const createMdxNodeDataModel = async (
   rootDir: string,
   contentRoot: string,
   callback: ParsedMdxCallback,
@@ -54,6 +71,7 @@ const recursiveParseMdx = async (
   const imagesMetadata: ImageData[] = [];
 
   const parseMdx = async (directory: string, currentDepth: number) => {
+    // get all child dirents with current directory
     const dirents = await await promises.readdir(directory, {
       withFileTypes: true,
     });
@@ -63,6 +81,7 @@ const recursiveParseMdx = async (
       (dirent) => !!dirent.name.match(isPostFileRegex),
     );
 
+    // if any dirent is an image, add meta data to imagesMetadata array
     dirents.forEach((dirent) => {
       if (dirent.name.match(/(gif|png|svg|jpe?g)$/i)) {
         const imageData: ImageData = {
@@ -92,21 +111,31 @@ const recursiveParseMdx = async (
         const path = pathComponents[2];
         const localPath = path.replace(orderPartRegex, '/');
         const connectorSectionComponents = connectorsListRegex.exec(localPath);
+
+        // TODO: needs updating when connectors moved to root (can use contentRoot instead)
         const isConnectorSection =
+          !!connectorSectionComponents || localPath === '/connectors/docs';
+        const isConnector =
           !!connectorSectionComponents ||
-          localPath.includes('/connectors/docs');
-        const filteredLocalPath = isConnectorSection
-          ? localPath.replace('/docs', '')
-          : localPath;
-        const slug = isConnectorSection
-          ? filteredLocalPath
-          : `/${contentRoot}${filteredLocalPath}`;
+          (localPath.includes('/connectors/docs') && !isConnectorSection);
+
+        // TODO: Can be removed once connectors moved to root
+        const filteredLocalPath =
+          isConnectorSection || isConnector
+            ? localPath.replace('/docs', '')
+            : localPath;
+
+        // TODO: Needs to be updated once connectors moved to root
+        const slug =
+          isConnectorSection || isConnector
+            ? filteredLocalPath
+            : `/${contentRoot}${filteredLocalPath}`;
+
         const level =
           (filteredLocalPath && filteredLocalPath.match(/\//g)?.length) || 1;
         const order = orderComponents ? parseInt(orderComponents[1], 10) : 0;
         const parentSlug = slug.replace(/\/[a-zA-Z0-9-]+$/, '');
         const connectorsComponents = connectorsRegex.exec(slug);
-        const isConnector = !!connectorsComponents;
 
         const markdownData = await promises.readFile(markdownPath, 'utf8');
         const { data, content } = matter(markdownData);
@@ -124,7 +153,7 @@ const recursiveParseMdx = async (
 
         if (isConnector && !data.connector)
           logger.warn(
-            `Connector at "${path}" does not have a connector name in the frontmatter`,
+            `Connector Docs File: "${path}" does not have a connector name in the frontmatter`,
           );
 
         let docType: ArticleType = 'article';
@@ -187,4 +216,4 @@ const recursiveParseMdx = async (
   await callback(allNodesData, contentRoot, imagesMetadata);
 };
 
-export default recursiveParseMdx;
+export default createMdxNodeDataModel;

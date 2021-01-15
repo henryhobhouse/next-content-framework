@@ -41,4 +41,7 @@ yarn-error.log*
 lib/node/*-nav-config.json
 lib/node/bread-crumbs.json
 
+public/sitemap.xml
+public/images
+
 **/*.log

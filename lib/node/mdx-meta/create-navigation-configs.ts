@@ -1,6 +1,6 @@
 import { promises } from 'fs';
 import parseFlatNavigationItems from './parse-flat-navigation-items';
-import { NodeData } from './recursive-parse-mdx';
+import { NodeData } from './create-mdx-node-data-model';
 
 /**
  * Callback for recursive parse MDX to create navigation
@@ -30,11 +30,7 @@ const createNavigationConfigs = async (
   // This can be removed when connectors are moved to root of content directory
   if (contentRoot === 'platform') {
     const connectorsListForNav = contentRootNodesData
-      .filter(
-        (nodeData) =>
-          nodeData.type === 'connector-list' &&
-          nodeData.slug !== '/connectors/docs',
-      )
+      .filter((nodeData) => nodeData.type === 'connector-list')
       .map((nodeData) => ({
         title: nodeData.title,
         slug: nodeData.slug,

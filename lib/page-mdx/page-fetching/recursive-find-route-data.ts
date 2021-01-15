@@ -39,6 +39,8 @@ interface RecursiveParseDirectoriesProps {
  *  * Builds table of contents configuration for that page
  *  * Returns pre-parsed markdown content and frontmatter data along with nav structure config
  *    and table of contents config.
+ *
+ * TODO: Consider if we can share logic with recursiveParseMdx (/lib/node/mdx-meta/recursive-parse-mdx.ts)
  */
 const recursiveFindRouteData = async ({
   rootDir,

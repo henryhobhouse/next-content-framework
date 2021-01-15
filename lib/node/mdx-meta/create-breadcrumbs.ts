@@ -1,5 +1,5 @@
 import { writeFileSync } from 'fs';
-import { NodeData } from './recursive-parse-mdx';
+import { NodeData } from './create-mdx-node-data-model';
 
 const breadCrumbs: { [key: string]: string[] } = {};
 const directoryTitle: { [key: string]: string } = {};
@@ -51,17 +51,25 @@ const createBreadcrumbs = async (allNodeData: NodeData[]) => {
       const contentSectionProductName = getContentSectionToProductName(
         contentRoot,
       );
-      const sectionTitles = slugSegments.slice(1).map((slugDirectory) => {
-        const slugDirectoryTitle = directoryTitle[slugDirectory];
-        // As nodes are added recurrisively we know that all parents for each node will be
-        // higher in the array so will therefore be already processed by this iterator. Error to be
-        // thrown in case how node data is created is changed and this assumption is no longer true.
-        if (!slugDirectoryTitle)
-          throw new Error(
-            'No title for slug directory. Has process of getting node data being changed?',
-          );
-        return directoryTitle[slugDirectory];
-      });
+      const sectionTitles = slugSegments
+        .slice(1)
+        .map((slugDirectory) => {
+          const slugDirectoryTitle = directoryTitle[slugDirectory];
+          // As nodes are added recurrisively we know that all parents for each node will be
+          // higher in the array so will therefore be already processed by this iterator. Error to be
+          // thrown in case how node data is created is changed and this assumption is no longer true.
+          if (!slugDirectoryTitle) {
+            logger.warn(
+              `BREADCRUMBS: ${slugSegments.join(
+                '/',
+              )} missing title for ${slugDirectory} section`,
+            );
+            return undefined;
+          }
+          return directoryTitle[slugDirectory];
+        })
+        .filter(Boolean) as string[];
+
       breadCrumbs[nodeData.slug] = [
         contentSectionProductName,
         ...sectionTitles,

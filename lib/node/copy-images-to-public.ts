@@ -14,19 +14,19 @@ const checkImageDirExists = () => {
   if (!existsSync(fullDirPath)) mkdirp.sync(fullDirPath);
 };
 
-const syncImagesWithPublic = async (imageDatas: ImageData[]) => {
+const syncImagesWithPublic = async (imagesMetaData: ImageData[]) => {
   checkImageDirExists();
   await Promise.allSettled(
-    imageDatas.map(async (imageData) => {
+    imagesMetaData.map(async (imageData) => {
       const optimiseImageName = getOptimisedImageFileName(
         imageData.name,
         imageData.path,
       );
 
-      const desitinationPath = `${process.cwd()}/${nextPublicDirectory}/${rootImageDirectory}/${optimiseImageName}`;
+      const destinationPath = `${process.cwd()}/${nextPublicDirectory}/${rootImageDirectory}/${optimiseImageName}`;
 
-      if (!existsSync(desitinationPath)) {
-        await promises.copyFile(imageData.path, desitinationPath);
+      if (!existsSync(destinationPath)) {
+        await promises.copyFile(imageData.path, destinationPath);
       }
     }),
   );

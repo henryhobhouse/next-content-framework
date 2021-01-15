@@ -1,7 +1,7 @@
 import { Settings, SearchOptions } from '@algolia/client-search';
 import { SearchIndex, SearchClient } from 'algoliasearch';
 
-import { NodeData } from '../mdx-meta/recursive-parse-mdx';
+import { NodeData } from '../mdx-meta/create-mdx-node-data-model';
 import { SearchHit, IndexQuery } from '../types/algolia';
 
 /**
