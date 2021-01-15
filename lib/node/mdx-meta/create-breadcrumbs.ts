@@ -31,15 +31,14 @@ const getContentSectionToProductName = (contentSection: string): string => {
  * File to be consumed by get articles components to get array of breadcrumbs for each relevant page and
  * pass back to getStaticProps function to be passed as prop to the page and built by webpack.
  */
-const createBreadcrumbs = async (
-  allNodeData: NodeData[],
-  contentRoot: string,
-) => {
+const createBreadcrumbs = async (allNodeData: NodeData[]) => {
   allNodeData.forEach((nodeData) => {
     // split slug into directories and remove any empty strings/falsey values.
     const slugSegments = nodeData.slug.split('/').filter(Boolean);
     // get last directory from the slug as represents the current node.
     const currentUrlDirectory = slugSegments.slice(-1).pop();
+
+    const contentRoot = slugSegments.slice(0, 1).pop();
     // on chance the slug was empty then to return.
     if (!currentUrlDirectory) return;
     // add relevant title value to the current url directory name key in the directory title object.
@@ -48,7 +47,7 @@ const createBreadcrumbs = async (
 
     // only care about the nodes that are above level one as level one is only titles and does
     // not require breadcrumbs.
-    if (nodeData.level > 1) {
+    if (nodeData.level > 1 && contentRoot) {
       const contentSectionProductName = getContentSectionToProductName(
         contentRoot,
       );

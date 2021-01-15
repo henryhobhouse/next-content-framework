@@ -42,7 +42,7 @@ export interface NodeData {
 type ParsedMdxCallback = (
   args: NodeData[],
   contentRoot: string,
-  imageDatas: ImageData[],
+  imagesMetaData: ImageData[],
 ) => void;
 
 const recursiveParseMdx = async (
@@ -51,7 +51,7 @@ const recursiveParseMdx = async (
   callback: ParsedMdxCallback,
 ): Promise<void> => {
   const allNodesData: NodeData[] = [];
-  const imageDatas: ImageData[] = [];
+  const imagesMetadata: ImageData[] = [];
 
   const parseMdx = async (directory: string, currentDepth: number) => {
     const dirents = await await promises.readdir(directory, {
@@ -70,7 +70,7 @@ const recursiveParseMdx = async (
           parentDirectory: directory,
           name: dirent.name,
         };
-        imageDatas.push(imageData);
+        imagesMetadata.push(imageData);
       }
     });
 
@@ -93,7 +93,8 @@ const recursiveParseMdx = async (
         const localPath = path.replace(orderPartRegex, '/');
         const connectorSectionComponents = connectorsListRegex.exec(localPath);
         const isConnectorSection =
-          !!connectorSectionComponents || localPath === '/connectors/docs';
+          !!connectorSectionComponents ||
+          localPath.includes('/connectors/docs');
         const filteredLocalPath = isConnectorSection
           ? localPath.replace('/docs', '')
           : localPath;
@@ -183,7 +184,7 @@ const recursiveParseMdx = async (
 
   await parseMdx(rootDir, 0);
 
-  await callback(allNodesData, contentRoot, imageDatas);
+  await callback(allNodesData, contentRoot, imagesMetadata);
 };
 
 export default recursiveParseMdx;

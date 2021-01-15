@@ -33,10 +33,6 @@ const createSiteMetaData = async () => {
       contentRoot,
       currentWorkingDirectory,
     );
-
-    await createSitemap(contentRootNodesData);
-
-    await createBreadcrumbs(contentRootNodesData, contentRoot);
   };
 
   await Promise.allSettled(
@@ -48,6 +44,10 @@ const createSiteMetaData = async () => {
       );
     }),
   );
+
+  await createBreadcrumbs(allNodesData);
+
+  await createSitemap(allNodesData);
 
   await updateAlgoliaArticleIndex({
     allNodesData,

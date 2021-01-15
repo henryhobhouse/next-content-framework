@@ -1,8 +1,6 @@
 const createSiteMetaData = require('./lib/node/create-site-meta-data');
 const redirectsConfig = require('./redirects');
 
-// TODO: Add lodash webpack pluging once https://github.com/lodash/lodash-webpack-plugin/issues/167 is resolved.
-
 /**
  * Next configuration.
  *
