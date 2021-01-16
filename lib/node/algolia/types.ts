@@ -17,11 +17,10 @@ export interface AlgoliaConnectorHit {
   description?: string;
   excerpt?: string;
   objectID?: string;
-  _highlightResult?: {
-    connectorName: AlgoliaHighlightResult;
-    connectorSection: AlgoliaHighlightResult;
-    description: AlgoliaHighlightResult;
-  };
+  _highlightResult?: Record<
+    keyof Omit<AlgoliaConnectorHit, '_highlightResult' | 'id' | 'objectID'>,
+    AlgoliaHighlightResult
+  >;
 }
 
 export interface AlgoliaTopArticleHit {
@@ -36,9 +35,8 @@ export interface AlgoliaTopArticleHit {
   description?: string;
   excerpt?: string;
   objectID?: string;
-  _highlightResult?: {
-    connectorName: AlgoliaHighlightResult;
-    connectorSection: AlgoliaHighlightResult;
-    description: AlgoliaHighlightResult;
-  };
+  _highlightResult?: Record<
+    keyof Omit<AlgoliaTopArticleHit, '_highlightResult' | 'id' | 'objectID'>,
+    AlgoliaHighlightResult
+  >;
 }
