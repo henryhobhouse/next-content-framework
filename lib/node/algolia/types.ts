@@ -23,3 +23,22 @@ export interface AlgoliaConnectorHit {
     description: AlgoliaHighlightResult;
   };
 }
+
+export interface AlgoliaTopArticleHit {
+  connectorSection: string;
+  id: string;
+  imageIcon?: string;
+  section: string;
+  slug: string;
+  title?: string;
+  type: string;
+  streamlineIcon?: string;
+  description?: string;
+  excerpt?: string;
+  objectID?: string;
+  _highlightResult?: {
+    connectorName: AlgoliaHighlightResult;
+    connectorSection: AlgoliaHighlightResult;
+    description: AlgoliaHighlightResult;
+  };
+}
