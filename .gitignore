@@ -41,6 +41,9 @@ yarn-error.log*
 lib/node/*-nav-config.json
 lib/node/bread-crumbs.json
 
+# local image processing cache
+.local-processed-cache.json
+
 public/sitemap.xml
 public/images
 

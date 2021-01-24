@@ -1,4 +1,4 @@
-const createSiteMetaData = require('./lib/node/create-site-meta-data');
+const createSiteMetaData = require('./lib/server/create-site-meta-data');
 const redirectsConfig = require('./redirects');
 
 /**

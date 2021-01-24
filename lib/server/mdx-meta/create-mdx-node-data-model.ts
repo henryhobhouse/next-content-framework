@@ -153,7 +153,7 @@ const createMdxNodeDataModel = async (
           }
         }
 
-        if (isConnector && !data.connector)
+        if (isConnector && !isConnectorSection && !data.connector)
           logger.warn(
             `Connector Docs File: "${path}" does not have a connector name in the frontmatter`,
           );

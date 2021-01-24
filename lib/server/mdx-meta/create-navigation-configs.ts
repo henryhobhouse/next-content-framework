@@ -44,13 +44,13 @@ const createNavigationConfigs = async (
     );
 
     await promises.writeFile(
-      `${basePath}/lib/node/connectors-nav-config.json`,
+      `${basePath}/lib/server/connectors-nav-config.json`,
       JSON.stringify({ config: connectorNavStructure }, null, 2),
     );
   }
 
   await promises.writeFile(
-    `${basePath}/lib/node/${contentRoot}-nav-config.json`,
+    `${basePath}/lib/server/${contentRoot}-nav-config.json`,
     JSON.stringify({ config: contentNavStructure }, null, 2),
   );
 };

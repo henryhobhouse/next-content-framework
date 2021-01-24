@@ -12,7 +12,6 @@ export interface StoredImageAttributes {
   width?: number;
   height?: number;
   imageHash: string;
-  lastModified: number;
 }
 
 export type SavedImageAttributes = { [key: string]: StoredImageAttributes };

@@ -1,6 +1,7 @@
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import mkdirp from 'mkdirp';
 import shortHash from 'shorthash2';
+import crypto from 'crypto';
 import { currentWorkingDirectory, nextPublicDirectory } from '../../constants';
 import { ImageMeta } from '../../types/image-processing';
 import imageProcessingConfig from './image-processing-config';
@@ -27,6 +28,18 @@ export const logSuccess = (
 };
 
 /**
+ * To avoid collisions with files with same name we take a simple hash of the path as a
+ * prefix to ensure each name is unique.
+ */
+export const getProcessedImageFileName = (imagePath: string) => {
+  const lowerCasePath = imagePath.toLowerCase();
+  const pathHash = shortHash(lowerCasePath);
+  const imageName = getImageNameFromPath(lowerCasePath);
+
+  return `${pathHash}-${imageName}`;
+};
+
+/**
  * Get path and name prefix for the image. The name prefix composing of imageHash and parent name
  * to avoid collisions when images are flattened and invalidation of browser cache on image change.
  */
@@ -35,7 +48,9 @@ export const getWriteFilePath = (
   width: number,
   imageHash: string,
 ) => {
-  return `${currentWorkingDirectory}/${nextPublicDirectory}/${width}/${imageHash}${getProcessedImageFileName(imageMeta.filePath)}`;
+  return `${currentWorkingDirectory}/${nextPublicDirectory}/${width}/${imageHash}${getProcessedImageFileName(
+    imageMeta.filePath,
+  )}`;
 };
 
 export const checkImageDirectories = () => {
@@ -48,10 +63,14 @@ export const checkImageDirectories = () => {
 
 export const numberPrefixRegex = /^([0-9+]+)\./i;
 
-export const getProcessedImageFileName = (imagePath: string) => {
-  const lowerCasePath = imagePath.toLowerCase();
-  const pathHash = shortHash(lowerCasePath);
-  const imageName = getImageNameFromPath(lowerCasePath);
+export const getFileShortHash = (path: string) => {
+  const imageContent = readFileSync(path).toString();
+  const imageHash = crypto
+    .createHash('sha1')
+    .update(imageContent)
+    .digest('base64')
+    .replace(/=|\+|\//gi, '')
+    .substring(0, 7);
 
-  return `${pathHash}-${imageName}`;
+  return imageHash;
 };

@@ -6,7 +6,7 @@ const breadCrumbs: { [key: string]: string[] } = {};
 const directoryTitle: { [key: string]: string } = {};
 const currentWorkingDirectory = process.cwd();
 const breadCrumbsFileName = 'bread-crumbs.json';
-const breadCrumbsFilePath = `${currentWorkingDirectory}/lib/node/${breadCrumbsFileName}`;
+const breadCrumbsFilePath = `${currentWorkingDirectory}/lib/server/${breadCrumbsFileName}`;
 
 const getContentSectionToProductName = (contentSection: string): string => {
   let productName;
