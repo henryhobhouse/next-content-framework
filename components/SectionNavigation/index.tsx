@@ -9,7 +9,7 @@ import {
   SectionWrapper,
 } from './section-navigation.sc';
 
-import { NavigationArticle } from 'lib/page-mdx/types';
+import { NavigationArticle } from 'lib/next-static-server/types';
 
 const SectionNavigation: FC<{ items: NavigationArticle[] }> = ({ items }) => (
   <SectionWrapper>

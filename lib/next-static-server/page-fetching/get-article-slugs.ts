@@ -4,8 +4,8 @@ import {
   isPostFileRegex,
   orderPartRegex,
   pathRegex,
-} from 'lib/page-mdx/mdx-parse';
-import { Resolve, StaticArticlePathParams } from 'lib/page-mdx/types';
+} from 'lib/next-static-server/mdx-parse';
+import { Resolve, StaticArticlePathParams } from 'lib/next-static-server/types';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 /**

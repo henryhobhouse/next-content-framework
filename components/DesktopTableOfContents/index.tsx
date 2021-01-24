@@ -11,7 +11,7 @@ import {
   Anchor,
 } from './desktopTableOfContents.sc';
 
-import { TableOfContents } from 'lib/page-mdx/types';
+import { TableOfContents } from 'lib/next-static-server/types';
 
 interface SectionItemsProps {
   items: TableOfContents[];

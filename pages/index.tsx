@@ -2,8 +2,8 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 
 import DocsHead from 'components/DocsHead';
-import { AlgoliaConnectorHit } from 'lib/node/algolia/types';
-import getHomepageData from 'lib/page-mdx/page-fetching/get-homepage-data';
+import getHomepageData from 'lib/next-static-server/page-fetching/get-homepage-data';
+import { AlgoliaConnectorHit } from 'lib/server/algolia/types';
 
 const LinkWrapper = styled.div`
   display: flex;

@@ -1,0 +1,2553 @@
+{
+  "/embedded/getting-started/embedded-id-and-master-token": [
+    "Tray Embedded",
+    "Getting started",
+    "Embedded ID and master token"
+  ],
+  "/embedded/getting-started/glossary": [
+    "Tray Embedded",
+    "Getting started",
+    "Glossary of terms"
+  ],
+  "/embedded/getting-started/organizations": [
+    "Tray Embedded",
+    "Getting started",
+    "Organizations"
+  ],
+  "/embedded/getting-started/overview": [
+    "Tray Embedded",
+    "Getting started",
+    "Tray Embedded Overview"
+  ],
+  "/embedded/getting-started/main-components-diagram": [
+    "Tray Embedded",
+    "Getting started",
+    "Main components diagram"
+  ],
+  "/embedded/core-topics/config-data": [
+    "Tray Embedded",
+    "Core Topics",
+    "Config Data"
+  ],
+  "/embedded/core-topics/static-slots": [
+    "Tray Embedded",
+    "Core Topics",
+    "Shared auths and data (Static Slots)"
+  ],
+  "/embedded/core-topics/authentications": [
+    "Tray Embedded",
+    "Core Topics",
+    "Authentications"
+  ],
+  "/embedded/core-topics/retrieving-webhook-urls": [
+    "Tray Embedded",
+    "Core Topics",
+    "Retrieving Webhook URLs"
+  ],
+  "/embedded/core-topics/deleting-solutions-and-projects": [
+    "Tray Embedded",
+    "Core Topics",
+    "Deleting Solutions and Projects"
+  ],
+  "/embedded/core-topics/config-wizard-data-validation": [
+    "Tray Embedded",
+    "Core Topics",
+    "Config Wizard data validation"
+  ],
+  "/embedded/an-integration-walkthrough/create-a-solution": [
+    "Tray Embedded",
+    "Integration walkthrough",
+    "Create a Solution"
+  ],
+  "/embedded/core-topics/managing-css": [
+    "Tray Embedded",
+    "Core Topics",
+    "Managing CSS"
+  ],
+  "/embedded/an-integration-walkthrough/api-calls-step-by-step": [
+    "Tray Embedded",
+    "Integration walkthrough",
+    "API calls step by step"
+  ],
+  "/embedded/core-topics/whitelabelling": [
+    "Tray Embedded",
+    "Core Topics",
+    "Whitelabelling"
+  ],
+  "/embedded/an-integration-walkthrough/run-the-demo-app": [
+    "Tray Embedded",
+    "Integration walkthrough",
+    "Run the Demo App"
+  ],
+  "/embedded/building-integrations/introduction": [
+    "Tray Embedded",
+    "Building Integrations",
+    "Introduction"
+  ],
+  "/embedded/building-integrations/user-management": [
+    "Tray Embedded",
+    "Building Integrations",
+    "User Management"
+  ],
+  "/embedded/building-integrations/solution-building-basics": [
+    "Tray Embedded",
+    "Building Integrations",
+    "Solution building basics"
+  ],
+  "/embedded/building-integrations/displaying-solutions": [
+    "Tray Embedded",
+    "Building Integrations",
+    "Displaying Solutions"
+  ],
+  "/embedded/building-integrations/the-config-wizard": [
+    "Tray Embedded",
+    "Building Integrations",
+    "The Config Wizard"
+  ],
+  "/embedded/building-integrations/enabling-instances": [
+    "Tray Embedded",
+    "Building Integrations",
+    "Enabling Instances"
+  ],
+  "/embedded/building-integrations/solution-instances": [
+    "Tray Embedded",
+    "Building Integrations",
+    "Solution Instances"
+  ],
+  "/embedded/building-integrations/updating-instances": [
+    "Tray Embedded",
+    "Building Integrations",
+    "Updating Solutions and Instances"
+  ],
+  "/embedded/embedded-apis/api-docs-postman": [
+    "Tray Embedded",
+    "Embedded APIs",
+    "API docs (Postman)"
+  ],
+  "/embedded/embedded-apis/insomnia-collection": [
+    "Tray Embedded",
+    "Embedded APIs",
+    "Insomnia GraphQL collection (local testing)"
+  ],
+  "/embedded/embedded-apis/intro-to-the-apis": [
+    "Tray Embedded",
+    "Embedded APIs",
+    "Intro to the APIs"
+  ],
+  "/embedded/embedded-apis/playground-intro": [
+    "Tray Embedded",
+    "Embedded APIs",
+    "GraphQL Playground (online testing)"
+  ],
+  "/embedded/advanced-topics/call-connector": [
+    "Tray Embedded",
+    "Advanced Topics",
+    "Using the Call Connector API"
+  ],
+  "/embedded/embedded-apis/required-token-types": [
+    "Tray Embedded",
+    "Embedded APIs",
+    "Table of required token types"
+  ],
+  "/embedded/advanced-topics/data-mapping": [
+    "Tray Embedded",
+    "Advanced Topics",
+    "Data Mapping (Embedded)"
+  ],
+  "/embedded/troubleshooting/debugging-and-error-handling": [
+    "Tray Embedded",
+    "Troubleshooting",
+    "Debugging / Error Handling"
+  ],
+  "/embedded/product-updates/updates-details": [
+    "Tray Embedded",
+    "Embedded Product Updates",
+    "Update details"
+  ],
+  "/embedded/version-control/importing-exporting-solutions": [
+    "Tray Embedded",
+    "Version control",
+    "Importing / Exporting Solutions"
+  ],
+  "/embedded/core-topics/config-data/config-and-drop-down-lists": [
+    "Tray Embedded",
+    "Core Topics",
+    "Config Data",
+    "Config data and drop-down lists"
+  ],
+  "/embedded/core-topics/config-data/setting-config-data": [
+    "Tray Embedded",
+    "Core Topics",
+    "Config Data",
+    "Setting Config Data"
+  ],
+  "/embedded/core-topics/config-data/config-data-errors": [
+    "Tray Embedded",
+    "Core Topics",
+    "Config Data",
+    "Avoiding config data errors"
+  ],
+  "/embedded/core-topics/authentications/setting-auth-scopes": [
+    "Tray Embedded",
+    "Core Topics",
+    "Authentications",
+    "Setting Auth Scopes for End Users"
+  ],
+  "/embedded/core-topics/config-data/importing-external-data": [
+    "Tray Embedded",
+    "Core Topics",
+    "Config Data",
+    "Importing external data"
+  ],
+  "/embedded/core-topics/authentications/auth-only-dialog": [
+    "Tray Embedded",
+    "Core Topics",
+    "Authentications",
+    "Auth-only dialog"
+  ],
+  "/embedded/core-topics/authentications/importing-auths": [
+    "Tray Embedded",
+    "Core Topics",
+    "Authentications",
+    "Importing authentications"
+  ],
+  "/embedded/core-topics/authentications/forcing-unique-auths": [
+    "Tray Embedded",
+    "Core Topics",
+    "Authentications",
+    "Forcing Unique Authentications"
+  ],
+  "/embedded/core-topics/managing-css/your-platform-css": [
+    "Tray Embedded",
+    "Core Topics",
+    "Managing CSS",
+    "Your App CSS"
+  ],
+  "/embedded/core-topics/authentications/mapping-editing-auths": [
+    "Tray Embedded",
+    "Core Topics",
+    "Authentications",
+    "Mapping and editing Auths"
+  ],
+  "/embedded/core-topics/authentications/managing-expired-auths": [
+    "Tray Embedded",
+    "Core Topics",
+    "Authentications",
+    "Managing Expired Authentications"
+  ],
+  "/embedded/core-topics/managing-css/config-wizard-css": [
+    "Tray Embedded",
+    "Core Topics",
+    "Managing CSS",
+    "Config Wizard CSS"
+  ],
+  "/embedded/embedded-apis/intro-to-the-apis/intro-to-graphql-apis": [
+    "Tray Embedded",
+    "Embedded APIs",
+    "Intro to the APIs",
+    "Intro to GraphQL APIs"
+  ],
+  "/embedded/embedded-apis/intro-to-the-apis/errors": [
+    "Tray Embedded",
+    "Embedded APIs",
+    "Intro to the APIs",
+    "Errors"
+  ],
+  "/embedded/embedded-apis/intro-to-the-apis/pagination": [
+    "Tray Embedded",
+    "Embedded APIs",
+    "Intro to the APIs",
+    "Pagination"
+  ],
+  "/embedded/embedded-apis/intro-to-the-apis/breakdown-of-an-api": [
+    "Tray Embedded",
+    "Embedded APIs",
+    "Intro to the APIs",
+    "Breakdown of an API"
+  ],
+  "/embedded/embedded-apis/intro-to-the-apis/basic-api-calls": [
+    "Tray Embedded",
+    "Embedded APIs",
+    "Intro to the APIs",
+    "Basic calls"
+  ],
+  "/embedded/advanced-topics/data-mapping/using-config-slots": [
+    "Tray Embedded",
+    "Advanced Topics",
+    "Data Mapping (Embedded)",
+    "Using Config Slots"
+  ],
+  "/embedded/advanced-topics/data-mapping/intro": [
+    "Tray Embedded",
+    "Advanced Topics",
+    "Data Mapping (Embedded)",
+    "Intro to Data Mapping"
+  ],
+  "/embedded/advanced-topics/data-mapping/hardcoded-example": [
+    "Tray Embedded",
+    "Advanced Topics",
+    "Data Mapping (Embedded)",
+    "Hardcoded example"
+  ],
+  "/embedded/advanced-topics/data-mapping/mapping-nested-data": [
+    "Tray Embedded",
+    "Advanced Topics",
+    "Data Mapping (Embedded)",
+    "Mapping nested data"
+  ],
+  "/embedded/advanced-topics/data-mapping/using-dynamic-lookup-schema": [
+    "Tray Embedded",
+    "Advanced Topics",
+    "Data Mapping (Embedded)",
+    "Using Dynamic Lookup Schema"
+  ],
+  "/embedded/troubleshooting/debugging-and-error-handling/debugging": [
+    "Tray Embedded",
+    "Troubleshooting",
+    "Debugging / Error Handling",
+    "Debugging workflows"
+  ],
+  "/embedded/advanced-topics/data-mapping/using-input-output-schema": [
+    "Tray Embedded",
+    "Advanced Topics",
+    "Data Mapping (Embedded)",
+    "Using input and output schema"
+  ],
+  "/embedded/advanced-topics/data-mapping/many-to-one-mapping": [
+    "Tray Embedded",
+    "Advanced Topics",
+    "Data Mapping (Embedded)",
+    "Many-to-one Mapping"
+  ],
+  "/embedded/troubleshooting/debugging-and-error-handling/logs-streaming": [
+    "Tray Embedded",
+    "Troubleshooting",
+    "Debugging / Error Handling",
+    "Logs streaming"
+  ],
+  "/embedded/troubleshooting/debugging-and-error-handling/automated-workflow-testing": [
+    "Tray Embedded",
+    "Troubleshooting",
+    "Debugging / Error Handling",
+    "Automated workflow testing"
+  ],
+  "/embedded/troubleshooting/debugging-and-error-handling/error-handling": [
+    "Tray Embedded",
+    "Troubleshooting",
+    "Debugging / Error Handling",
+    "Error Handling"
+  ],
+  "/platform/quick-start-templates/connecting-asana-with-salesforce": [
+    "Tray Platform",
+    "Connecting Asana with Salesforce"
+  ],
+  "/platform/working-with-data/intro-to-data-jsonpaths": [
+    "Tray Platform",
+    "Moving Data",
+    "Intro to data and jsonpaths"
+  ],
+  "/platform/troubleshooting/error-handling": [
+    "Tray Platform",
+    "Logs and Troubleshooting",
+    "Error Handling"
+  ],
+  "/platform/troubleshooting/logs-streaming": [
+    "Tray Platform",
+    "Logs and Troubleshooting",
+    "Streaming logs to external systems"
+  ],
+  "/platform/working-with-data/troubleshooting-data": [
+    "Tray Platform",
+    "Moving Data",
+    "Troubleshooting data and jsonpaths"
+  ],
+  "/platform/working-with-data/converting-between-types": [
+    "Tray Platform",
+    "Moving Data",
+    "Converting between data types"
+  ],
+  "/platform/working-with-data/basic-data-guide": [
+    "Tray Platform",
+    "Moving Data",
+    "Working with data and jsonpaths"
+  ],
+  "/platform/connectors/authenticating-connectors": [
+    "Tray Platform",
+    "Using Connectors",
+    "Authenticating Connectors"
+  ],
+  "/platform/connectors/updating-connector-version": [
+    "Tray Platform",
+    "Using Connectors",
+    "Updating Connector version"
+  ],
+  "/platform/connectors/auth-with-google": [
+    "Tray Platform",
+    "Using Connectors",
+    "Authenticating Google connectors"
+  ],
+  "/platform/working-with-data/jsonpath-shortcuts": [
+    "Tray Platform",
+    "Moving Data",
+    "jsonpath shortcuts"
+  ],
+  "/platform/connectors/technical-limits-and-retry-info": [
+    "Tray Platform",
+    "Connector Documentation",
+    "Technical limits, timeouts and retries"
+  ],
+  "/platform/getting-started/how-to-use-tray": [
+    "Tray Platform",
+    "Getting Started",
+    "How to use Tray"
+  ],
+  "/platform/getting-started/intro-tutorials": [
+    "Tray Platform",
+    "Getting Started",
+    "Intro Tutorials"
+  ],
+  "/platform/getting-started/overview": [
+    "Tray Platform",
+    "Getting Started",
+    "Platform Overview"
+  ],
+  "/platform/useful-scripts/scripts-intro": [
+    "Tray Platform",
+    "Useful Scripts",
+    "Intro to useful scripts"
+  ],
+  "/platform/getting-started/sharing-workflows": [
+    "Tray Platform",
+    "Getting Started",
+    "Sharing Workflows"
+  ],
+  "/platform/getting-started/config-data": [
+    "Tray Platform",
+    "Getting Started",
+    "Config data"
+  ],
+  "/platform/useful-scripts/removing-duplicate-objects": [
+    "Tray Platform",
+    "Useful Scripts",
+    "Removing duplicate objects"
+  ],
+  "/platform/getting-started/editing-workflows": [
+    "Tray Platform",
+    "Getting Started",
+    "Editing Workflows"
+  ],
+  "/platform/useful-scripts/find-mulitple-words-phrases": [
+    "Tray Platform",
+    "Useful Scripts",
+    "Find multiple words/phrases"
+  ],
+  "/platform/advanced-tray-usage/advanced-data-mapping": [
+    "Tray Platform",
+    "Advanced Tray.io usage",
+    "Advanced Data Mapping"
+  ],
+  "/platform/advanced-tray-usage/recursion": [
+    "Tray Platform",
+    "Advanced Tray.io usage",
+    "Recursion (folder migration)"
+  ],
+  "/platform/version-control/importing-exporting-workflows": [
+    "Tray Platform",
+    "Version Control",
+    "Importing / Exporting Workflows"
+  ],
+  "/platform/advanced-tray-usage/testing-workflows": [
+    "Tray Platform",
+    "Advanced Tray.io usage",
+    "Automated workflow testing"
+  ],
+  "/platform/standard-best-practices/intro-to-standard-best-practices": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Intro to Standard / Best Practices"
+  ],
+  "/platform/standard-best-practices/check-for-changed-records": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Check for changed records"
+  ],
+  "/platform/standard-best-practices/conditional-logic": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Conditional Logic"
+  ],
+  "/platform/standard-best-practices/polling": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Polling"
+  ],
+  "/platform/standard-best-practices/managing-csv-files": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Managing CSV files"
+  ],
+  "/platform/standard-best-practices/managing-data": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Managing Data"
+  ],
+  "/platform/standard-best-practices/pagination": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Pagination / Batch processing"
+  ],
+  "/platform/account-management/general-account-management": [
+    "Tray Platform",
+    "Account Management",
+    "General Account Management"
+  ],
+  "/platform/standard-best-practices/api-limits-queue-management": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "API limits and queue management"
+  ],
+  "/platform/your-organization/what-is-an-organization": [
+    "Tray Platform",
+    "Your Organization",
+    "What is an organization?"
+  ],
+  "/platform/account-management/single-sign-on": [
+    "Tray Platform",
+    "Account Management",
+    "Set up Single Sign On"
+  ],
+  "/platform/account-management/estimating-task-count": [
+    "Tray Platform",
+    "Account Management",
+    "Estimating your Workflow Task Count"
+  ],
+  "/platform/account-management/analytics-and-tasks": [
+    "Tray Platform",
+    "Account Management",
+    "Analytics and Tasks"
+  ],
+  "/platform/your-organization/roles-at-tray": [
+    "Tray Platform",
+    "Your Organization",
+    "Roles"
+  ],
+  "/platform/your-organization/adding-people": [
+    "Tray Platform",
+    "Your Organization",
+    "Adding people, settings and billing"
+  ],
+  "/platform/your-organization/using-multiple-accounts": [
+    "Tray Platform",
+    "Your Organization",
+    "Using multiple accounts"
+  ],
+  "/platform/your-organization/workspaces": [
+    "Tray Platform",
+    "Your Organization",
+    "Workspaces (Personal/Organization)"
+  ],
+  "/platform/your-organization/managing-workflows-and-auths": [
+    "Tray Platform",
+    "Your Organization",
+    "Managing Workflows and Auths"
+  ],
+  "/platform/your-organization/filtering": [
+    "Tray Platform",
+    "Your Organization",
+    "Filtering"
+  ],
+  "/platform/your-organization/orgs-faqs": [
+    "Tray Platform",
+    "Your Organization",
+    "Organizations FAQs"
+  ],
+  "/platform/security/tray-security-policies": [
+    "Tray Platform",
+    "Security",
+    "Tray.io security policies"
+  ],
+  "/platform/troubleshooting/logs-and-debugging": [
+    "Tray Platform",
+    "Logs and Troubleshooting",
+    "Logs and Debugging"
+  ],
+  "/platform/connectors/on-prem-setup": [
+    "Tray Platform",
+    "Connector Documentation",
+    "On-prem setup"
+  ],
+  "/platform/standard-best-practices/managing-data/clearing-account-data": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Managing Data"
+  ],
+  "/connectors/triggers": [
+    "Connectors",
+    "Trigger"
+  ],
+  "/connectors/core": [
+    "Connectors",
+    "Core"
+  ],
+  "/connectors/helpers": [
+    "Connectors",
+    "Helper"
+  ],
+  "/connectors/service": [
+    "Connectors",
+    "Service"
+  ],
+  "/platform/getting-started/how-to-use-tray/the-advanced-tools": [
+    "Tray Platform",
+    "Getting Started",
+    "How to use Tray",
+    "The Advanced Tools"
+  ],
+  "/platform/getting-started/how-to-use-tray/the-basic-tools": [
+    "Tray Platform",
+    "Getting Started",
+    "How to use Tray",
+    "The Basic Tools"
+  ],
+  "/platform/getting-started/intro-tutorials/automated-actions-tutorial": [
+    "Tray Platform",
+    "Getting Started",
+    "Intro Tutorials",
+    "Automated actions (easy)"
+  ],
+  "/platform/getting-started/intro-tutorials/list-helpers-tutorial": [
+    "Tray Platform",
+    "Getting Started",
+    "Intro Tutorials",
+    "List Helpers (adv.)"
+  ],
+  "/platform/getting-started/intro-tutorials/lead-enrichment-tutorial": [
+    "Tray Platform",
+    "Getting Started",
+    "Intro Tutorials",
+    "Lead enrichment (med.)"
+  ],
+  "/platform/getting-started/intro-tutorials/simple-slack-workflow": [
+    "Tray Platform",
+    "Getting Started",
+    "Intro Tutorials",
+    "Webform / Slack (easy)"
+  ],
+  "/platform/standard-best-practices/polling/basic-polling": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Polling",
+    "Basic Polling for Updates"
+  ],
+  "/platform/standard-best-practices/managing-data/intro-to-managing-data": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Managing Data",
+    "Intro to managing data"
+  ],
+  "/platform/standard-best-practices/managing-data/manipulating-data-part-2": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Managing Data",
+    "Manipulating data with scripts"
+  ],
+  "/platform/standard-best-practices/polling/polling-last-runtime": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Polling",
+    "Polling with last runtime"
+  ],
+  "/platform/standard-best-practices/managing-data/manipulating-data-part-1": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Managing Data",
+    "Manipulating data with helpers"
+  ],
+  "/platform/standard-best-practices/managing-data/tidying-data": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Managing Data",
+    "Tidying Data"
+  ],
+  "/platform/standard-best-practices/pagination/process-large-vols-of-data": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Pagination / Batch processing",
+    "Processing large volumes of data"
+  ],
+  "/platform/standard-best-practices/pagination/intro-to-pagination": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Pagination / Batch processing",
+    "Intro to Pagination"
+  ],
+  "/platform/standard-best-practices/pagination/updating-missing-customer-info": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Pagination / Batch processing",
+    "Updating missing customer info"
+  ],
+  "/platform/standard-best-practices/pagination/workflow-threads": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Pagination / Batch processing",
+    "Workflow Threads"
+  ],
+  "/platform/standard-best-practices/pagination/batch-updates": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "Pagination / Batch processing",
+    "Using batch update operations"
+  ],
+  "/platform/your-organization/managing-workflows-and-auths/managing-workflows": [
+    "Tray Platform",
+    "Your Organization",
+    "Managing Workflows and Auths",
+    "Managing workflows"
+  ],
+  "/platform/standard-best-practices/api-limits-queue-management/csv-queue-management": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "API limits and queue management",
+    "CSV queue management"
+  ],
+  "/platform/standard-best-practices/api-limits-queue-management/intro-to-api-limits": [
+    "Tray Platform",
+    "Standard / Best Practices",
+    "API limits and queue management",
+    "Intro to managing API limits"
+  ],
+  "/platform/your-organization/filtering/filtering-workflows": [
+    "Tray Platform",
+    "Your Organization",
+    "Filtering",
+    "Filtering workflows"
+  ],
+  "/platform/your-organization/filtering/filtering-auths": [
+    "Tray Platform",
+    "Your Organization",
+    "Filtering",
+    "Filtering Authentications"
+  ],
+  "/platform/your-organization/managing-workflows-and-auths/managing-auths": [
+    "Tray Platform",
+    "Your Organization",
+    "Managing Workflows and Auths",
+    "Managing Authentications"
+  ],
+  "/connectors/triggers/email-trigger": [
+    "Connectors",
+    "Trigger",
+    "Email Trigger"
+  ],
+  "/connectors/triggers/callable-trigger": [
+    "Connectors",
+    "Trigger",
+    "Callable Trigger"
+  ],
+  "/connectors/triggers/alert-trigger": [
+    "Connectors",
+    "Trigger",
+    "Alert Trigger"
+  ],
+  "/connectors/triggers/manual-trigger": [
+    "Connectors",
+    "Trigger",
+    "Manual Trigger"
+  ],
+  "/connectors/triggers/scheduled-trigger": [
+    "Connectors",
+    "Trigger",
+    "Scheduled Trigger"
+  ],
+  "/connectors/triggers/form-trigger": [
+    "Connectors",
+    "Trigger",
+    "Form Trigger"
+  ],
+  "/connectors/core/branch": [
+    "Connectors",
+    "Core",
+    "Branch"
+  ],
+  "/connectors/triggers/webhook-trigger": [
+    "Connectors",
+    "Trigger",
+    "Webhook Trigger"
+  ],
+  "/connectors/core/call-workflow": [
+    "Connectors",
+    "Core",
+    "Call workflow"
+  ],
+  "/connectors/core/break-loop": [
+    "Connectors",
+    "Core",
+    "Break loop"
+  ],
+  "/connectors/core/boolean-condition": [
+    "Connectors",
+    "Core",
+    "Boolean Condition"
+  ],
+  "/connectors/core/callable-workflow-response": [
+    "Connectors",
+    "Core",
+    "Callable response"
+  ],
+  "/connectors/core/csv-reader": [
+    "Connectors",
+    "Core",
+    "CSV Reader"
+  ],
+  "/connectors/core/data-mapper": [
+    "Connectors",
+    "Core",
+    "Data Mapper"
+  ],
+  "/connectors/core/data-storage": [
+    "Connectors",
+    "Core",
+    "Data Storage"
+  ],
+  "/connectors/core/delay": [
+    "Connectors",
+    "Core",
+    "Delay"
+  ],
+  "/connectors/core/ftp-client": [
+    "Connectors",
+    "Core",
+    "FTP Client"
+  ],
+  "/connectors/core/json-reader": [
+    "Connectors",
+    "Core",
+    "JSON Reader"
+  ],
+  "/connectors/core/mustache": [
+    "Connectors",
+    "Core",
+    "Mustache"
+  ],
+  "/connectors/core/loop": [
+    "Connectors",
+    "Core",
+    "Loop"
+  ],
+  "/connectors/core/python-script": [
+    "Connectors",
+    "Core",
+    "Python Script"
+  ],
+  "/connectors/core/send-email": [
+    "Connectors",
+    "Core",
+    "Send Email"
+  ],
+  "/connectors/core/terminate": [
+    "Connectors",
+    "Core",
+    "Terminate"
+  ],
+  "/connectors/core/script": [
+    "Connectors",
+    "Core",
+    "Script"
+  ],
+  "/connectors/core/trigger-event-reply": [
+    "Connectors",
+    "Core",
+    "Trigger Event Reply"
+  ],
+  "/connectors/helpers/date-time-helper": [
+    "Connectors",
+    "Helper",
+    "Date & Time Helpers"
+  ],
+  "/connectors/helpers/crypto-helpers": [
+    "Connectors",
+    "Helper",
+    "Crypto Helpers"
+  ],
+  "/connectors/core/xml-decoder": [
+    "Connectors",
+    "Core",
+    "XML Decoder"
+  ],
+  "/connectors/helpers/encryption-helper": [
+    "Connectors",
+    "Helper",
+    "Encryption Helper"
+  ],
+  "/connectors/helpers/lodash": [
+    "Connectors",
+    "Helper",
+    "Lodash"
+  ],
+  "/connectors/helpers/ldap-client": [
+    "Connectors",
+    "Helper",
+    "LDAP Client"
+  ],
+  "/connectors/helpers/htmldomparser": [
+    "Connectors",
+    "Helper",
+    "HTML Dom Parser"
+  ],
+  "/connectors/helpers/file-helper": [
+    "Connectors",
+    "Helper",
+    "File Helpers"
+  ],
+  "/connectors/helpers/logic-helper": [
+    "Connectors",
+    "Helper",
+    "Logic Helper"
+  ],
+  "/connectors/helpers/math-helper": [
+    "Connectors",
+    "Helper",
+    "Math Helper"
+  ],
+  "/connectors/helpers/pdf-helper": [
+    "Connectors",
+    "Helper",
+    "PDF Helpers"
+  ],
+  "/connectors/helpers/random-helper": [
+    "Connectors",
+    "Helper",
+    "Random Helper"
+  ],
+  "/connectors/helpers/phone-number-helper": [
+    "Connectors",
+    "Helper",
+    "Phone Number Helper"
+  ],
+  "/connectors/helpers/text-helper": [
+    "Connectors",
+    "Helper",
+    "Text Helper"
+  ],
+  "/connectors/helpers/xlsx-helper": [
+    "Connectors",
+    "Helper",
+    "XLSX Helper"
+  ],
+  "/connectors/helpers/zip-helper": [
+    "Connectors",
+    "Helper",
+    "Zip Helper"
+  ],
+  "/connectors/service/absorb": [
+    "Connectors",
+    "Service",
+    "Absorb"
+  ],
+  "/connectors/service/act-on": [
+    "Connectors",
+    "Service",
+    "Act-On"
+  ],
+  "/connectors/service/adaptive-insights": [
+    "Connectors",
+    "Service",
+    "Adaptive Insights"
+  ],
+  "/connectors/service/adobe-analytics-live-stream-trigger": [
+    "Connectors",
+    "Service",
+    "Adobe Analytics Live Stream"
+  ],
+  "/connectors/service/adp": [
+    "Connectors",
+    "Service",
+    "ADP"
+  ],
+  "/connectors/service/adroll": [
+    "Connectors",
+    "Service",
+    "Adroll"
+  ],
+  "/connectors/service/admithub": [
+    "Connectors",
+    "Service",
+    "AdmitHub"
+  ],
+  "/connectors/service/adobe-experience-manager": [
+    "Connectors",
+    "Service",
+    "Adobe Experience Manager"
+  ],
+  "/connectors/service/adobe-user-management": [
+    "Connectors",
+    "Service",
+    "Adobe User Management"
+  ],
+  "/connectors/service/ahrefs": [
+    "Connectors",
+    "Service",
+    "Ahrefs"
+  ],
+  "/connectors/service/adstream": [
+    "Connectors",
+    "Service",
+    "Adstream"
+  ],
+  "/connectors/service/airtable": [
+    "Connectors",
+    "Service",
+    "Airtable"
+  ],
+  "/connectors/service/affinity": [
+    "Connectors",
+    "Service",
+    "Affinity"
+  ],
+  "/connectors/service/aircall": [
+    "Connectors",
+    "Service",
+    "Aircall"
+  ],
+  "/connectors/service/algolia": [
+    "Connectors",
+    "Service",
+    "Algolia"
+  ],
+  "/connectors/service/alida": [
+    "Connectors",
+    "Service",
+    "Alida"
+  ],
+  "/connectors/service/amplitude": [
+    "Connectors",
+    "Service",
+    "Amplitude"
+  ],
+  "/connectors/service/asana": [
+    "Connectors",
+    "Service",
+    "Asana"
+  ],
+  "/connectors/service/anaplan": [
+    "Connectors",
+    "Service",
+    "Anaplan"
+  ],
+  "/connectors/service/appneta": [
+    "Connectors",
+    "Service",
+    "AppNeta"
+  ],
+  "/connectors/service/attentive-mobile": [
+    "Connectors",
+    "Service",
+    "Attentive Mobile"
+  ],
+  "/connectors/service/atlassian": [
+    "Connectors",
+    "Service",
+    "Atlassian"
+  ],
+  "/connectors/service/aweber": [
+    "Connectors",
+    "Service",
+    "AWeber"
+  ],
+  "/connectors/service/arcgis": [
+    "Connectors",
+    "Service",
+    "ArcGIS"
+  ],
+  "/connectors/service/aws-cloudfront": [
+    "Connectors",
+    "Service",
+    "AWS Cloudfront"
+  ],
+  "/connectors/service/aws": [
+    "Connectors",
+    "Service",
+    "AWS Generic Connector"
+  ],
+  "/connectors/service/aws-cloudwatch": [
+    "Connectors",
+    "Service",
+    "AWS CloudWatch"
+  ],
+  "/connectors/service/aws-comprehend": [
+    "Connectors",
+    "Service",
+    "AWS Comprehend"
+  ],
+  "/connectors/service/aws-kinesis": [
+    "Connectors",
+    "Service",
+    "AWS Kinesis"
+  ],
+  "/connectors/service/aws-marketplace": [
+    "Connectors",
+    "Service",
+    "Amazon Marketplace"
+  ],
+  "/connectors/service/aws-s3": [
+    "Connectors",
+    "Service",
+    "AWS S3"
+  ],
+  "/connectors/service/aws-sagemaker": [
+    "Connectors",
+    "Service",
+    "AWS SageMaker"
+  ],
+  "/connectors/service/aws-cognito": [
+    "Connectors",
+    "Service",
+    "AWS Cognito"
+  ],
+  "/connectors/service/aws-sqs": [
+    "Connectors",
+    "Service",
+    "AWS SQS"
+  ],
+  "/connectors/service/bamboohr": [
+    "Connectors",
+    "Service",
+    "BambooHR"
+  ],
+  "/connectors/service/azure": [
+    "Connectors",
+    "Service",
+    "Azure Active Directory"
+  ],
+  "/connectors/service/azure-devops": [
+    "Connectors",
+    "Service",
+    "Azure DevOps"
+  ],
+  "/connectors/service/azure-blob-storage": [
+    "Connectors",
+    "Service",
+    "Azure Blob Storage"
+  ],
+  "/connectors/service/boostr": [
+    "Connectors",
+    "Service",
+    "Boostr"
+  ],
+  "/connectors/service/bigcommerce": [
+    "Connectors",
+    "Service",
+    "BigCommerce"
+  ],
+  "/connectors/service/bing-ads": [
+    "Connectors",
+    "Service",
+    "Bing Ads"
+  ],
+  "/connectors/service/bizzabo": [
+    "Connectors",
+    "Service",
+    "Bizzabo"
+  ],
+  "/connectors/service/brandfolder": [
+    "Connectors",
+    "Service",
+    "Brandfolder"
+  ],
+  "/connectors/service/blueshift": [
+    "Connectors",
+    "Service",
+    "Blueshift"
+  ],
+  "/connectors/service/braze": [
+    "Connectors",
+    "Service",
+    "Braze"
+  ],
+  "/connectors/service/braintree": [
+    "Connectors",
+    "Service",
+    "Braintree"
+  ],
+  "/connectors/service/box": [
+    "Connectors",
+    "Service",
+    "Box"
+  ],
+  "/connectors/service/calendly": [
+    "Connectors",
+    "Service",
+    "Calendly"
+  ],
+  "/connectors/service/canvas": [
+    "Connectors",
+    "Service",
+    "Canvas"
+  ],
+  "/connectors/service/bynder": [
+    "Connectors",
+    "Service",
+    "Bynder"
+  ],
+  "/connectors/service/campaign-monitor-commerce": [
+    "Connectors",
+    "Service",
+    "Campaign Monitor Commerce"
+  ],
+  "/connectors/service/campaign-monitor": [
+    "Connectors",
+    "Service",
+    "Campaign Monitor"
+  ],
+  "/connectors/service/chargify": [
+    "Connectors",
+    "Service",
+    "Chargify"
+  ],
+  "/connectors/service/chartmogul": [
+    "Connectors",
+    "Service",
+    "ChartMogul"
+  ],
+  "/connectors/service/chargeback": [
+    "Connectors",
+    "Service",
+    "Chargback"
+  ],
+  "/connectors/service/clevereach": [
+    "Connectors",
+    "Service",
+    "CleverReach"
+  ],
+  "/connectors/service/close": [
+    "Connectors",
+    "Service",
+    "Close"
+  ],
+  "/connectors/service/click-up": [
+    "Connectors",
+    "Service",
+    "ClickUp"
+  ],
+  "/connectors/service/clearbit": [
+    "Connectors",
+    "Service",
+    "Clearbit"
+  ],
+  "/connectors/service/clubhouse": [
+    "Connectors",
+    "Service",
+    "Clubhouse"
+  ],
+  "/connectors/service/confluence": [
+    "Connectors",
+    "Service",
+    "Confluence"
+  ],
+  "/connectors/service/coda": [
+    "Connectors",
+    "Service",
+    "Coda"
+  ],
+  "/connectors/service/connectwise": [
+    "Connectors",
+    "Service",
+    "ConnectWise"
+  ],
+  "/connectors/service/constant-contact": [
+    "Connectors",
+    "Service",
+    "Constant Contact"
+  ],
+  "/connectors/service/copper": [
+    "Connectors",
+    "Service",
+    "Copper"
+  ],
+  "/connectors/service/convertkit": [
+    "Connectors",
+    "Service",
+    "ConvertKit"
+  ],
+  "/connectors/service/criteo": [
+    "Connectors",
+    "Service",
+    "Criteo"
+  ],
+  "/connectors/service/chat-trayning": [
+    "Connectors",
+    "Service",
+    "Chat Trayning"
+  ],
+  "/connectors/service/crm-trayning": [
+    "Connectors",
+    "Service",
+    "CRM Trayning"
+  ],
+  "/connectors/service/cue": [
+    "Connectors",
+    "Service",
+    "Cue"
+  ],
+  "/connectors/service/docebo": [
+    "Connectors",
+    "Service",
+    "Docebo"
+  ],
+  "/connectors/service/docusign": [
+    "Connectors",
+    "Service",
+    "DocuSign"
+  ],
+  "/connectors/service/demandbase": [
+    "Connectors",
+    "Service",
+    "Demandbase"
+  ],
+  "/connectors/service/crunchbase": [
+    "Connectors",
+    "Service",
+    "Crunchbase"
+  ],
+  "/connectors/service/drift": [
+    "Connectors",
+    "Service",
+    "Drift"
+  ],
+  "/connectors/service/crosscap": [
+    "Connectors",
+    "Service",
+    "CrossCap"
+  ],
+  "/connectors/service/datadog": [
+    "Connectors",
+    "Service",
+    "Datadog"
+  ],
+  "/connectors/service/domo": [
+    "Connectors",
+    "Service",
+    "Domo"
+  ],
+  "/connectors/service/dotdigital": [
+    "Connectors",
+    "Service",
+    "Dotdigital"
+  ],
+  "/connectors/service/dropbox": [
+    "Connectors",
+    "Service",
+    "Dropbox"
+  ],
+  "/connectors/service/dynamo": [
+    "Connectors",
+    "Service",
+    "Dynamo"
+  ],
+  "/connectors/service/easypromos": [
+    "Connectors",
+    "Service",
+    "Easypromos"
+  ],
+  "/connectors/service/eloqua": [
+    "Connectors",
+    "Service",
+    "Eloqua"
+  ],
+  "/connectors/service/dynamics365": [
+    "Connectors",
+    "Service",
+    "Dynamics 365"
+  ],
+  "/connectors/service/ellucian-ethos": [
+    "Connectors",
+    "Service",
+    "Ellucian Ethos"
+  ],
+  "/connectors/service/etermin": [
+    "Connectors",
+    "Service",
+    "eTermin"
+  ],
+  "/connectors/service/emarsys": [
+    "Connectors",
+    "Service",
+    "Emarsys"
+  ],
+  "/connectors/service/eventbrite": [
+    "Connectors",
+    "Service",
+    "EventBrite"
+  ],
+  "/connectors/service/emma": [
+    "Connectors",
+    "Service",
+    "Emma"
+  ],
+  "/connectors/service/entrata": [
+    "Connectors",
+    "Service",
+    "Entrata"
+  ],
+  "/connectors/service/eventgeek": [
+    "Connectors",
+    "Service",
+    "EventGeek"
+  ],
+  "/connectors/service/everhour": [
+    "Connectors",
+    "Service",
+    "Everhour"
+  ],
+  "/connectors/service/facebook": [
+    "Connectors",
+    "Service",
+    "Facebook"
+  ],
+  "/connectors/service/firebase": [
+    "Connectors",
+    "Service",
+    "Firebase"
+  ],
+  "/connectors/service/float": [
+    "Connectors",
+    "Service",
+    "Float"
+  ],
+  "/connectors/service/firstrain": [
+    "Connectors",
+    "Service",
+    "FirstRain"
+  ],
+  "/connectors/service/fixer": [
+    "Connectors",
+    "Service",
+    "Fixer"
+  ],
+  "/connectors/service/formstack": [
+    "Connectors",
+    "Service",
+    "Formstack"
+  ],
+  "/connectors/service/freewheel-financial": [
+    "Connectors",
+    "Service",
+    "Freewheel Financial"
+  ],
+  "/connectors/service/freshdesk": [
+    "Connectors",
+    "Service",
+    "Freshdesk"
+  ],
+  "/connectors/service/g-suite": [
+    "Connectors",
+    "Service",
+    "G-Suite"
+  ],
+  "/connectors/service/fulcrum": [
+    "Connectors",
+    "Service",
+    "Fulcrum"
+  ],
+  "/connectors/service/gatherup": [
+    "Connectors",
+    "Service",
+    "GatherUp"
+  ],
+  "/connectors/service/gainsight": [
+    "Connectors",
+    "Service",
+    "Gainsight"
+  ],
+  "/connectors/service/getresponse": [
+    "Connectors",
+    "Service",
+    "GetResponse"
+  ],
+  "/connectors/service/gmail": [
+    "Connectors",
+    "Service",
+    "Gmail"
+  ],
+  "/connectors/service/giphy": [
+    "Connectors",
+    "Service",
+    "Giphy"
+  ],
+  "/connectors/service/github": [
+    "Connectors",
+    "Service",
+    "GitHub"
+  ],
+  "/connectors/service/google-adwords": [
+    "Connectors",
+    "Service",
+    "Google Adwords"
+  ],
+  "/connectors/service/google-calendar": [
+    "Connectors",
+    "Service",
+    "Google Calendar"
+  ],
+  "/connectors/service/getty": [
+    "Connectors",
+    "Service",
+    "Getty"
+  ],
+  "/connectors/service/google-ad-manager": [
+    "Connectors",
+    "Service",
+    "Google Ad Manager"
+  ],
+  "/connectors/service/google-docs": [
+    "Connectors",
+    "Service",
+    "Google Docs"
+  ],
+  "/connectors/service/google-contacts": [
+    "Connectors",
+    "Service",
+    "Google Contacts"
+  ],
+  "/connectors/service/gongio": [
+    "Connectors",
+    "Service",
+    "Gong.io"
+  ],
+  "/connectors/service/google-cloud-storage": [
+    "Connectors",
+    "Service",
+    "Google Cloud Storage"
+  ],
+  "/connectors/service/google-drive": [
+    "Connectors",
+    "Service",
+    "Google Drive"
+  ],
+  "/connectors/service/google-sheets": [
+    "Connectors",
+    "Service",
+    "Google Sheets"
+  ],
+  "/connectors/service/gotomeeting": [
+    "Connectors",
+    "Service",
+    "GoToMeeting"
+  ],
+  "/connectors/service/google-tasks": [
+    "Connectors",
+    "Service",
+    "Google Tasks"
+  ],
+  "/connectors/service/google-vision": [
+    "Connectors",
+    "Service",
+    "Google Vision"
+  ],
+  "/connectors/service/gotowebinar": [
+    "Connectors",
+    "Service",
+    "GoToWebinar"
+  ],
+  "/connectors/service/grade-us": [
+    "Connectors",
+    "Service",
+    "Grade.us"
+  ],
+  "/connectors/service/hackerone": [
+    "Connectors",
+    "Service",
+    "HackerOne"
+  ],
+  "/connectors/service/hatchbuck": [
+    "Connectors",
+    "Service",
+    "Hatchbuck"
+  ],
+  "/connectors/service/grafana": [
+    "Connectors",
+    "Service",
+    "Grafana"
+  ],
+  "/connectors/service/help-scout": [
+    "Connectors",
+    "Service",
+    "Help Scout"
+  ],
+  "/connectors/service/hranswerlink": [
+    "Connectors",
+    "Service",
+    "HRAnswerLink"
+  ],
+  "/connectors/service/hootsuite": [
+    "Connectors",
+    "Service",
+    "Hootsuite"
+  ],
+  "/connectors/service/hunter": [
+    "Connectors",
+    "Service",
+    "Hunter"
+  ],
+  "/connectors/service/harvest": [
+    "Connectors",
+    "Service",
+    "Harvest"
+  ],
+  "/connectors/service/ibm-mq": [
+    "Connectors",
+    "Service",
+    "IBM MQ"
+  ],
+  "/connectors/service/huddle": [
+    "Connectors",
+    "Service",
+    "Huddle"
+  ],
+  "/connectors/service/hubspot": [
+    "Connectors",
+    "Service",
+    "Hubspot"
+  ],
+  "/connectors/service/icontact": [
+    "Connectors",
+    "Service",
+    "iContact"
+  ],
+  "/connectors/service/ibm-watson-tts": [
+    "Connectors",
+    "Service",
+    "IBM Watson TTS"
+  ],
+  "/connectors/service/infusionsoft": [
+    "Connectors",
+    "Service",
+    "Infusionsoft"
+  ],
+  "/connectors/service/iterable": [
+    "Connectors",
+    "Service",
+    "Iterable"
+  ],
+  "/connectors/service/instagram": [
+    "Connectors",
+    "Service",
+    "Instagram"
+  ],
+  "/connectors/service/jdbc-client": [
+    "Connectors",
+    "Service",
+    "JDBC Client"
+  ],
+  "/connectors/service/intercom": [
+    "Connectors",
+    "Service",
+    "Intercom"
+  ],
+  "/connectors/service/ironclad": [
+    "Connectors",
+    "Service",
+    "Ironclad"
+  ],
+  "/connectors/service/jira": [
+    "Connectors",
+    "Service",
+    "Jira"
+  ],
+  "/connectors/service/jira-cloud": [
+    "Connectors",
+    "Service",
+    "Jira Cloud"
+  ],
+  "/connectors/service/jira-service-desk": [
+    "Connectors",
+    "Service",
+    "Jira Service Desk"
+  ],
+  "/connectors/service/jive": [
+    "Connectors",
+    "Service",
+    "Jive"
+  ],
+  "/connectors/service/jotform": [
+    "Connectors",
+    "Service",
+    "JotForm"
+  ],
+  "/connectors/service/jumpcloud": [
+    "Connectors",
+    "Service",
+    "Jumpcloud"
+  ],
+  "/connectors/service/kafka": [
+    "Connectors",
+    "Service",
+    "Kafka"
+  ],
+  "/connectors/service/kapost": [
+    "Connectors",
+    "Service",
+    "Kapost"
+  ],
+  "/connectors/service/kazoo-hr": [
+    "Connectors",
+    "Service",
+    "Kazoo HR"
+  ],
+  "/connectors/service/kanban-tool": [
+    "Connectors",
+    "Service",
+    "Kanban Tool"
+  ],
+  "/connectors/service/klaviyo": [
+    "Connectors",
+    "Service",
+    "Klaviyo"
+  ],
+  "/connectors/service/kochava": [
+    "Connectors",
+    "Service",
+    "Kochava"
+  ],
+  "/connectors/service/keatext": [
+    "Connectors",
+    "Service",
+    "Keatext"
+  ],
+  "/connectors/service/linkedin": [
+    "Connectors",
+    "Service",
+    "LinkedIn"
+  ],
+  "/connectors/service/launchdarkly": [
+    "Connectors",
+    "Service",
+    "LaunchDarkly"
+  ],
+  "/connectors/service/listrak": [
+    "Connectors",
+    "Service",
+    "Listrak"
+  ],
+  "/connectors/service/liveperson": [
+    "Connectors",
+    "Service",
+    "LivePerson"
+  ],
+  "/connectors/service/liveramp": [
+    "Connectors",
+    "Service",
+    "Liveramp"
+  ],
+  "/connectors/service/logic-monitor": [
+    "Connectors",
+    "Service",
+    "Logic Monitor"
+  ],
+  "/connectors/service/looker": [
+    "Connectors",
+    "Service",
+    "Looker"
+  ],
+  "/connectors/service/lufthansa": [
+    "Connectors",
+    "Service",
+    "Lufthansa"
+  ],
+  "/connectors/service/magento-2": [
+    "Connectors",
+    "Service",
+    "Magento 2"
+  ],
+  "/connectors/service/magento-1": [
+    "Connectors",
+    "Service",
+    "Magento 1"
+  ],
+  "/connectors/service/mad-mimi": [
+    "Connectors",
+    "Service",
+    "Mad Mimi"
+  ],
+  "/connectors/service/mailboxlayer": [
+    "Connectors",
+    "Service",
+    "Mailboxlayer"
+  ],
+  "/connectors/service/mailerlite": [
+    "Connectors",
+    "Service",
+    "MailerLite"
+  ],
+  "/connectors/service/mailchimp": [
+    "Connectors",
+    "Service",
+    "Mailchimp"
+  ],
+  "/connectors/service/marketo": [
+    "Connectors",
+    "Service",
+    "Marketo"
+  ],
+  "/connectors/service/mailjet": [
+    "Connectors",
+    "Service",
+    "Mailjet"
+  ],
+  "/connectors/service/microsoft-dynamics-gp": [
+    "Connectors",
+    "Service",
+    "Microsoft Dynamics GP"
+  ],
+  "/connectors/service/microsoft-teams": [
+    "Connectors",
+    "Service",
+    "Microsoft Teams"
+  ],
+  "/connectors/service/messagebird": [
+    "Connectors",
+    "Service",
+    "Messagebird"
+  ],
+  "/connectors/service/microsoft-sql-database": [
+    "Connectors",
+    "Service",
+    "Microsoft SQL Database"
+  ],
+  "/connectors/service/microsoft-text-translate": [
+    "Connectors",
+    "Service",
+    "Microsoft Text Translate"
+  ],
+  "/connectors/service/mindbody": [
+    "Connectors",
+    "Service",
+    "Mindbody"
+  ],
+  "/connectors/service/mixpanel": [
+    "Connectors",
+    "Service",
+    "Mixpanel"
+  ],
+  "/connectors/service/monday": [
+    "Connectors",
+    "Service",
+    "Monday"
+  ],
+  "/connectors/service/mongodb-cloud": [
+    "Connectors",
+    "Service",
+    "MongoDB-Cloud"
+  ],
+  "/connectors/service/mysql": [
+    "Connectors",
+    "Service",
+    "MySQL"
+  ],
+  "/connectors/service/mongo-db": [
+    "Connectors",
+    "Service",
+    "MongoDB"
+  ],
+  "/connectors/service/musixmatch": [
+    "Connectors",
+    "Service",
+    "Musixmatch"
+  ],
+  "/connectors/service/namely": [
+    "Connectors",
+    "Service",
+    "Namely"
+  ],
+  "/connectors/service/nasa": [
+    "Connectors",
+    "Service",
+    "NASA"
+  ],
+  "/connectors/service/news-api": [
+    "Connectors",
+    "Service",
+    "News API"
+  ],
+  "/connectors/service/newscred": [
+    "Connectors",
+    "Service",
+    "NewsCred"
+  ],
+  "/connectors/service/new-relic": [
+    "Connectors",
+    "Service",
+    "New Relic"
+  ],
+  "/connectors/service/onelogin": [
+    "Connectors",
+    "Service",
+    "OneLogin"
+  ],
+  "/connectors/service/okta": [
+    "Connectors",
+    "Service",
+    "Okta"
+  ],
+  "/connectors/service/office365": [
+    "Connectors",
+    "Service",
+    "Office365"
+  ],
+  "/connectors/service/omnisend": [
+    "Connectors",
+    "Service",
+    "Omnisend"
+  ],
+  "/connectors/service/ooma": [
+    "Connectors",
+    "Service",
+    "Ooma"
+  ],
+  "/connectors/service/ontraport": [
+    "Connectors",
+    "Service",
+    "Ontraport"
+  ],
+  "/connectors/service/opal": [
+    "Connectors",
+    "Service",
+    "Opal"
+  ],
+  "/connectors/service/oracle-bronto": [
+    "Connectors",
+    "Service",
+    "Oracle Bronto"
+  ],
+  "/connectors/service/opsgenie": [
+    "Connectors",
+    "Service",
+    "OpsGenie"
+  ],
+  "/connectors/service/optimoroute": [
+    "Connectors",
+    "Service",
+    "OptimoRoute"
+  ],
+  "/connectors/service/pandadoc": [
+    "Connectors",
+    "Service",
+    "Pandadoc"
+  ],
+  "/connectors/service/oracle-responsys": [
+    "Connectors",
+    "Service",
+    "Oracle Responsys"
+  ],
+  "/connectors/service/pardot": [
+    "Connectors",
+    "Service",
+    "Pardot"
+  ],
+  "/connectors/service/pagerduty": [
+    "Connectors",
+    "Service",
+    "PagerDuty"
+  ],
+  "/connectors/service/oxford-dictionaries": [
+    "Connectors",
+    "Service",
+    "Oxford Dictionaries"
+  ],
+  "/connectors/service/paylocity": [
+    "Connectors",
+    "Service",
+    "Paylocity"
+  ],
+  "/connectors/service/paypal": [
+    "Connectors",
+    "Service",
+    "PayPal"
+  ],
+  "/connectors/service/outreach": [
+    "Connectors",
+    "Service",
+    "Outreach"
+  ],
+  "/connectors/service/paymo": [
+    "Connectors",
+    "Service",
+    "Paymo"
+  ],
+  "/connectors/service/pdk": [
+    "Connectors",
+    "Service",
+    "PDK"
+  ],
+  "/connectors/service/postgresql": [
+    "Connectors",
+    "Service",
+    "PostgreSQL"
+  ],
+  "/connectors/service/personio": [
+    "Connectors",
+    "Service",
+    "Personio"
+  ],
+  "/connectors/service/pendo": [
+    "Connectors",
+    "Service",
+    "Pendo"
+  ],
+  "/connectors/service/portabilling": [
+    "Connectors",
+    "Service",
+    "PortaBilling (PortaOne)"
+  ],
+  "/connectors/service/postscript": [
+    "Connectors",
+    "Service",
+    "Postscript"
+  ],
+  "/connectors/service/prodpad": [
+    "Connectors",
+    "Service",
+    "ProdPad"
+  ],
+  "/connectors/service/powerbi": [
+    "Connectors",
+    "Service",
+    "PowerBI"
+  ],
+  "/connectors/service/pipeliner-crm-cloud": [
+    "Connectors",
+    "Service",
+    "Pipeliner CRM Cloud"
+  ],
+  "/connectors/service/productboard": [
+    "Connectors",
+    "Service",
+    "Productboard"
+  ],
+  "/connectors/service/promoterio": [
+    "Connectors",
+    "Service",
+    "Promoter.io"
+  ],
+  "/connectors/service/powerschool": [
+    "Connectors",
+    "Service",
+    "PowerSchool"
+  ],
+  "/connectors/service/quickbooks": [
+    "Connectors",
+    "Service",
+    "QuickBooks"
+  ],
+  "/connectors/service/recurly": [
+    "Connectors",
+    "Service",
+    "Recurly"
+  ],
+  "/connectors/service/quickbooks-payments": [
+    "Connectors",
+    "Service",
+    "QuickBooks Payments"
+  ],
+  "/connectors/service/redshift": [
+    "Connectors",
+    "Service",
+    "Redshift"
+  ],
+  "/connectors/service/qualtrics": [
+    "Connectors",
+    "Service",
+    "Qualtrics"
+  ],
+  "/connectors/service/rareio": [
+    "Connectors",
+    "Service",
+    "Rare.io"
+  ],
+  "/connectors/service/resci-retention-science": [
+    "Connectors",
+    "Service",
+    "ReSci Retention Science"
+  ],
+  "/connectors/service/revio": [
+    "Connectors",
+    "Service",
+    "Rev.io"
+  ],
+  "/connectors/service/rejoiner": [
+    "Connectors",
+    "Service",
+    "Rejoiner"
+  ],
+  "/connectors/service/retention-rocket": [
+    "Connectors",
+    "Service",
+    "Retention Rocket"
+  ],
+  "/connectors/service/remarkety": [
+    "Connectors",
+    "Service",
+    "Remarkety"
+  ],
+  "/connectors/service/salesforce-marketing-cloud": [
+    "Connectors",
+    "Service",
+    "Salesforce Marketing cloud"
+  ],
+  "/connectors/service/sailthru": [
+    "Connectors",
+    "Service",
+    "Sailthru"
+  ],
+  "/connectors/service/sage-intaact": [
+    "Connectors",
+    "Service",
+    "Sage Intaact"
+  ],
+  "/connectors/service/sage-300": [
+    "Connectors",
+    "Service",
+    "Sage 300"
+  ],
+  "/connectors/service/sap-success-factors": [
+    "Connectors",
+    "Service",
+    "SAP SuccessFactors"
+  ],
+  "/connectors/service/salesrabbit": [
+    "Connectors",
+    "Service",
+    "SalesRabbit"
+  ],
+  "/connectors/service/salesloft": [
+    "Connectors",
+    "Service",
+    "SalesLoft"
+  ],
+  "/connectors/service/sap-s4hana-cloud": [
+    "Connectors",
+    "Service",
+    "SAP S/4HANA Cloud"
+  ],
+  "/connectors/service/scoop": [
+    "Connectors",
+    "Service",
+    "Scoop"
+  ],
+  "/connectors/service/sapling": [
+    "Connectors",
+    "Service",
+    "Sapling"
+  ],
+  "/connectors/service/segment": [
+    "Connectors",
+    "Service",
+    "Segment"
+  ],
+  "/connectors/service/sedna": [
+    "Connectors",
+    "Service",
+    "Sedna"
+  ],
+  "/connectors/service/searchblox": [
+    "Connectors",
+    "Service",
+    "SearchBlox"
+  ],
+  "/connectors/service/semrush": [
+    "Connectors",
+    "Service",
+    "SEMrush"
+  ],
+  "/connectors/service/sendgrid": [
+    "Connectors",
+    "Service",
+    "Sendgrid"
+  ],
+  "/connectors/service/sendpulse": [
+    "Connectors",
+    "Service",
+    "SendPulse"
+  ],
+  "/connectors/service/sharepoint": [
+    "Connectors",
+    "Service",
+    "Sharepoint"
+  ],
+  "/connectors/service/sendlane": [
+    "Connectors",
+    "Service",
+    "Sendlane"
+  ],
+  "/connectors/service/servicenow": [
+    "Connectors",
+    "Service",
+    "Servicenow"
+  ],
+  "/connectors/service/showpad": [
+    "Connectors",
+    "Service",
+    "Showpad"
+  ],
+  "/connectors/service/shopify": [
+    "Connectors",
+    "Service",
+    "Shopify"
+  ],
+  "/connectors/service/signal-vine": [
+    "Connectors",
+    "Service",
+    "Signal Vine"
+  ],
+  "/connectors/service/shutterstock": [
+    "Connectors",
+    "Service",
+    "Shutterstock"
+  ],
+  "/connectors/service/sitecore": [
+    "Connectors",
+    "Service",
+    "Sitecore"
+  ],
+  "/connectors/service/smartrmail": [
+    "Connectors",
+    "Service",
+    "SmartrMail"
+  ],
+  "/connectors/service/simpli-fi": [
+    "Connectors",
+    "Service",
+    "Simpli.fi"
+  ],
+  "/connectors/service/smartsheet": [
+    "Connectors",
+    "Service",
+    "Smartsheet"
+  ],
+  "/connectors/service/surefire": [
+    "Connectors",
+    "Service",
+    "Surefire"
+  ],
+  "/connectors/service/splash": [
+    "Connectors",
+    "Service",
+    "Splash"
+  ],
+  "/connectors/service/snowflake": [
+    "Connectors",
+    "Service",
+    "Snowflake"
+  ],
+  "/connectors/service/strava": [
+    "Connectors",
+    "Service",
+    "Strava"
+  ],
+  "/connectors/service/sugarcrm": [
+    "Connectors",
+    "Service",
+    "SugarCRM"
+  ],
+  "/connectors/service/sugarmarket": [
+    "Connectors",
+    "Service",
+    "SugarMarket"
+  ],
+  "/connectors/service/stripe": [
+    "Connectors",
+    "Service",
+    "Stripe"
+  ],
+  "/connectors/service/survey-monkey-trigger": [
+    "Connectors",
+    "Service",
+    "SurveyMonkey"
+  ],
+  "/connectors/service/swoogo": [
+    "Connectors",
+    "Service",
+    "Swoogo"
+  ],
+  "/connectors/service/talkdesk": [
+    "Connectors",
+    "Service",
+    "Talkdesk"
+  ],
+  "/connectors/service/textmagic": [
+    "Connectors",
+    "Service",
+    "TextMagic"
+  ],
+  "/connectors/service/survey-sparrow": [
+    "Connectors",
+    "Service",
+    "Survey Sparrow"
+  ],
+  "/connectors/service/thinkific": [
+    "Connectors",
+    "Service",
+    "Thinkific"
+  ],
+  "/connectors/service/toggl": [
+    "Connectors",
+    "Service",
+    "Toggl"
+  ],
+  "/connectors/service/transport-for-london-tfl": [
+    "Connectors",
+    "Service",
+    "Transport For London (TFL)"
+  ],
+  "/connectors/service/totango": [
+    "Connectors",
+    "Service",
+    "Totango"
+  ],
+  "/connectors/service/uberflip": [
+    "Connectors",
+    "Service",
+    "Uberflip"
+  ],
+  "/connectors/service/typeform": [
+    "Connectors",
+    "Service",
+    "Typeform"
+  ],
+  "/connectors/service/trello": [
+    "Connectors",
+    "Service",
+    "Trello"
+  ],
+  "/connectors/service/twilio": [
+    "Connectors",
+    "Service",
+    "Twilio"
+  ],
+  "/connectors/service/velocify": [
+    "Connectors",
+    "Service",
+    "Velocify"
+  ],
+  "/connectors/service/udemy": [
+    "Connectors",
+    "Service",
+    "Udemy"
+  ],
+  "/connectors/service/ultipro": [
+    "Connectors",
+    "Service",
+    "UltiPro"
+  ],
+  "/connectors/service/vertical-response": [
+    "Connectors",
+    "Service",
+    "VerticalResponse"
+  ],
+  "/connectors/service/virtuous-crm": [
+    "Connectors",
+    "Service",
+    "Virtuous CRM"
+  ],
+  "/connectors/service/verve": [
+    "Connectors",
+    "Service",
+    "Verve"
+  ],
+  "/connectors/service/veeva": [
+    "Connectors",
+    "Service",
+    "Veeva"
+  ],
+  "/connectors/service/videoask": [
+    "Connectors",
+    "Service",
+    "VideoAsk"
+  ],
+  "/connectors/service/vonage": [
+    "Connectors",
+    "Service",
+    "Vonage"
+  ],
+  "/connectors/service/walmart-marketplace": [
+    "Connectors",
+    "Service",
+    "Walmart Marketplace"
+  ],
+  "/connectors/service/whatcounts": [
+    "Connectors",
+    "Service",
+    "WhatCounts"
+  ],
+  "/connectors/service/widen": [
+    "Connectors",
+    "Service",
+    "Widen"
+  ],
+  "/connectors/service/wolfram-alpha-short-answers": [
+    "Connectors",
+    "Service",
+    "Wolfram|Alpha Short Answers"
+  ],
+  "/connectors/service/workable": [
+    "Connectors",
+    "Service",
+    "Workable"
+  ],
+  "/connectors/service/wolfram-alpha-full-results": [
+    "Connectors",
+    "Service",
+    "Wolfram|Alpha Full Results"
+  ],
+  "/connectors/service/workflowmax": [
+    "Connectors",
+    "Service",
+    "WorkflowMAX"
+  ],
+  "/connectors/service/workfront": [
+    "Connectors",
+    "Service",
+    "Workfront"
+  ],
+  "/connectors/service/xverify": [
+    "Connectors",
+    "Service",
+    "Xverify"
+  ],
+  "/connectors/service/xero": [
+    "Connectors",
+    "Service",
+    "Xero"
+  ],
+  "/connectors/service/wrike": [
+    "Connectors",
+    "Service",
+    "Wrike"
+  ],
+  "/connectors/service/yammer": [
+    "Connectors",
+    "Service",
+    "Yammer"
+  ],
+  "/connectors/service/zendesk-sell": [
+    "Connectors",
+    "Service",
+    "Zendesk Sell (formely Base)"
+  ],
+  "/connectors/service/yotpo": [
+    "Connectors",
+    "Service",
+    "Yotpo"
+  ],
+  "/connectors/service/zaius": [
+    "Connectors",
+    "Service",
+    "Zaius"
+  ],
+  "/connectors/service/zenefits": [
+    "Connectors",
+    "Service",
+    "Zenefits"
+  ],
+  "/connectors/service/zendesk-sunshine": [
+    "Connectors",
+    "Service",
+    "Zendesk Sunshine"
+  ],
+  "/connectors/service/zendesk": [
+    "Connectors",
+    "Service",
+    "Zendesk"
+  ],
+  "/connectors/service/yext": [
+    "Connectors",
+    "Service",
+    "Yext"
+  ],
+  "/connectors/service/zoho": [
+    "Connectors",
+    "Service",
+    "Zoho"
+  ],
+  "/connectors/service/zoom": [
+    "Connectors",
+    "Service",
+    "Zoom"
+  ],
+  "/connectors/service/zoho-desk": [
+    "Connectors",
+    "Service",
+    "Zoho Desk"
+  ],
+  "/connectors/service/zelo-pay": [
+    "Connectors",
+    "Service",
+    "Zelo Pay"
+  ],
+  "/connectors/service/zoho-creator": [
+    "Connectors",
+    "Service",
+    "Zoho Creator"
+  ],
+  "/connectors/service/zuora": [
+    "Connectors",
+    "Service",
+    "Zuora"
+  ],
+  "/connectors/service/zoom-user": [
+    "Connectors",
+    "Service",
+    "Zoom User"
+  ],
+  "/connectors/service/zoominfo": [
+    "Connectors",
+    "Service",
+    "ZoomInfo"
+  ],
+  "/connectors/core/csv-editor": [
+    "Connectors",
+    "Core",
+    "CSV Editor"
+  ],
+  "/connectors/helpers/list-helper": [
+    "Connectors",
+    "Helper",
+    "List Helper"
+  ],
+  "/connectors/core/graphql": [
+    "Connectors",
+    "Core",
+    "GraphQL"
+  ],
+  "/connectors/helpers/object-helper": [
+    "Connectors",
+    "Helper",
+    "Object Helper"
+  ],
+  "/connectors/service/google-bigquery": [
+    "Connectors",
+    "Service",
+    "Google BigQuery"
+  ],
+  "/connectors/service/slack": [
+    "Connectors",
+    "Service",
+    "Slack"
+  ],
+  "/connectors/core/http-client": [
+    "Connectors",
+    "Core",
+    "HTTP Client"
+  ],
+  "/connectors/service/netsuite": [
+    "Connectors",
+    "Service",
+    "Netsuite"
+  ],
+  "/connectors/service/salesforce": [
+    "Connectors",
+    "Service",
+    "Salesforce"
+  ]
+}

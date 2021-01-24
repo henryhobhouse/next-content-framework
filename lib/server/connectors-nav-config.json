@@ -1,0 +1,45 @@
+{
+  "config": [
+    {
+      "title": "Connector Documentation",
+      "slug": "/connectors",
+      "level": 1,
+      "order": 1000,
+      "parentSlug": "",
+      "children": [
+        {
+          "title": "Trigger",
+          "slug": "/connectors/triggers",
+          "level": 2,
+          "order": 5,
+          "parentSlug": "/connectors",
+          "children": []
+        },
+        {
+          "title": "Core",
+          "slug": "/connectors/core",
+          "level": 2,
+          "order": 10,
+          "parentSlug": "/connectors",
+          "children": []
+        },
+        {
+          "title": "Helper",
+          "slug": "/connectors/helpers",
+          "level": 2,
+          "order": 25,
+          "parentSlug": "/connectors",
+          "children": []
+        },
+        {
+          "title": "Service",
+          "slug": "/connectors/service",
+          "level": 2,
+          "order": 30,
+          "parentSlug": "/connectors",
+          "children": []
+        }
+      ]
+    }
+  ]
+}

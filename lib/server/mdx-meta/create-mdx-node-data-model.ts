@@ -1,10 +1,10 @@
-import { resolve } from 'path';
 import { promises } from 'fs';
-import matter from 'gray-matter';
+import { resolve } from 'path';
+
 import mdx from '@mdx-js/mdx';
+import matter from 'gray-matter';
 import { prune } from 'underscore.string';
 import visit from 'unist-util-visit';
-import { ImageData } from '../copy-images-to-public';
 
 import {
   connectorsListRegex,
@@ -14,7 +14,9 @@ import {
   orderPartRegex,
   orderRegex,
   pathRegex,
-} from '../../page-mdx/mdx-parse';
+} from '../../next-static-server/mdx-parse';
+import { ImageData } from '../copy-images-to-public';
+
 import createNodeId from './create-node-id';
 
 const navigationArticleDepth = 5;

@@ -43,7 +43,7 @@ module.exports = {
       },
     },
     {
-      files: ['./lib/node/**/*.ts'],
+      files: ['./lib/server/**/*.ts'],
       extends: ['@x-and-ai/eslint-config-ts-node'],
       rules: {
         'import/no-commonjs': 0,

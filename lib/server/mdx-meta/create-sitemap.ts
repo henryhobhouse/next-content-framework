@@ -1,5 +1,5 @@
 import { promises } from 'fs';
-import { nextPublicDirectory } from '../../page-mdx/mdx-parse';
+import { nextPublicDirectory } from '../../next-static-server/mdx-parse';
 import { currentWorkingDirectory } from '../constants';
 import { NodeData } from './create-mdx-node-data-model';
 

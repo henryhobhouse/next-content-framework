@@ -6,7 +6,7 @@ import useGifFirstFrame from '../../lib/hooks/use-gif-first-frame';
 
 import { GifWrapper, PlayButton, FirstFrameImage } from './gif-player.sc';
 
-import { rootImageDirectory } from 'lib/page-mdx/mdx-parse';
+import { rootImageDirectory } from 'lib/next-static-server/mdx-parse';
 
 interface Props extends HTMLAttributes<HTMLImageElement> {
   gifUrl: string;

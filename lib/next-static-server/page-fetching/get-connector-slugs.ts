@@ -3,8 +3,11 @@ import {
   isPostFileRegex,
   orderPartRegex,
   pathRegex,
-} from 'lib/page-mdx/mdx-parse';
-import { Resolve, StaticConnectorPathParams } from 'lib/page-mdx/types';
+} from 'lib/next-static-server/mdx-parse';
+import {
+  Resolve,
+  StaticConnectorPathParams,
+} from 'lib/next-static-server/types';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 const connectorDirPath = 'platform/50.connectors/1000.docs';

@@ -3,9 +3,9 @@ import Image from 'next/image';
 import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import imageProcessingConfig from '../../lib/node/scripts/image-manipulation/image-processing-config';
+import imageProcessingConfig from '../../lib/server/scripts/image-manipulation/image-processing-config';
 
-import { rootImageDirectory } from 'lib/page-mdx/mdx-parse';
+import { rootImageDirectory } from 'lib/next-static-server/mdx-parse';
 
 const BlurredImage = styled.img<{ $imageLoaded: boolean; $maxWidth: number }>`
   transition: opacity 500ms ease;

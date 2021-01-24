@@ -1,6 +1,9 @@
 import { promises, existsSync } from 'fs';
 import mkdirp from 'mkdirp';
-import { rootImageDirectory, nextPublicDirectory } from '../page-mdx/mdx-parse';
+import {
+  rootImageDirectory,
+  nextPublicDirectory,
+} from '../next-static-server/mdx-parse';
 import { getProcessedImageFileName } from './scripts/image-manipulation/utils';
 import imageMetaData from '../image-meta-data.json';
 import { SavedImageAttributes } from './types/image-processing';

@@ -1,12 +1,13 @@
 import cliProgress from 'cli-progress';
 import colors from 'colors';
 
-import getImagesToProcess from './image-manipulation/get-images-to-process';
+import { contentRootPath } from '../../next-static-server/mdx-parse';
 import initialiseLogger from '../logger';
-import { contentRootPath } from '../../page-mdx/mdx-parse';
-import createThumbnailsAndSaveAttributes from './image-manipulation/create-thumbnails-and-save-attributes';
+
 import checkForDeletedImages from './image-manipulation/check-for-deleted-images';
 import checkForErrors from './image-manipulation/check-for-errors';
+import createThumbnailsAndSaveAttributes from './image-manipulation/create-thumbnails-and-save-attributes';
+import getImagesToProcess from './image-manipulation/get-images-to-process';
 
 const errorLogFileName = 'image-optimisation-error.log';
 

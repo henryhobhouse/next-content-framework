@@ -11,7 +11,7 @@ import {
   removeRedirectLink,
   setNextRedirects,
 } from './migrate-utils';
-import { contentRootPath } from '../../../page-mdx/mdx-parse';
+import { contentRootPath } from '../../../next-static-server/mdx-parse';
 
 const isPostFileRegex = /docs\.(mdx|md)$/gi;
 const orderPartRegex = /\/([0-9+]+)\./g;

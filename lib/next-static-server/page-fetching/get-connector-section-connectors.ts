@@ -6,8 +6,8 @@ import {
   orderPartRegex,
   orderRegex,
   pathRegex,
-} from 'lib/page-mdx/mdx-parse';
-import { Resolve, ConnectorMetaData } from 'lib/page-mdx/types';
+} from 'lib/next-static-server/mdx-parse';
+import { Resolve, ConnectorMetaData } from 'lib/next-static-server/types';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 /**

@@ -1,6 +1,6 @@
 import { promises, existsSync, writeFileSync, readFileSync } from 'fs';
 import imageSizeMetaData from '../../../image-meta-data.json';
-import { nextPublicDirectory } from '../../../page-mdx/mdx-parse';
+import { nextPublicDirectory } from '../../../next-static-server/mdx-parse';
 import { currentWorkingDirectory } from '../../constants';
 import { SavedImageAttributes } from '../../types/image-processing';
 import { imageAttributesFilePath } from './extract-image-attributes';

@@ -1,4 +1,5 @@
 import { writeFileSync } from 'fs';
+
 import { NodeData } from './create-mdx-node-data-model';
 
 const breadCrumbs: { [key: string]: string[] } = {};

@@ -10,8 +10,8 @@ import {
   nextPublicDirectory,
 } from './mdx-parse';
 
-import { getProcessedImageFileName } from 'lib/node/scripts/image-manipulation/utils';
-import { SavedImageAttributes } from 'lib/node/types/image-processing';
+import { getProcessedImageFileName } from 'lib/server/scripts/image-manipulation/utils';
+import { SavedImageAttributes } from 'lib/server/types/image-processing';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 const checkFileExists = async (filePath: string, promises: FsPromises) => {

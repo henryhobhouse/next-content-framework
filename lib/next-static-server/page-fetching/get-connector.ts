@@ -1,12 +1,12 @@
 import recursiveFindRouteData from './recursive-find-route-data';
 
-import initialiseLogger from 'lib/node/logger';
-import { contentRootPath } from 'lib/page-mdx/mdx-parse';
+import { contentRootPath } from 'lib/next-static-server/mdx-parse';
 import {
   Resolve,
   MdxRenderedToString,
   TableOfContents,
-} from 'lib/page-mdx/types';
+} from 'lib/next-static-server/types';
+import initialiseLogger from 'lib/server/logger';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 /**

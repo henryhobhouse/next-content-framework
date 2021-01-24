@@ -2,7 +2,7 @@ import {
   BaseNavigationArticle,
   NavigationArticle,
   SecondTierNavigationArticle,
-} from '../../page-mdx/types';
+} from '../../next-static-server/types';
 
 const parseFlatNavigationItems = (
   allItems: Omit<NavigationArticle, 'children'>[],
