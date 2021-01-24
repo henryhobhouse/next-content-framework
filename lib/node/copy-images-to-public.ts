@@ -1,7 +1,10 @@
 import { promises, existsSync } from 'fs';
 import mkdirp from 'mkdirp';
 import { rootImageDirectory, nextPublicDirectory } from '../page-mdx/mdx-parse';
-import { getOptimisedImageFileName } from './utils';
+import { getProcessedImageFileName } from './pre-build/image-manipulation/utils';
+import imageMetaData from '../image-meta-data.json';
+import { SavedImageAttributes } from './types/image-processing';
+import { currentWorkingDirectory } from './constants';
 
 export interface ImageData {
   path: string;
@@ -10,20 +13,21 @@ export interface ImageData {
 }
 
 const checkImageDirExists = () => {
-  const fullDirPath = `${process.cwd()}/${nextPublicDirectory}/${rootImageDirectory}`;
+  const fullDirPath = `${currentWorkingDirectory}/${nextPublicDirectory}/${rootImageDirectory}`;
   if (!existsSync(fullDirPath)) mkdirp.sync(fullDirPath);
 };
 
 const syncImagesWithPublic = async (imagesMetaData: ImageData[]) => {
   checkImageDirExists();
-  await Promise.allSettled(
+  // use all settled so it will still continue even if error with a single image
+  await Promise.all(
     imagesMetaData.map(async (imageData) => {
-      const optimiseImageName = getOptimisedImageFileName(
-        imageData.name,
-        imageData.path,
-      );
+      const processedImageName = getProcessedImageFileName(imageData.path);
+      const imageHash = (imageMetaData as SavedImageAttributes)[
+        processedImageName as keyof typeof imageMetaData
+      ]?.imageHash;
 
-      const destinationPath = `${process.cwd()}/${nextPublicDirectory}/${rootImageDirectory}/${optimiseImageName}`;
+      const destinationPath = `${currentWorkingDirectory}/${nextPublicDirectory}/${rootImageDirectory}/${imageHash}.${processedImageName}`;
 
       if (!existsSync(destinationPath)) {
         await promises.copyFile(imageData.path, destinationPath);

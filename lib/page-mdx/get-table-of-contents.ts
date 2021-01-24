@@ -10,9 +10,9 @@ const getTableOfContents = (mdxContent: string): TableOfContents => {
   const compiler = mdx.createMdxAstCompiler({ remarkPlugins: [] });
   // get MarkDown as AST as much easier to parse than pure HTML
   const mdAst: ParentNode = compiler.parse(mdxContent);
-  // create array of header nodes from AST
+  // create flat array of header nodes from AST
   const headerNodes = searchNodes(mdAst, smallestHeaderSizeOfToc);
-  // parse header nodes in to TOC format (hierarchical)
+  // parse header nodes in to TOC object format (hierarchical)
   const tableOfContents = parseTocNodes(headerNodes as SearchMap[]);
 
   return tableOfContents;

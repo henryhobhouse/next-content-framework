@@ -1,5 +1,6 @@
 import { promises } from 'fs';
 import { nextPublicDirectory } from '../../page-mdx/mdx-parse';
+import { currentWorkingDirectory } from '../constants';
 import { NodeData } from './create-mdx-node-data-model';
 
 const sitemapHeader =
@@ -7,7 +8,7 @@ const sitemapHeader =
 const sitemapFooter = '</urlset>';
 const appUrl = 'https://tray.io/documentation';
 const sitemapFileName = 'sitemap.xml';
-const sitemapPath = `${process.cwd()}/${nextPublicDirectory}/${sitemapFileName}`;
+const sitemapPath = `${currentWorkingDirectory}/${nextPublicDirectory}/${sitemapFileName}`;
 
 const createSitemap = async (contentRootNodesData: NodeData[]) => {
   if (process.env.NODE_ENV !== 'production') return;

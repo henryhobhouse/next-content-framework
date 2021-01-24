@@ -3,18 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "yarn optimise-images && yarn ts-next dev",
+    "dev": "yarn build-app-image-meta && yarn ts-next dev",
     "local-ts-node": "ts-node -P ./lib/node/tsconfig.json",
     "ts-next": "yarn local-ts-node ./node_modules/next/dist/bin/next",
     "debug-dev": "TS_NODE_PROJECT='./lib/node/tsconfig.json' NODE_OPTIONS='--inspect-brk' node -r ts-node/register ./node_modules/next/dist/bin/next dev",
     "build-static": "yarn ts-next build && yarn export",
     "export": "yarn ts-next export",
-    "build": "yarn optimise-images && yarn ts-next build",
+    "build": "yarn build-app-image-meta && yarn ts-next build",
     "start": "yarn ts-next start",
     "lint": "eslint . --format=codeframe",
     "type-check": "tsc --noEmit",
     "migrate": "yarn local-ts-node ./lib/node/pre-build/migration/migrate-content.ts",
-    "optimise-images": "NODE_OPTIONS='--max-old-space-size=16384' yarn local-ts-node ./lib/node/pre-build/optimise-images.ts"
+    "build-app-image-meta": "NODE_OPTIONS='--max-old-space-size=16384' yarn local-ts-node ./lib/node/pre-build/build-app-image-meta.ts"
   },
   "resolutions": {
     "webpack": "^5.11.1"
@@ -46,7 +46,6 @@
   },
   "devDependencies": {
     "@algolia/client-search": "^4.5.1",
-    "@gumlet/gif-resize": "^1.1.1",
     "@mdx-js/mdx": "^1.6.22",
     "@types/classnames": "^2.2.10",
     "@types/cli-progress": "^3.8.0",
@@ -83,18 +82,15 @@
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "github-slugger": "^1.3.0",
-    "imagemin": "^7.0.1",
-    "imagemin-gifsicle": "^7.0.0",
-    "imagemin-mozjpeg": "^9.0.0",
-    "imagemin-pngquant": "^9.0.1",
-    "imagemin-svgo": "^8.0.0",
     "mkdirp": "^1.0.4",
     "prettier": "^2.1.1",
-    "sharp": "^0.27.0",
+    "sharp": "0.26.1",
+    "shorthash2": "^1.0.3",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3",
     "unist-util-is": "^4.0.2",
     "unist-util-visit": "^2.0.3",
+    "uuid": "^8.3.2",
     "winston": "^3.3.3"
   }
 }

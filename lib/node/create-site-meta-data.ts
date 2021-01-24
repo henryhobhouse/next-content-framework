@@ -9,8 +9,8 @@ import initialiseLogger from './logger';
 import syncImagesWithPublic, { ImageData } from './copy-images-to-public';
 import createSitemap from './mdx-meta/create-sitemap';
 import createBreadcrumbs from './mdx-meta/create-breadcrumbs';
+import { currentWorkingDirectory } from './constants';
 
-const currentWorkingDirectory = process.cwd();
 const contentDir = `${currentWorkingDirectory}/content`;
 const contentRoots = ['platform', 'embedded', 'images'] as const;
 
@@ -49,7 +49,8 @@ const createSiteMetaData = async () => {
     );
   };
 
-  await Promise.allSettled(
+  // use all settled so it will still continue even if error with a single image
+  await Promise.all(
     contentRoots.map(async (contentRoot) => {
       await createMdxNodeDataModel(
         `${contentDir}/${contentRoot}`,

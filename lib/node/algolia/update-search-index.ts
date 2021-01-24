@@ -25,14 +25,18 @@ const updateAlgoliaArticleIndex = async ({
   chunkSize = 1000,
 }: UpdateIndexOptions) => {
   if (!isProduction || !allNodesData.length) return;
+
   if (!algoliaApiKey || !algoliaAppId) {
     throw new Error(
       '"ALGOLIA_APP_ID" or "ALGOLIA_API_KEY" not added to env variables',
     );
   }
+
   logger.info(`Updating ${indexQueries.length} Algolia Indexes`);
+
   const algoliaClient = algoliasearch(algoliaAppId, algoliaApiKey);
-  await Promise.allSettled(
+
+  await Promise.all(
     indexQueries.map(async (indexQuery) => {
       const { indexName, transformer, matchFields = [] } = indexQuery;
 
@@ -75,6 +79,7 @@ const updateAlgoliaArticleIndex = async ({
         const algoliaNodes = await fetchAlgoliaNodes(indexToUse, matchFields);
 
         const nbMatchedRecords = Object.keys(algoliaNodes).length;
+
         logger.info(`Found ${nbMatchedRecords} existing records`);
 
         if (nbMatchedRecords) {
@@ -131,7 +136,7 @@ const updateAlgoliaArticleIndex = async ({
           await indexToUse.saveObjects(chunked);
         });
 
-        await Promise.allSettled(chunkJobs);
+        await Promise.all(chunkJobs);
       } else {
         logger.info('No changes; skipping');
       }

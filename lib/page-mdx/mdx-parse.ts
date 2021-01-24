@@ -13,9 +13,6 @@ export const contentRootPath = `${process.cwd()}/content`;
 export const connectorDocsRelativePath = '/connectors/docs';
 export const rootImageDirectory = 'images';
 export const nextPublicDirectory = 'public';
-export const referenceImageSize = 2000; // px
-export const articleImageSize = 600; // px
-export const lazyLoadImageSize = 20; // px
 export const connectorSectionRelativePath = 'platform/50.connectors/1000.docs';
 
 interface ReplaceLinkInContentProps {

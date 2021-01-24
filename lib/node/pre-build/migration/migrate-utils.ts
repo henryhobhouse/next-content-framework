@@ -11,6 +11,7 @@ const isUrlRegex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+
 const isGifPlayerRegex = /(<GifPlayer)(.*)(\/>)/g;
 const isInlineStyleRegex = /(?<=style=)".*"/g;
 const redirectLinkRegex = /redirect_from:(\s*-\s*[/\-\w]*\n)*(?=---|\w{2,})/im;
+const currentWorkingDirectory = process.cwd();
 
 export const getLinksWithPaths = (markdownText: string) => {
   const links: string[] = [];
@@ -200,6 +201,9 @@ export const setNextRedirects = async (redirectLinks: Redirect[]) => {
       null,
       2,
     )};`;
-    await promises.writeFile(`${process.cwd()}/redirects.js`, linksModule);
+    await promises.writeFile(
+      `${currentWorkingDirectory}/redirects.js`,
+      linksModule,
+    );
   }
 };

@@ -16,6 +16,7 @@ import { contentRootPath } from '../../../page-mdx/mdx-parse';
 const isPostFileRegex = /docs\.(mdx|md)$/gi;
 const orderPartRegex = /\/([0-9+]+)\./g;
 const pathRegex = /([^/]*)(.*)\/docs\.(mdx|md)$/gi;
+const currentWorkingDirectory = process.cwd();
 
 const redirectLinks: Redirect[] = [];
 
@@ -59,7 +60,7 @@ const migrateContent = async (
 
     if (redirectLink) {
       const relativePath = markdownFileLocation.replace(
-        `${process.cwd()}/content/`,
+        `${currentWorkingDirectory}/content/`,
         '',
       );
       pathRegex.lastIndex = 0;
@@ -84,7 +85,7 @@ const migrateContent = async (
       }
     }
   }
-  await Promise.allSettled(
+  await Promise.all(
     dirents.map(async (dirent) => {
       const directPath = resolve(dir, dirent.name);
       const isDirectory = dirent.isDirectory();

@@ -121,11 +121,13 @@ export const getFilteredNodes = (
   if (!indexQuery.filters) return allNodesData;
 
   const allFilteredNodes: NodeData[] = [];
+
   indexQuery.filters.forEach((filter) => {
     const filteredNodes = allNodesData.filter(
       (nodeData) => nodeData[filter.key] === filter.value,
     );
     allFilteredNodes.push(...filteredNodes);
   });
+
   return allFilteredNodes;
 };

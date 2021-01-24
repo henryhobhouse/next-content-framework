@@ -1,4 +1,4 @@
-import uuidV5 from 'uuid/v5';
+import { v5 as uuidV5 } from 'uuid';
 
 const seedConstant = `638f7a53-c567-4eca-8fc1-b23efb1cfb2b`;
 

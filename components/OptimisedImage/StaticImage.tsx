@@ -3,7 +3,9 @@ import Image from 'next/image';
 import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { lazyLoadImageSize, rootImageDirectory } from 'lib/page-mdx/mdx-parse';
+import imageProcessingConfig from '../../lib/node/pre-build/image-manipulation/image-processing-config';
+
+import { rootImageDirectory } from 'lib/page-mdx/mdx-parse';
 
 const BlurredImage = styled.img<{ $imageLoaded: boolean; $maxWidth: number }>`
   transition: opacity 500ms ease;
@@ -74,7 +76,7 @@ const StaticImage: FC<StaticImageProps> = ({ imgUrl, alt, width, height }) => {
   return (
     <ImageContainer>
       <BlurredImage
-        src={`/documentation/${lazyLoadImageSize}/${imgUrl}`}
+        src={`/documentation/${imageProcessingConfig.thumbnailImageWidth}/${imgUrl}`}
         $imageLoaded={!imageLoading}
         aria-hidden="true"
         $maxWidth={imageWidth}

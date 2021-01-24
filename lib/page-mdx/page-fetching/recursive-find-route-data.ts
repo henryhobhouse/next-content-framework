@@ -114,7 +114,7 @@ const recursiveFindRouteData = async ({
         }
       }
     }
-    await Promise.allSettled(
+    await Promise.all(
       dirents.map(async (dirent) => {
         const isCompleted =
           (currentDepth > navigationArticleDepth && !!pageContent) ||

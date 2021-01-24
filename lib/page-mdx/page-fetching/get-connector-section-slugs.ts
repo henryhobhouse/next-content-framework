@@ -31,7 +31,7 @@ const getConnectorSectionSlugs = async (
   const docDirectories = dirents.filter((dirent) => dirent.isDirectory());
 
   if (docDirectories.length) {
-    await Promise.allSettled(
+    await Promise.all(
       docDirectories.map(async (docDirectory) => {
         const childDirectoryPath = resolve(
           connectorSectionsPath,
