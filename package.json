@@ -13,8 +13,8 @@
     "start": "yarn ts-next start",
     "lint": "eslint . --format=codeframe",
     "type-check": "tsc --noEmit",
-    "migrate": "yarn local-ts-node ./lib/node/pre-build/migration/migrate-content.ts",
-    "build-app-image-meta": "NODE_OPTIONS='--max-old-space-size=16384' yarn local-ts-node ./lib/node/pre-build/build-app-image-meta.ts"
+    "migrate": "yarn local-ts-node ./lib/node/scripts/migration/migrate-content.ts",
+    "build-app-image-meta": "NODE_OPTIONS='--max-old-space-size=16384' yarn local-ts-node ./lib/node/scripts/build-app-image-meta.ts"
   },
   "resolutions": {
     "webpack": "^5.11.1"

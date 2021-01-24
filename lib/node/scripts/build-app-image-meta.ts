@@ -17,7 +17,7 @@ const imagesSuccessfullyProcessed: string[] = [];
 export const progressBar = new cliProgress.SingleBar({
   format: `|${colors.magenta(
     '{bar}',
-  )}| {percentage}% || {value}/{total} Images to be processed || ETA: {eta}s`,
+  )}| {percentage}% || {value}/{total} Images available to be processed || ETA: {eta}s`,
   barCompleteChar: '\u2588',
   barIncompleteChar: '\u2591',
   hideCursor: true,

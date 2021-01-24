@@ -1,4 +1,4 @@
-import { imageFormat } from '../pre-build/image-manipulation/image-processing-config';
+import { imageFormat } from '../scripts/image-manipulation/image-processing-config';
 
 export type ImageFileType = keyof typeof imageFormat;
 export interface ImageMeta {

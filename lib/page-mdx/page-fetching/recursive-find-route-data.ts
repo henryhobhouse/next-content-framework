@@ -87,14 +87,14 @@ const recursiveFindRouteData = async ({
 
           const { data, content } = matter(markdownData);
 
-          const relativePathToParentDirectory = relativePath.replace(
+          const pathToParentDirectory = markdownPath.replace(
             /\/docs.(mdx|md)$/,
             '',
           );
 
           const transformedContent = await addRelativeImageLinks(
             content,
-            relativePathToParentDirectory,
+            pathToParentDirectory,
             promises,
           );
 

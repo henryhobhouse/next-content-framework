@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 import imageSizeMetaData from '../image-meta-data.json';
 
 import {
@@ -8,7 +10,8 @@ import {
   nextPublicDirectory,
 } from './mdx-parse';
 
-import { numberPrefixRegex } from 'lib/node/utils';
+import { getProcessedImageFileName } from 'lib/node/scripts/image-manipulation/utils';
+import { SavedImageAttributes } from 'lib/node/types/image-processing';
 import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 const checkFileExists = async (filePath: string, promises: FsPromises) => {
@@ -32,7 +35,7 @@ enum LinkType {
 }
 
 export interface ImageLinkMeta {
-  imageUrl: string;
+  imageSrc: string;
   type: LinkType;
   imageMdString: string;
   altTitle?: string;
@@ -64,7 +67,7 @@ const addRelativeImageLinks = async (
       // remove the ![ prefix and ]( postfix from string to get alt title
       const altTitle = result[1].replace(/(^!\[)|(]\($)/gi, '');
       imageLinksToUpdate.push({
-        imageUrl: result[2],
+        imageSrc: result[2],
         type: LinkType.md,
         imageMdString: result[0],
         altTitle,
@@ -78,7 +81,7 @@ const addRelativeImageLinks = async (
       const altTitleArray = result[0].match(/(?<=alt=")\S+(?=")/gi);
       const altTitle = altTitleArray ? altTitleArray[0] : undefined;
       imageLinksToUpdate.push({
-        imageUrl: result[2],
+        imageSrc: result[2],
         type: LinkType.html,
         imageMdString: result[0],
         altTitle,
@@ -94,28 +97,27 @@ const addRelativeImageLinks = async (
   await Promise.allSettled(
     nonDupedImageLinks.map(async (imageLinkMeta) => {
       // remove any path prefixes (./ or /) from beginning of link
-      const nonRelativeLink = imageLinkMeta.imageUrl.replace(/^(.\/|\/)/, '');
+      const nonRelativeLink = imageLinkMeta.imageSrc.replace(/^(.\/|\/)/, '');
       const imageLinkDirectories = nonRelativeLink.split('/');
       const fileName = imageLinkDirectories[
         imageLinkDirectories.length - 1
       ].toLowerCase();
-      const relativePathSegments = parentDirectoryRelativePath.split('/');
-      const imageLinkSegments = nonRelativeLink.split('/');
-      const nonRelativeLinkSegments = imageLinkSegments.filter(
-        (dir) => dir !== '..',
-      );
+      const filePath = resolve(parentDirectoryRelativePath, fileName);
 
-      // get parent from link structure (when relative link) otherwise directory of docs file
-      const parentDirectory =
-        imageLinkSegments.length > 1
-          ? nonRelativeLinkSegments[nonRelativeLinkSegments.length - 2]
-          : relativePathSegments[relativePathSegments.length - 1];
-      const parentSlug = parentDirectory
-        ?.replace(numberPrefixRegex, '')
-        .toLowerCase();
-      const revisedImageName = `${parentSlug}-${fileName}` as keyof typeof imageSizeMetaData;
-      const imageWidth = imageSizeMetaData[revisedImageName]?.width;
-      const imageHeight = imageSizeMetaData[revisedImageName]?.height;
+      const processedImageName = getProcessedImageFileName(filePath);
+      const imageHash = (imageSizeMetaData as SavedImageAttributes)[
+        processedImageName
+      ]?.imageHash;
+
+      const revisedImageName = `${imageHash}${processedImageName}` as keyof typeof imageSizeMetaData;
+
+      const imageWidth = (imageSizeMetaData as SavedImageAttributes)[
+        processedImageName
+      ]?.width;
+
+      const imageHeight = (imageSizeMetaData as SavedImageAttributes)[
+        processedImageName
+      ]?.height;
 
       const isValidLink = await checkValidLink(revisedImageName, promises);
 
@@ -131,12 +133,12 @@ const addRelativeImageLinks = async (
 
       if (!isValidLink) {
         // eslint-disable-next-line no-undef
-        logger.warn(`${imageLinkMeta.imageUrl} does not exist. See error log`);
+        logger.warn(`${imageLinkMeta.imageSrc} does not exist. See error log`);
         // eslint-disable-next-line no-undef
         logger.log({
           noConsole: true,
           level: 'error',
-          message: `WARNING: The image "${imageLinkMeta.imageUrl}" referenced in "${parentDirectoryRelativePath}/docs.mdx|md" does not exist.`,
+          message: `WARNING: The image "${imageLinkMeta.imageSrc}" referenced in "${parentDirectoryRelativePath}/docs.mdx|md" does not exist.`,
         });
         const links = enhancedContent.match(
           imageLinkMeta.type === LinkType.md
@@ -144,7 +146,7 @@ const addRelativeImageLinks = async (
             : isHtmlImageRegex,
         );
         const badLink = links?.find((link) =>
-          link.includes(imageLinkMeta.imageUrl),
+          link.includes(imageLinkMeta.imageSrc),
         );
         if (badLink) {
           // escape all special characters from link and make global in case multiple instances

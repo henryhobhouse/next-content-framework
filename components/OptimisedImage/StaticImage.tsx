@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import imageProcessingConfig from '../../lib/node/pre-build/image-manipulation/image-processing-config';
+import imageProcessingConfig from '../../lib/node/scripts/image-manipulation/image-processing-config';
 
 import { rootImageDirectory } from 'lib/page-mdx/mdx-parse';
 

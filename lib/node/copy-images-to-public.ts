@@ -1,7 +1,7 @@
 import { promises, existsSync } from 'fs';
 import mkdirp from 'mkdirp';
 import { rootImageDirectory, nextPublicDirectory } from '../page-mdx/mdx-parse';
-import { getProcessedImageFileName } from './pre-build/image-manipulation/utils';
+import { getProcessedImageFileName } from './scripts/image-manipulation/utils';
 import imageMetaData from '../image-meta-data.json';
 import { SavedImageAttributes } from './types/image-processing';
 import { currentWorkingDirectory } from './constants';
@@ -27,7 +27,7 @@ const syncImagesWithPublic = async (imagesMetaData: ImageData[]) => {
         processedImageName as keyof typeof imageMetaData
       ]?.imageHash;
 
-      const destinationPath = `${currentWorkingDirectory}/${nextPublicDirectory}/${rootImageDirectory}/${imageHash}.${processedImageName}`;
+      const destinationPath = `${currentWorkingDirectory}/${nextPublicDirectory}/${rootImageDirectory}/${imageHash}${processedImageName}`;
 
       if (!existsSync(destinationPath)) {
         await promises.copyFile(imageData.path, destinationPath);

@@ -9,9 +9,7 @@ const { thumbnailImageWidth } = imageProcessingConfig;
 
 const getImageNameFromPath = (filePath: string) => {
   const imagePathDirectories = filePath.split('/');
-  const imageName = imagePathDirectories[
-    imagePathDirectories.length - 1
-  ].toLowerCase();
+  const imageName = imagePathDirectories[imagePathDirectories.length - 1];
 
   return imageName;
 };
@@ -37,9 +35,7 @@ export const getWriteFilePath = (
   width: number,
   imageHash: string,
 ) => {
-  return `${currentWorkingDirectory}/${nextPublicDirectory}/${width}/${imageHash}${shortHash(
-    imageMeta.filePath,
-  )}.${imageMeta.name.toLowerCase()}`;
+  return `${currentWorkingDirectory}/${nextPublicDirectory}/${width}/${imageHash}${getProcessedImageFileName(imageMeta.filePath)}`;
 };
 
 export const checkImageDirectories = () => {
@@ -53,8 +49,9 @@ export const checkImageDirectories = () => {
 export const numberPrefixRegex = /^([0-9+]+)\./i;
 
 export const getProcessedImageFileName = (imagePath: string) => {
-  const pathHash = shortHash(imagePath);
-  const imageName = getImageNameFromPath(imagePath);
+  const lowerCasePath = imagePath.toLowerCase();
+  const pathHash = shortHash(lowerCasePath);
+  const imageName = getImageNameFromPath(lowerCasePath);
 
-  return `${pathHash}.${imageName}`;
+  return `${pathHash}-${imageName}`;
 };
