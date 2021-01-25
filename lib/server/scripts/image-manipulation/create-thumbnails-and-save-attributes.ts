@@ -1,6 +1,6 @@
 import { SingleBar } from 'cli-progress';
 import sharp from 'sharp';
-import extractHashAndSaveAttributes from './extract-image-attributes';
+import getHashAndUpdateCache from './get-hash-and-update-cache';
 import { checkImageDirectories } from './utils';
 import { ImageMeta } from '../../types/image-processing';
 import writeFromPipeline from './write-to-system';
@@ -25,10 +25,7 @@ const createThumbnailsAndSaveAttributes = async (
         // get image size metadata and save to file system for use in build. Used to prevent layout shift.
         const imageMetaData = await pipeline.metadata();
 
-        const imageHash = extractHashAndSaveAttributes(
-          imageMetaData,
-          imageMeta,
-        );
+        const imageHash = getHashAndUpdateCache(imageMetaData, imageMeta);
 
         if (
           imageProcessingConfig.allowedFormatForThumbnails.includes(

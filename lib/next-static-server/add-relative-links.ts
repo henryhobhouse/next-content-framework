@@ -1,4 +1,7 @@
+import { existsSync } from 'fs';
 import { resolve } from 'path';
+
+import tinyGlob from 'tiny-glob';
 
 import imageSizeMetaData from '../image-meta-data.json';
 
@@ -102,9 +105,21 @@ const addRelativeImageLinks = async (
       const fileName = imageLinkDirectories[
         imageLinkDirectories.length - 1
       ].toLowerCase();
-      const filePath = resolve(parentDirectoryRelativePath, fileName);
+      let filePath = resolve(parentDirectoryRelativePath, fileName);
+
+      if (!existsSync(filePath)) {
+        // if image is not available in current directory then try to find it
+        // (NOTE: as the links are not as per the file path this operation is quite a bit more expensive
+        // than it could be. Consideration to transforming all image links to as per file path (inc ordering)
+        // to improve the speed of load at this step.)
+        const pathNameOptions = await tinyGlob(`**/${fileName}`);
+        if (pathNameOptions && pathNameOptions.length === 1) {
+          filePath = resolve(pathNameOptions[0]);
+        }
+      }
 
       const processedImageName = getProcessedImageFileName(filePath);
+
       const imageHash = (imageSizeMetaData as SavedImageAttributes)[
         processedImageName
       ]?.imageHash;

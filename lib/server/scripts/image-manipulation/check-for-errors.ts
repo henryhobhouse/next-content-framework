@@ -13,8 +13,6 @@ const checkForErrors = (errorLogFileName: string) => {
   createReadStream(`${currentWorkingDirectory}/${errorLogFileName}`)
     .on('data', (chunk) => {
       for (let i = 0; i < chunk.length; i += 1) {
-        // accounts for first line
-        if (i === 0 && chunk.length) fileLineCount += 1;
         // accounts for second and beyond lines
         if (chunk[i] === 10) fileLineCount += 1;
       }

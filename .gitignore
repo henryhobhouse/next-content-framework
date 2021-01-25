@@ -38,11 +38,11 @@ yarn-error.log*
 .env
 .vscode
 
-lib/node/*-nav-config.json
-lib/node/bread-crumbs.json
+lib/server/*-nav-config.json
+lib/server/bread-crumbs.json
 
 # local image processing cache
-.local-processed-cache.json
+.image-processing-cache/
 
 public/sitemap.xml
 public/images

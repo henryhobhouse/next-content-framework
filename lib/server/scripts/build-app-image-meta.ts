@@ -45,7 +45,7 @@ export const progressBar = new cliProgress.SingleBar({
     });
 
     // As optimised images are essentially cached we need to sync both additions and removals.
-    await checkForDeletedImages(allNonModifiedImages);
+    checkForDeletedImages(allNonModifiedImages);
 
     if (totalImagesToProcess === 0) {
       logger.info('No new images to process.');

@@ -1,8 +1,13 @@
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import mkdirp from 'mkdirp';
 import shortHash from 'shorthash2';
 import crypto from 'crypto';
-import { currentWorkingDirectory, nextPublicDirectory } from '../../constants';
+import {
+  currentWorkingDirectory,
+  localImageCachePath,
+  localModifiedFilePath,
+  nextPublicDirectory,
+} from '../../constants';
 import { ImageMeta } from '../../types/image-processing';
 import imageProcessingConfig from './image-processing-config';
 
@@ -51,6 +56,12 @@ export const getWriteFilePath = (
   return `${currentWorkingDirectory}/${nextPublicDirectory}/${width}/${imageHash}${getProcessedImageFileName(
     imageMeta.filePath,
   )}`;
+};
+
+export const ensureLocalModifiedCacheFileExists = () => {
+  if (!existsSync(localImageCachePath)) mkdirSync(localImageCachePath);
+  if (!existsSync(localModifiedFilePath))
+    writeFileSync(localModifiedFilePath, '{}');
 };
 
 export const checkImageDirectories = () => {

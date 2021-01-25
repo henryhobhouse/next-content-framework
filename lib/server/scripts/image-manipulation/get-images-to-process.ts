@@ -1,4 +1,4 @@
-import { promises, existsSync, writeFileSync } from 'fs';
+import { promises, readFileSync, statSync } from 'fs';
 import { resolve } from 'path';
 import {
   ImageMeta,
@@ -6,14 +6,17 @@ import {
   SavedImageAttributes,
 } from '../../types/image-processing';
 
-import { getFileShortHash, getProcessedImageFileName } from './utils';
+import {
+  ensureLocalModifiedCacheFileExists,
+  getFileShortHash,
+  getProcessedImageFileName,
+} from './utils';
 
 import preProcessedImageMetas from '../../../image-meta-data.json';
 import { imageFormat } from './image-processing-config';
-import { currentWorkingDirectory } from '../../constants';
+import { localModifiedFilePath } from '../../constants';
 
 const imageFileTypeRegex = /(?<=\.)(gif|png|svg|jpe?g)$/i;
-const localCachePath = `${currentWorkingDirectory}/.local-processed-cache.json`;
 
 interface GetImagesToProcessProps {
   directoryPath: string;
@@ -31,7 +34,12 @@ const getImagesToProcess = async ({
   const allNonModifiedImages: string[] = [];
 
   // if no local cache exists then create the file with empty json in
-  if (!existsSync(localCachePath)) writeFileSync(localCachePath, '{}');
+  ensureLocalModifiedCacheFileExists();
+
+  const localImageModifiedCacheString = readFileSync(
+    localModifiedFilePath,
+  ).toString();
+  const localImageModifiedCache = JSON.parse(localImageModifiedCacheString);
 
   const searchContentDirectory = async (path: string) => {
     const dirents = await promises.readdir(path, {
@@ -62,20 +70,33 @@ const getImagesToProcess = async ({
             imageFileLocation,
           );
 
+          const imageLastModifiedTime = statSync(
+            imageFileLocation,
+          ).mtime.getTime();
+          const imageHasChangedOnFileSystem =
+            imageLastModifiedTime !==
+            localImageModifiedCache[processedImageName];
+
           const preProcessedImageHash = (preProcessedImageMetas as SavedImageAttributes)[
             processedImageName as keyof typeof preProcessedImageMetas
           ]?.imageHash;
 
           // only if image has previously been processed do we need to check if image has changed
           if (preProcessedImageHash) {
-            const currentFileHash = getFileShortHash(imageFileLocation);
+            let imageDoesNotNeedUpdating = !imageHasChangedOnFileSystem;
 
-            const imageNotModifiedSinceLastProcessed =
-              preProcessedImageHash === currentFileHash;
+            // if image has changed on local file system or is in CI pipeline then do the more expensive
+            // check of getting content hash of image to compare against pre processed value
+            if (imageHasChangedOnFileSystem || process.env.CI) {
+              const currentFileHash = getFileShortHash(imageFileLocation);
+
+              imageDoesNotNeedUpdating =
+                preProcessedImageHash === currentFileHash;
+            }
 
             // if image has been modified since last process then don't add to all images as will then be flagged
             // to be deleted before being re-processed. This cannot happen on the build pipeline
-            if (imageNotModifiedSinceLastProcessed || process.env.CI) {
+            if (imageDoesNotNeedUpdating) {
               allNonModifiedImages.push(processedImageName);
               return;
             }

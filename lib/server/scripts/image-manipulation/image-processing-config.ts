@@ -3,7 +3,6 @@ export const imageFormat = Object.freeze({
   gif: 'gif',
   svg: 'svg',
   jpeg: 'jpeg',
-  webp: 'webp',
 });
 
 const imageConfig = {
