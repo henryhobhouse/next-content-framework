@@ -1,8 +1,8 @@
-import { Settings, SearchOptions } from '@algolia/client-search';
+import { Settings } from '@algolia/client-search';
 import { SearchIndex, SearchClient } from 'algoliasearch';
 
 import { NodeData } from '../mdx-meta/create-mdx-node-data-model';
-import { SearchHit, IndexQuery } from '../types/algolia';
+import { IndexQuery } from '../types/algolia';
 
 /**
  * Does an Algolia index exist already
@@ -84,34 +84,6 @@ export const getSettingsToApply = async ({
   };
 
   return requestedSettings;
-};
-
-/**
- * Fetches all records for the current index from Algolia
- *
- * @param {AlgoliaIndex} index eg. client.initIndex('your_index_name');
- * @param {Array<String>} attributesToRetrieve eg. ['modified', 'slug']
- */
-export const fetchAlgoliaNodes = async <T extends SearchHit>(
-  index: SearchIndex,
-  attributesToRetrieve: SearchOptions['attributesToRetrieve'] = ['modified'],
-) => {
-  const matchedHits: { [keyof: string]: T } = {};
-  await index
-    .browseObjects<T>({
-      attributesToRetrieve,
-      batch: (hits) => {
-        if (Array.isArray(hits)) {
-          hits.forEach((hit) => {
-            matchedHits[hit.objectID] = hit;
-          });
-        }
-      },
-    })
-    .catch((error) => {
-      throw new Error(`Problem getting index objects: ${error.message}`);
-    });
-  return matchedHits;
 };
 
 export const getFilteredNodes = (

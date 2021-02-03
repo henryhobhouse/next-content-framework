@@ -7,7 +7,6 @@ import {
 } from '../types/algolia';
 
 import {
-  fetchAlgoliaNodes,
   getFilteredNodes,
   getIndexToUse,
   getSettingsToApply,
@@ -38,7 +37,7 @@ const updateAlgoliaArticleIndex = async ({
 
   await Promise.all(
     indexQueries.map(async (indexQuery) => {
-      const { indexName, transformer, matchFields = [] } = indexQuery;
+      const { indexName, transformer } = indexQuery;
 
       if (!indexName) {
         logger.error('algolia index name is missing');
@@ -68,66 +67,8 @@ const updateAlgoliaArticleIndex = async ({
         `Index query for ${indexQuery.indexName} has resulted in ${nodeObjects.length} results`,
       );
 
-      let hasChanged = nodeObjects;
-
-      // this is disabled by default. To enable we need to do two things. First add file last updated time to the metadata stored
-      // in the index and then compare against the new to decided if to update a file after change (it currently won't). Secondly we
-      // need to remove indexes that are no longer valid (source has been removed) as this will currently not do it.
-      if (enablePartialUpdates) {
-        logger.info(`Starting Partial updates...`);
-
-        const algoliaNodes = await fetchAlgoliaNodes(indexToUse, matchFields);
-
-        const nbMatchedRecords = Object.keys(algoliaNodes).length;
-
-        logger.info(`Found ${nbMatchedRecords} existing records`);
-
-        if (nbMatchedRecords) {
-          hasChanged = nodeObjects.filter((currentNode) => {
-            if (
-              matchFields.length &&
-              matchFields.every(
-                (field) => Boolean(currentNode[field]) === false,
-              )
-            ) {
-              logger.error(
-                `when enablePartialUpdates is true, the objects must have at least one of the matched fields.\n` +
-                  `Current object:\n${JSON.stringify(currentNode, null, 2)}\n` +
-                  `Expected one of these fields:\n${matchFields.join('\n')}`,
-              );
-            }
-
-            const nodeId = currentNode.objectID;
-            const algoliaNode = algoliaNodes[nodeId];
-
-            /* The object exists so we don't need to remove it from Algolia */
-            delete algoliaNodes[nodeId];
-            delete toRemove[nodeId];
-
-            if (!algoliaNode) return true;
-
-            return matchFields.some(
-              (field) => algoliaNode[field] !== currentNode[field],
-            );
-          });
-
-          Object.keys(algoliaNodes).forEach((objectID) => {
-            // if the object has one of the matchFields, it should be removed,
-            // but objects without matchFields are considered "not controlled"
-            // and stay in the index
-            if (matchFields.some((field) => algoliaNodes[objectID][field])) {
-              toRemove[objectID] = true;
-            }
-          });
-        }
-
-        logger.info(
-          `Partial updates – [insert/update: ${hasChanged.length}, total: ${nodeObjects.length}]`,
-        );
-      }
-
-      if (hasChanged.length) {
-        const chunks = chunk(hasChanged, chunkSize);
+      if (nodeObjects.length) {
+        const chunks = chunk(nodeObjects, chunkSize);
 
         logger.info(`Splitting in ${chunks.length} jobs`);
 

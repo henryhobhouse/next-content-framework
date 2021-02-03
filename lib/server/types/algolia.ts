@@ -1,4 +1,4 @@
-import { SearchOptions, Settings } from '@algolia/client-search';
+import { Settings } from '@algolia/client-search';
 import { NodeData } from '../mdx-meta/create-mdx-node-data-model';
 
 export type SearchHit = { [key: string]: string };
@@ -17,7 +17,6 @@ export interface IndexQuery {
   filters?: DateFilter[];
   indexName?: string;
   settings?: Settings;
-  matchFields?: SearchOptions['attributesToRetrieve'];
 }
 
 export interface UpdateIndexOptions {
