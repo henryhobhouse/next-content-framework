@@ -1,6 +1,3 @@
-import { promises } from 'fs';
-import { resolve } from 'path';
-
 import hydrate from 'next-mdx-remote/hydrate';
 import React, { FC } from 'react';
 import styled from 'styled-components';
@@ -19,7 +16,6 @@ import {
 import navigationStructure from 'lib/server/embedded-nav-config.json';
 
 const sectionContentDir = 'embedded';
-export type FsPromises = typeof promises;
 
 const TableOfContentWrapper = styled.div`
   width: 200px;
@@ -71,7 +67,7 @@ const EmbeddedPosts: FC<DocumentPostProps> = ({
  * Create all the slugs (paths) for this page
  */
 export const getStaticPaths = async () => {
-  const paths = await getArticleSlugs(sectionContentDir, promises, resolve);
+  const paths = getArticleSlugs(sectionContentDir);
 
   return {
     paths,
@@ -90,8 +86,6 @@ export const getStaticProps = async ({
   const { pageContent, frontMatterData, currentPageTocData } = await getArticle(
     articleSlug,
     sectionContentDir,
-    promises,
-    resolve,
   );
 
   return {

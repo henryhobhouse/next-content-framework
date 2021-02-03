@@ -1,3 +1,6 @@
+import { readdirSync, readFileSync } from 'fs';
+import { resolve } from 'path';
+
 import matter from 'gray-matter';
 
 import {
@@ -7,8 +10,7 @@ import {
   orderRegex,
   pathRegex,
 } from 'lib/next-static-server/mdx-parse';
-import { Resolve, ConnectorMetaData } from 'lib/next-static-server/types';
-import { FsPromises } from 'pages/embedded/[...articleSlug]';
+import { ConnectorMetaData } from 'lib/next-static-server/types';
 
 /**
  * Gets connector section connectors as part of the static pre-render (static compilation by webpack) stage of the build (https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation)
@@ -18,8 +20,6 @@ import { FsPromises } from 'pages/embedded/[...articleSlug]';
  */
 const getConnectorSectionConnectors = async (
   currentConnectorSection: string,
-  promises: FsPromises,
-  resolve: Resolve,
 ): Promise<{
   connectors: ConnectorMetaData[];
 }> => {
@@ -30,7 +30,7 @@ const getConnectorSectionConnectors = async (
   const connectorSectionSlug = `/connectors/${currentConnectorSection}`;
 
   const parse = async (directory: string, currentDepth: number) => {
-    const dirents = await await promises.readdir(directory, {
+    const dirents = readdirSync(directory, {
       withFileTypes: true,
     });
 
@@ -55,7 +55,7 @@ const getConnectorSectionConnectors = async (
         const slug = localPath.replace('/docs', '');
 
         if (slug.startsWith(connectorSectionSlug) && currentDepth >= 2) {
-          const markdownData = await promises.readFile(markdownPath, 'utf8');
+          const markdownData = readFileSync(markdownPath, 'utf8');
           const { data } = matter(markdownData);
           connectors.push({
             frontmatter: data,

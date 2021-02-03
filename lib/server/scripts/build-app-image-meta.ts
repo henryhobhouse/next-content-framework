@@ -40,7 +40,7 @@ export const progressBar = new cliProgress.SingleBar({
       imagesPathsToProcess,
       totalImagesToProcess,
       allNonModifiedImages,
-    } = await getImagesToProcess({
+    } = getImagesToProcess({
       directoryPath: contentRootPath,
     });
 

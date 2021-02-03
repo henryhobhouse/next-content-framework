@@ -15,21 +15,12 @@ import {
 
 import { getProcessedImageFileName } from 'lib/server/scripts/image-manipulation/utils';
 import { SavedImageAttributes } from 'lib/server/types/image-processing';
-import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
-const checkFileExists = async (filePath: string, promises: FsPromises) => {
-  try {
-    await promises.access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-};
+const checkFileExists = (filePath: string) => existsSync(filePath);
 
-const checkValidLink = async (imageLink: string, promises: FsPromises) =>
+const checkValidLink = (imageLink: string) =>
   checkFileExists(
     `${process.cwd()}/${nextPublicDirectory}/${rootImageDirectory}/${imageLink}`,
-    promises,
   );
 
 enum LinkType {
@@ -52,7 +43,6 @@ export interface ImageLinkMeta {
 const addRelativeImageLinks = async (
   mdxContent: string,
   parentDirectoryRelativePath: string,
-  promises: FsPromises,
 ) => {
   const imageLinksToUpdate: ImageLinkMeta[] = [];
   let result: RegExpExecArray | null;
@@ -113,7 +103,7 @@ const addRelativeImageLinks = async (
         // than it could be. Consideration to transforming all image links to as per file path (inc ordering)
         // to improve the speed of load at this step.)
         const pathNameOptions = await tinyGlob(`**/${fileName}`);
-        if (pathNameOptions && pathNameOptions.length === 1) {
+        if (pathNameOptions && pathNameOptions.length > 0) {
           filePath = resolve(pathNameOptions[0]);
         }
       }
@@ -134,7 +124,7 @@ const addRelativeImageLinks = async (
         processedImageName
       ]?.height;
 
-      const isValidLink = await checkValidLink(revisedImageName, promises);
+      const isValidLink = checkValidLink(revisedImageName);
 
       if (isValidLink) {
         enhancedContent = replaceLinkInContent({

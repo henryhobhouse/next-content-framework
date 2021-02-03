@@ -1,6 +1,3 @@
-import { promises } from 'fs';
-import { resolve } from 'path';
-
 import hydrate from 'next-mdx-remote/hydrate';
 import React, { FC } from 'react';
 
@@ -77,7 +74,7 @@ const ConnectorSection: FC<ConnectorSectionProps> = ({
  * Create all the slugs (paths) for this page
  */
 export const getStaticPaths = async () => {
-  const paths = await getConnectorSectionSlugs(promises, resolve);
+  const paths = getConnectorSectionSlugs();
 
   return {
     paths,
@@ -97,13 +94,9 @@ export const getStaticProps = async ({
     pageContent,
     frontMatterData,
     currentPageTocData,
-  } = await getConnectorSection(connectorSection, promises, resolve);
+  } = await getConnectorSection(connectorSection);
 
-  const { connectors } = await getConnectorSectionConnectors(
-    connectorSection,
-    promises,
-    resolve,
-  );
+  const { connectors } = await getConnectorSectionConnectors(connectorSection);
 
   return {
     props: {

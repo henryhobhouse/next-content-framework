@@ -2,12 +2,10 @@ import recursiveFindRouteData from './recursive-find-route-data';
 
 import { contentRootPath } from 'lib/next-static-server/mdx-parse';
 import {
-  Resolve,
   MdxRenderedToString,
   TableOfContents,
 } from 'lib/next-static-server/types';
 import initialiseLogger from 'lib/server/logger';
-import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 /**
  * Get article contents as part of the static pre-render (static compilation by webpack) stage of the build (https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation)
@@ -18,8 +16,6 @@ import { FsPromises } from 'pages/embedded/[...articleSlug]';
 const getArticle = async (
   currentSlugSections: string[],
   sectionContentDir: string,
-  promises: FsPromises,
-  resolve: Resolve,
 ): Promise<{
   pageContent?: MdxRenderedToString;
   frontMatterData?: Record<string, string>;
@@ -44,8 +40,6 @@ const getArticle = async (
     currentPageSlug: articleSlug,
     sectionContentDir,
     maxDepthToTraverse,
-    promises,
-    resolve,
   });
 
   return {

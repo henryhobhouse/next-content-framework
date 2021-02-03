@@ -1,3 +1,6 @@
+import { readdirSync, readFileSync } from 'fs';
+import { resolve } from 'path';
+
 import matter from 'gray-matter';
 import renderToString from 'next-mdx-remote/render-to-string';
 import rehypeAutoLinkHeadings from 'rehype-autolink-headings';
@@ -11,20 +14,17 @@ import {
   orderRegex,
   pathRegex,
 } from '../mdx-parse';
-import { MdxRenderedToString, Resolve, TableOfContents } from '../types';
+import { MdxRenderedToString, TableOfContents } from '../types';
 
 import addRelativeImageLinks from 'lib/next-static-server/add-relative-links';
 import getTableOfContents from 'lib/next-static-server/get-table-of-contents';
 import mdxComponents from 'lib/next-static-server/mdx-components';
-import { FsPromises } from 'pages/embedded/[...articleSlug]';
 
 interface RecursiveParseDirectoriesProps {
   rootDir: string;
   currentPageSlug: string;
   sectionContentDir: string;
   maxDepthToTraverse: number;
-  promises: FsPromises;
-  resolve: Resolve;
 }
 
 /**
@@ -47,8 +47,6 @@ const recursiveFindRouteData = async ({
   currentPageSlug,
   sectionContentDir,
   maxDepthToTraverse,
-  promises,
-  resolve,
 }: RecursiveParseDirectoriesProps) => {
   // This can be removed once the connectors are moved to the content directory root.
   const navigationArticleDepth = 3;
@@ -58,7 +56,7 @@ const recursiveFindRouteData = async ({
   let currentPageTocData: TableOfContents = {};
 
   const recursiveParse = async (directory: string, currentDepth: number) => {
-    const dirents = await await promises.readdir(directory, {
+    const dirents = readdirSync(directory, {
       withFileTypes: true,
     });
 
@@ -83,7 +81,7 @@ const recursiveFindRouteData = async ({
         const slug = `/${sectionContentDir}${localPath}`;
 
         if (slug === currentPageSlug) {
-          const markdownData = await promises.readFile(markdownPath, 'utf8');
+          const markdownData = readFileSync(markdownPath, 'utf8');
 
           const { data, content } = matter(markdownData);
 
@@ -95,7 +93,6 @@ const recursiveFindRouteData = async ({
           const transformedContent = await addRelativeImageLinks(
             content,
             pathToParentDirectory,
-            promises,
           );
 
           frontMatterData = data;

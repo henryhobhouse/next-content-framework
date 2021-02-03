@@ -17,7 +17,7 @@ const createThumbnailsAndSaveAttributes = async (
 ) => {
   checkImageDirectories();
   const { thumbnailImageWidth } = imageProcessingConfig;
-  await Promise.allSettled(
+  await Promise.all(
     imagesPathsToProcess.map(async (imageMeta) => {
       try {
         // initialise sharp with image

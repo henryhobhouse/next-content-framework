@@ -1,14 +1,13 @@
+import { readdirSync } from 'fs';
+import { resolve } from 'path';
+
 import {
   contentRootPath,
   isPostFileRegex,
   orderPartRegex,
   pathRegex,
 } from 'lib/next-static-server/mdx-parse';
-import {
-  Resolve,
-  StaticConnectorPathParams,
-} from 'lib/next-static-server/types';
-import { FsPromises } from 'pages/embedded/[...articleSlug]';
+import { StaticConnectorPathParams } from 'lib/next-static-server/types';
 
 const connectorDirPath = 'platform/50.connectors/1000.docs';
 
@@ -20,15 +19,15 @@ const connectorDirPath = 'platform/50.connectors/1000.docs';
  *
  * Returns an array of all slugs.
  */
-const getConnectorSlugs = async (promises: FsPromises, resolve: Resolve) => {
+const getConnectorSlugs = () => {
   const paths: StaticConnectorPathParams[] = [];
   const platformDocumentsPath = `${contentRootPath}/${connectorDirPath}`;
   // as articles is only 3 layers deep then only retrieve those. (connectors being level 4 and 5 and dealt
   // with in the connectors-list and connectors pages
   const maxDepthToTraverse = 3;
 
-  const parseDirectories = async (directory: string, currentDepth: number) => {
-    const dirents = await promises.readdir(directory, {
+  const parseDirectories = (directory: string, currentDepth: number) => {
+    const dirents = readdirSync(directory, {
       withFileTypes: true,
     });
 
@@ -61,16 +60,14 @@ const getConnectorSlugs = async (promises: FsPromises, resolve: Resolve) => {
         });
       }
     }
-    await Promise.all(
-      dirents.map(async (dirent) => {
-        if (dirent.isDirectory() && currentDepth <= maxDepthToTraverse) {
-          const directoryPath = resolve(directory, dirent.name);
-          await parseDirectories(directoryPath, currentDepth + 1);
-        }
-      }),
-    );
+    dirents.forEach((dirent) => {
+      if (dirent.isDirectory() && currentDepth <= maxDepthToTraverse) {
+        const directoryPath = resolve(directory, dirent.name);
+        parseDirectories(directoryPath, currentDepth + 1);
+      }
+    });
   };
-  await parseDirectories(platformDocumentsPath, 1);
+  parseDirectories(platformDocumentsPath, 1);
   return paths;
 };
 

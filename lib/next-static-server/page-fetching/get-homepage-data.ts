@@ -3,7 +3,7 @@ import algoliaSearch from 'algoliasearch';
 import { AlgoliaConnectorHit } from 'lib/server/algolia/types';
 
 const connectorsIndexName = process.env.ALGOLIA_CONNECTORS_INDEX_NAME;
-const topArticlesIndexName = process.env.ALGOLIA_TOP_ARTICLES_INDEX_NAME;
+const topArticlesIndexName = process.env.ALGOLIA_INDEX_NAME;
 const algoliaAppId = process.env.ALGOLIA_APP_ID;
 const algoliaAppKey = process.env.ALGOLIA_API_KEY;
 
