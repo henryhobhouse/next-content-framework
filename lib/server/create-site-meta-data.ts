@@ -30,7 +30,7 @@ export type ContentRoot = typeof contentRoots[number];
 
 const createSiteMetaData = async () => {
   const allNodesData: NodeData[] = [];
-  await initialiseLogger({ metaData: { script: 'create-site-meta-data' } });
+  initialiseLogger({ metaData: { script: 'create-site-meta-data' } });
 
   const parsedMdxCallback = async (
     contentRootNodesData: NodeData[],

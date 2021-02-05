@@ -26,7 +26,7 @@ const getArticle = async (
   // This can be removed once the connectors are moved to the root of the content directory.
   const maxDepthToTraverse = 4;
 
-  await initialiseLogger({ metaData: { script: 'create-article-page' } });
+  initialiseLogger({ metaData: { script: 'create-article-page' } });
 
   const sectionContentPath = `${contentRootPath}/${sectionContentDir}`;
   const articleSlug = `/${sectionContentDir}/${currentSlugSections.join('/')}`;

@@ -24,7 +24,7 @@ const getConnectorSection = async (
   // with in the connectors-list and connectors pages
   const maxDepthToTraverse = 5;
 
-  await initialiseLogger({
+  initialiseLogger({
     metaData: { script: 'create-connector-list-page' },
   });
 

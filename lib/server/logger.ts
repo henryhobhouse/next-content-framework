@@ -1,5 +1,5 @@
 import winston, { format } from 'winston';
-import { promises, existsSync } from 'fs';
+import { existsSync, unlinkSync } from 'fs';
 
 /**
  * Slight adjustment from default NPM levels (https://github.com/winstonjs/winston#logging-levels)
@@ -43,7 +43,7 @@ interface LoggerProps {
   retainExistingLogs?: boolean;
 }
 
-type InitialiseLogger = (options?: LoggerProps) => Promise<void>;
+type InitialiseLogger = (options?: LoggerProps) => void;
 
 const defaultErrorLogFileName = 'errors.log';
 const stringLineBreakRegex = /(\r\n|\n|\r)/gm;
@@ -55,7 +55,7 @@ const stringLineBreakRegex = /(\r\n|\n|\r)/gm;
  * - errors saved to local file
  * - option to remove (error) log from console output if desired.
  */
-const initialiseLogger: InitialiseLogger = async (options) => {
+const initialiseLogger: InitialiseLogger = (options) => {
   // if there is a custom error log file, delete it, to ensure only new errors are saved.
   const errorLogFilePath = `${process.cwd()}/${options?.errorLogFileName}`;
   if (
@@ -63,7 +63,7 @@ const initialiseLogger: InitialiseLogger = async (options) => {
     !options?.retainExistingLogs &&
     existsSync(errorLogFilePath)
   ) {
-    await promises.unlink(errorLogFilePath);
+    unlinkSync(errorLogFilePath);
   }
 
   // initialise logger and save to global object

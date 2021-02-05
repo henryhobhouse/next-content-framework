@@ -27,7 +27,7 @@ export const progressBar = new cliProgress.SingleBar({
 
 (async () => {
   try {
-    await initialiseLogger({
+    initialiseLogger({
       errorLogFileName,
       retainExistingLogs: true,
       metaData: { script: 'image-optimisation' },

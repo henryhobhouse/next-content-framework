@@ -25,7 +25,7 @@ const getConnector = async (
   const maxDepthToTraverse = 5;
   const documentPathRootSection = 'platform';
 
-  await initialiseLogger({ metaData: { script: 'create-connector-page' } });
+  initialiseLogger({ metaData: { script: 'create-connector-page' } });
 
   const productDocumentsPath = `${contentRootPath}/${documentPathRootSection}`;
   // as connectors slugs are unique in that they don't match the file path we have to artificially revert between the two
