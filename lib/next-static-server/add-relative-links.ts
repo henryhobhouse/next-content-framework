@@ -87,7 +87,7 @@ const addRelativeImageLinks = async (
   );
 
   // iterate through image links to parse relative path
-  await Promise.allSettled(
+  await Promise.all(
     nonDupedImageLinks.map(async (imageLinkMeta) => {
       // remove any path prefixes (./ or /) from beginning of link
       const nonRelativeLink = imageLinkMeta.imageSrc.replace(/^(.\/|\/)/, '');

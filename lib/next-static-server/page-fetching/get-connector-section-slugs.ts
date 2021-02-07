@@ -1,5 +1,4 @@
 import { readdirSync } from 'fs';
-import { resolve } from 'path';
 
 import {
   connectorSectionRelativePath,
@@ -31,10 +30,7 @@ const getConnectorSectionSlugs = () => {
 
   if (docDirectories.length) {
     docDirectories.forEach((docDirectory) => {
-      const childDirectoryPath = resolve(
-        connectorSectionsPath,
-        docDirectory.name,
-      );
+      const childDirectoryPath = `${connectorSectionsPath}/${docDirectory.name}`;
 
       const childDirents = readdirSync(connectorSectionsPath, {
         withFileTypes: true,

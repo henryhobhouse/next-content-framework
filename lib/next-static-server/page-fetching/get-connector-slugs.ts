@@ -1,5 +1,4 @@
 import { readdirSync } from 'fs';
-import { resolve } from 'path';
 
 import {
   contentRootPath,
@@ -37,7 +36,7 @@ const getConnectorSlugs = () => {
     );
 
     if (postFile) {
-      const markdownPath = resolve(directory, postFile.name);
+      const markdownPath = `${directory}/${postFile.name}`;
       const relativePath = markdownPath.replace(`${contentRootPath}/`, '');
 
       // as exec is global we need to reset the index each iteration of the loop
@@ -62,7 +61,7 @@ const getConnectorSlugs = () => {
     }
     dirents.forEach((dirent) => {
       if (dirent.isDirectory() && currentDepth <= maxDepthToTraverse) {
-        const directoryPath = resolve(directory, dirent.name);
+        const directoryPath = `${directory}/${dirent.name}`;
         parseDirectories(directoryPath, currentDepth + 1);
       }
     });

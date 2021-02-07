@@ -1,5 +1,4 @@
 import { readdirSync } from 'fs';
-import { resolve } from 'path';
 
 import {
   connectorDocsRelativePath,
@@ -43,7 +42,7 @@ const getArticleSlugs = (sectionContentDir: string) => {
     );
 
     if (articleFile) {
-      const docsFileAbsolutePath = resolve(directory, articleFile.name);
+      const docsFileAbsolutePath = `${directory}/${articleFile.name}`;
       const docsFileRelativePath = docsFileAbsolutePath.replace(
         `${contentRootPath}/`,
         '',
@@ -86,7 +85,7 @@ const getArticleSlugs = (sectionContentDir: string) => {
     }
     dirents.forEach(async (dirent) => {
       if (dirent.isDirectory() && currentDepth <= maxDepthToTraverse) {
-        const directoryPath = resolve(directory, dirent.name);
+        const directoryPath = `${directory}/${dirent.name}`;
         parseDirectories(directoryPath, currentDepth + 1);
       }
     });
