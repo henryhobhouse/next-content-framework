@@ -1,8 +1,8 @@
 import { ImageLinkMeta } from './add-relative-links';
 
-export const isPostFileRegex = /docs\.(mdx|md)$/gi;
-export const pathRegex = /([^/]*)(.*)\/docs\.(mdx|md)$/gi;
-export const orderRegex = /.*\/([0-9+]+)\.[^/]*\/docs\.(mdx|md)$/gi;
+export const isPostFileRegex = /(docs|section)\.(mdx|md)$/gi;
+export const pathRegex = /([^/]*)(.*)\/(docs|section)\.(mdx|md)$/gi;
+export const orderRegex = /.*\/([0-9+]+)\.[^/]*\/(docs|section)\.(mdx|md)$/gi;
 export const orderPartRegex = /\/([0-9+]+)\./g;
 export const isMdImageRegex = /(!\[.*?\]\()(\S*?)(?=\))\)/g;
 export const isHtmlImageRegex = /(<img .*src=["'])(\S*?)(?=("|'))(.*\/>)/gi;
