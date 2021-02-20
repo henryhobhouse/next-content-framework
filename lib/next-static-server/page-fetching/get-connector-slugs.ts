@@ -1,4 +1,4 @@
-import { readdirSync } from 'fs';
+import { promises } from 'fs';
 
 import {
   contentRootPath,
@@ -18,15 +18,15 @@ const connectorDirPath = 'platform/50.connectors/1000.docs';
  *
  * Returns an array of all slugs.
  */
-const getConnectorSlugs = () => {
+const getConnectorSlugs = async () => {
   const paths: StaticConnectorPathParams[] = [];
   const platformDocumentsPath = `${contentRootPath}/${connectorDirPath}`;
   // as articles is only 3 layers deep then only retrieve those. (connectors being level 4 and 5 and dealt
   // with in the connectors-list and connectors pages
   const maxDepthToTraverse = 3;
 
-  const parseDirectories = (directory: string, currentDepth: number) => {
-    const dirents = readdirSync(directory, {
+  const parseDirectories = async (directory: string, currentDepth: number) => {
+    const dirents = await promises.readdir(directory, {
       withFileTypes: true,
     });
 
@@ -59,14 +59,16 @@ const getConnectorSlugs = () => {
         });
       }
     }
-    dirents.forEach((dirent) => {
-      if (dirent.isDirectory() && currentDepth <= maxDepthToTraverse) {
-        const directoryPath = `${directory}/${dirent.name}`;
-        parseDirectories(directoryPath, currentDepth + 1);
-      }
-    });
+    await Promise.all(
+      dirents.map(async (dirent) => {
+        if (dirent.isDirectory() && currentDepth <= maxDepthToTraverse) {
+          const directoryPath = `${directory}/${dirent.name}`;
+          await parseDirectories(directoryPath, currentDepth + 1);
+        }
+      }),
+    );
   };
-  parseDirectories(platformDocumentsPath, 1);
+  await parseDirectories(platformDocumentsPath, 1);
   return paths;
 };
 

@@ -1,5 +1,5 @@
 import { Metadata } from 'sharp';
-import { existsSync, writeFileSync, readFileSync, statSync } from 'fs';
+import { existsSync, readFileSync, statSync, writeFileSync } from 'fs';
 import { ImageMeta, StoredImageAttributes } from '../../types/image-processing';
 import {
   currentWorkingDirectory,
@@ -36,7 +36,8 @@ const updateLocalImageCache = (imageMeta: ImageMeta) => {
   // if image size file doesn't exist yet create it
   ensureLocalModifiedCacheFileExists();
 
-  const imageLastModifiedLocally = statSync(imageMeta.filePath).mtime.getTime();
+  const imageStats = statSync(imageMeta.filePath);
+  const imageLastModifiedLocally = imageStats.mtime.getTime();
 
   const localImageCacheString = readFileSync(localModifiedFilePath).toString();
 
@@ -53,8 +54,11 @@ const updateLocalImageCache = (imageMeta: ImageMeta) => {
   writeFileSync(localModifiedFilePath, prettifiedLocalImageCacheString);
 };
 
-const getHashAndUpdateCache = (metaData: Metadata, imageMeta: ImageMeta) => {
-  const imageHash = getFileShortHash(imageMeta.filePath);
+const getHashAndUpdateCache = async (
+  metaData: Metadata,
+  imageMeta: ImageMeta,
+) => {
+  const imageHash = await getFileShortHash(imageMeta.filePath);
 
   const imageAttributes: StoredImageAttributes = {
     width: metaData.width,

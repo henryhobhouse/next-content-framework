@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
+import { promises, existsSync, unlinkSync } from 'fs';
 import processedImageMetaData from '../../../image-meta-data.json';
 import { nextPublicDirectory } from '../../../next-static-server/mdx-parse';
 import {
@@ -11,11 +11,11 @@ import imageProcessingConfig from './image-processing-config';
 
 const { thumbnailImageWidth } = imageProcessingConfig;
 
-const deleteImageThumbnail = async (
+const deleteImageThumbnail = (
   imageName: string,
   staticImageSizes: number[],
 ) => {
-  staticImageSizes.forEach(async (imageSize) => {
+  staticImageSizes.forEach((imageSize) => {
     const imageHash = (processedImageMetaData as SavedImageAttributes)[
       imageName as keyof typeof processedImageMetaData
     ]?.imageHash;
@@ -26,10 +26,10 @@ const deleteImageThumbnail = async (
   });
 };
 
-const deleteStoredImageAttributes = (imageName: string) => {
-  const preProcessedImageMetaString = readFileSync(
-    imageAttributesFilePath,
-  ).toString();
+const deleteStoredImageAttributes = async (imageName: string) => {
+  const preProcessedImageMetaString = await promises
+    .readFile(imageAttributesFilePath)
+    .toString();
 
   const preProcessedImageMeta = JSON.parse(preProcessedImageMetaString);
 
@@ -41,13 +41,13 @@ const deleteStoredImageAttributes = (imageName: string) => {
     2,
   );
 
-  writeFileSync(imageAttributesFilePath, prettifiedMetaDataString);
+  await promises.writeFile(imageAttributesFilePath, prettifiedMetaDataString);
 };
 
-const deleteImageFromLocalCache = (imageName: string) => {
-  const localModifiedCacheString = readFileSync(
-    localModifiedFilePath,
-  ).toString();
+const deleteImageFromLocalCache = async (imageName: string) => {
+  const localModifiedCacheString = await promises
+    .readFile(localModifiedFilePath)
+    .toString();
 
   const localModifiedCache = JSON.parse(localModifiedCacheString);
 
@@ -59,7 +59,7 @@ const deleteImageFromLocalCache = (imageName: string) => {
     2,
   );
 
-  writeFileSync(localModifiedFilePath, prettifiedLocalCacheString);
+  await promises.writeFile(localModifiedFilePath, prettifiedLocalCacheString);
 };
 
 /**
@@ -70,7 +70,7 @@ const deleteImageFromLocalCache = (imageName: string) => {
  * concurrently. There is likely some optimisation we can do here (delete file asynchronous but not update meta)
  * for instance
  */
-const checkForDeletedImages = (allNonModifiedImages: string[]) => {
+const checkForDeletedImages = async (allNonModifiedImages: string[]) => {
   const imagesToDelete: string[] = [];
 
   Object.keys(processedImageMetaData).forEach((processedImageName) => {
@@ -90,11 +90,13 @@ const checkForDeletedImages = (allNonModifiedImages: string[]) => {
   });
 
   if (imagesToDelete.length) {
-    imagesToDelete.forEach((imageName) => {
-      deleteImageThumbnail(imageName, [thumbnailImageWidth]);
-      deleteStoredImageAttributes(imageName);
-      deleteImageFromLocalCache(imageName);
-    });
+    await Promise.all(
+      imagesToDelete.map(async (imageName) => {
+        deleteImageThumbnail(imageName, [thumbnailImageWidth]);
+        await deleteStoredImageAttributes(imageName);
+        await deleteImageFromLocalCache(imageName);
+      }),
+    );
 
     logger.log(
       'info',

@@ -67,7 +67,7 @@ const EmbeddedPosts: FC<DocumentPostProps> = ({
  * Create all the slugs (paths) for this page
  */
 export const getStaticPaths = async () => {
-  const paths = getArticleSlugs(sectionContentDir);
+  const paths = await getArticleSlugs(sectionContentDir);
 
   return {
     paths,

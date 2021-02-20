@@ -1,5 +1,4 @@
-import { readdirSync, readFileSync, statSync } from 'fs';
-import { resolve } from 'path';
+import { promises } from 'fs';
 import {
   ImageMeta,
   ImageFileType,
@@ -26,7 +25,9 @@ interface GetImagesToProcessProps {
  * Recursively iterate through all content directories and add any accepted image files
  * to a list.
  */
-const getImagesToProcess = ({ directoryPath }: GetImagesToProcessProps) => {
+const getImagesToProcess = async ({
+  directoryPath,
+}: GetImagesToProcessProps) => {
   let totalImagesToProcess = 0;
   const imagesPathsToProcess: ImageMeta[] = [];
   const allNonModifiedImages: string[] = [];
@@ -34,13 +35,16 @@ const getImagesToProcess = ({ directoryPath }: GetImagesToProcessProps) => {
   // if no local cache exists then create the file with empty json in
   ensureLocalModifiedCacheFileExists();
 
-  const localImageModifiedCacheString = readFileSync(
+  const localImageModifiedCacheString = await promises.readFile(
     localModifiedFilePath,
-  ).toString();
-  const localImageModifiedCache = JSON.parse(localImageModifiedCacheString);
+  );
+
+  const localImageModifiedCache = JSON.parse(
+    localImageModifiedCacheString.toString(),
+  );
 
   const searchContentDirectory = async (path: string) => {
-    const dirents = readdirSync(path, {
+    const dirents = await promises.readdir(path, {
       withFileTypes: true,
     });
 
@@ -48,80 +52,89 @@ const getImagesToProcess = ({ directoryPath }: GetImagesToProcessProps) => {
       dirent.name.match(imageFileTypeRegex),
     );
 
-    if (imageDirents.length)
-      imageDirents.forEach((imageDirent) => {
-        const imageFileLocation = resolve(path, imageDirent.name);
-        const fileFormatRegExResult = imageDirent.name.match(
-          imageFileTypeRegex,
-        );
-        const imageFormatType = Array.isArray(fileFormatRegExResult)
-          ? fileFormatRegExResult[0]
-          : '';
+    if (imageDirents.length) {
+      await Promise.all(
+        imageDirents.map(async (imageDirent) => {
+          const imageFileLocation = `${path}/${imageDirent.name}`;
+          const fileFormatRegExResult = imageDirent.name.match(
+            imageFileTypeRegex,
+          );
 
-        // if the dirent isn't a valid image file then return. This will only happen if the regex checking
-        // if valid image format diverges from regex to extract file format
-        if (!imageFormatType) return;
+          const imageFormatType = Array.isArray(fileFormatRegExResult)
+            ? fileFormatRegExResult[0]
+            : '';
 
-        // get unique image name with hashed filepath prefix
-        const processedImageName = getProcessedImageFileName(imageFileLocation);
+          // if the dirent isn't a valid image file then return. This will only happen if the regex checking
+          // if valid image format diverges from regex to extract file format
+          if (!imageFormatType) return;
 
-        const imageLastModifiedTime = statSync(
-          imageFileLocation,
-        ).mtime.getTime();
-        const imageHasChangedOnFileSystem =
-          imageLastModifiedTime !== localImageModifiedCache[processedImageName];
+          // get unique image name with hashed filepath prefix
+          const processedImageName = getProcessedImageFileName(
+            imageFileLocation,
+          );
 
-        const preProcessedImageHash = (preProcessedImageMetas as SavedImageAttributes)[
-          processedImageName as keyof typeof preProcessedImageMetas
-        ]?.imageHash;
+          const imageStats = await promises.stat(imageFileLocation);
+          const imageLastModifiedTime = imageStats.mtime.getTime();
 
-        // only if image has previously been processed do we need to check if image has changed
-        if (preProcessedImageHash) {
-          let imageDoesNotNeedUpdating = !imageHasChangedOnFileSystem;
+          const imageHasChangedOnFileSystem =
+            imageLastModifiedTime !==
+            localImageModifiedCache[processedImageName];
 
-          // if image has changed on local file system or is in CI pipeline then do the more expensive
-          // check of getting content hash of image to compare against pre processed value
-          if (imageHasChangedOnFileSystem || process.env.CI) {
-            const currentFileHash = getFileShortHash(imageFileLocation);
+          const preProcessedImageHash = (preProcessedImageMetas as SavedImageAttributes)[
+            processedImageName as keyof typeof preProcessedImageMetas
+          ]?.imageHash;
 
-            imageDoesNotNeedUpdating =
-              preProcessedImageHash === currentFileHash;
-          }
+          // only if image has previously been processed do we need to check if image has changed
+          if (preProcessedImageHash) {
+            let imageDoesNotNeedUpdating = !imageHasChangedOnFileSystem;
 
-          // if image has been modified since last process then don't add to all images as will then be flagged
-          // to be deleted before being re-processed. This cannot happen on the build pipeline
-          if (imageDoesNotNeedUpdating) {
+            // if image has changed on local file system or is in CI pipeline then do the more expensive
+            // check of getting content hash of image to compare against pre processed value
+            if (imageHasChangedOnFileSystem || process.env.CI) {
+              const currentFileHash = await getFileShortHash(imageFileLocation);
+
+              imageDoesNotNeedUpdating =
+                preProcessedImageHash === currentFileHash;
+            }
+
+            // if image has been modified since last process then don't add to all images as will then be flagged
+            // to be deleted before being re-processed. This cannot happen on the build pipeline
+            if (imageDoesNotNeedUpdating) {
+              allNonModifiedImages.push(processedImageName);
+              return;
+            }
+          } else {
             allNonModifiedImages.push(processedImageName);
-            return;
           }
-        } else {
-          allNonModifiedImages.push(processedImageName);
-        }
 
-        const fileType =
-          imageFormatType === 'jpg' ? imageFormat.jpeg : imageFormatType;
+          const fileType =
+            imageFormatType === 'jpg' ? imageFormat.jpeg : imageFormatType;
 
-        if (fileType && fileType === imageFormat.png) totalImagesToProcess += 1;
+          if (fileType && fileType === imageFormat.png)
+            totalImagesToProcess += 1;
 
-        if (fileType) {
-          const imageMeta = {
-            filePath: imageFileLocation,
-            name: imageDirent.name,
-            processedImageName,
-            fileType: fileType as ImageFileType,
-          };
-          imagesPathsToProcess.push(imageMeta);
-        }
-      });
-
-    dirents.forEach((dirent) => {
-      const filePath = resolve(path, dirent.name);
-      const isDirectory = dirent.isDirectory();
-      if (isDirectory) searchContentDirectory(filePath);
-    });
+          if (fileType) {
+            const imageMeta = {
+              filePath: imageFileLocation,
+              name: imageDirent.name,
+              processedImageName,
+              fileType: fileType as ImageFileType,
+            };
+            imagesPathsToProcess.push(imageMeta);
+          }
+        }),
+      );
+    }
+    await Promise.all(
+      dirents.map(async (dirent) => {
+        const filePath = `${path}/${dirent.name}`;
+        const isDirectory = dirent.isDirectory();
+        if (isDirectory) await searchContentDirectory(filePath);
+      }),
+    );
   };
 
-  searchContentDirectory(directoryPath);
+  await searchContentDirectory(directoryPath);
 
   return {
     totalImagesToProcess,

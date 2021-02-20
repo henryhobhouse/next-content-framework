@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, promises, writeFileSync } from 'fs';
 import mkdirp from 'mkdirp';
 import shortHash from 'shorthash2';
 import crypto from 'crypto';
@@ -74,8 +74,9 @@ export const checkImageDirectories = () => {
 
 export const numberPrefixRegex = /^([0-9+]+)\./i;
 
-export const getFileShortHash = (path: string) => {
-  const imageContent = readFileSync(path).toString();
+export const getFileShortHash = async (path: string) => {
+  const imageContentBuffer = await promises.readFile(path);
+  const imageContent = imageContentBuffer.toString();
   const imageHash = crypto
     .createHash('sha1')
     .update(imageContent)

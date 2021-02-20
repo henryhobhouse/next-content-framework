@@ -1,5 +1,4 @@
-import { readdirSync, readFileSync } from 'fs';
-import { resolve } from 'path';
+import { promises } from 'fs';
 
 import matter from 'gray-matter';
 
@@ -30,7 +29,7 @@ const getConnectorSectionConnectors = async (
   const connectorSectionSlug = `/connectors/${currentConnectorSection}`;
 
   const parse = async (directory: string, currentDepth: number) => {
-    const dirents = readdirSync(directory, {
+    const dirents = await promises.readdir(directory, {
       withFileTypes: true,
     });
 
@@ -40,7 +39,7 @@ const getConnectorSectionConnectors = async (
     );
 
     if (docsFile) {
-      const markdownPath = resolve(directory, docsFile.name);
+      const markdownPath = `${directory}/${docsFile.name}`;
       const relativePath = markdownPath.replace(`${contentRootPath}/`, '');
 
       // as exec is global we need to reset the index each iteration of the loop
@@ -55,7 +54,7 @@ const getConnectorSectionConnectors = async (
         const slug = localPath.replace('/docs', '');
 
         if (slug.startsWith(connectorSectionSlug) && currentDepth >= 2) {
-          const markdownData = readFileSync(markdownPath, 'utf8');
+          const markdownData = await promises.readFile(markdownPath, 'utf8');
           const { data } = matter(markdownData);
           connectors.push({
             frontmatter: data,
@@ -67,7 +66,7 @@ const getConnectorSectionConnectors = async (
     await Promise.all(
       dirents.map(async (dirent) => {
         if (dirent.isDirectory()) {
-          const directoryPath = resolve(directory, dirent.name);
+          const directoryPath = `${directory}/${dirent.name}`;
           await parse(directoryPath, currentDepth + 1);
         }
       }),

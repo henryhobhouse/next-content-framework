@@ -1,4 +1,4 @@
-import { readdirSync } from 'fs';
+import { promises } from 'fs';
 
 import {
   connectorDocsRelativePath,
@@ -21,7 +21,7 @@ import { StaticArticlePathParams } from 'lib/next-static-server/types';
  *
  * Returns an array of all slugs.
  */
-const getArticleSlugs = (sectionContentDir: string) => {
+const getArticleSlugs = async (sectionContentDir: string) => {
   const paths: StaticArticlePathParams[] = [];
   // determine root directory of article files
   const articleSectionPath = `${contentRootPath}/${sectionContentDir}`;
@@ -30,9 +30,9 @@ const getArticleSlugs = (sectionContentDir: string) => {
   // the content directory
   const maxDepthToTraverse = 3;
 
-  const parseDirectories = (directory: string, currentDepth: number) => {
+  const parseDirectories = async (directory: string, currentDepth: number) => {
     // get all dirents in current directory
-    const dirents = readdirSync(directory, {
+    const dirents = await promises.readdir(directory, {
       withFileTypes: true,
     });
 
@@ -83,16 +83,18 @@ const getArticleSlugs = (sectionContentDir: string) => {
         }
       }
     }
-    dirents.forEach(async (dirent) => {
-      if (dirent.isDirectory() && currentDepth <= maxDepthToTraverse) {
-        const directoryPath = `${directory}/${dirent.name}`;
-        parseDirectories(directoryPath, currentDepth + 1);
-      }
-    });
+    await Promise.all(
+      dirents.map(async (dirent) => {
+        if (dirent.isDirectory() && currentDepth <= maxDepthToTraverse) {
+          const directoryPath = `${directory}/${dirent.name}`;
+          await parseDirectories(directoryPath, currentDepth + 1);
+        }
+      }),
+    );
   };
 
   // kick of recursive search of article directory from root
-  parseDirectories(articleSectionPath, 1);
+  await parseDirectories(articleSectionPath, 1);
 
   return paths;
 };

@@ -17,11 +17,9 @@ const writeFromPipeline = async (
   try {
     const writePath = getWriteFilePath(imageMeta, width, imageHash);
 
-    // as writing to system can take some time to keep progress bar showing progress of image processing to
-    // show completed before file write.
-    progressBar.increment();
-
     await pipeline.toFile(writePath);
+
+    progressBar.increment();
 
     // Logs success
     logSuccess(imageMeta.filePath, imagesSuccessfullyOptimised);

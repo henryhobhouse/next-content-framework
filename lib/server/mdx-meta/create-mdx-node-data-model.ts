@@ -1,5 +1,4 @@
 import { promises } from 'fs';
-import { resolve } from 'path';
 
 import mdx from '@mdx-js/mdx';
 import matter from 'gray-matter';
@@ -87,7 +86,7 @@ const createMdxNodeDataModel = async (
     dirents.forEach((dirent) => {
       if (dirent.name.match(/(gif|png|svg|jpe?g)$/i)) {
         const imageData: ImageData = {
-          path: resolve(directory, dirent.name),
+          path: `${directory}/${dirent.name}`,
           parentDirectory: directory,
           name: dirent.name,
         };
@@ -96,7 +95,7 @@ const createMdxNodeDataModel = async (
     });
 
     if (docsFile) {
-      const markdownPath = resolve(directory, docsFile.name);
+      const markdownPath = `${directory}/${docsFile.name}`;
       const relativePath = markdownPath.replace(`${contentRootPath}/`, '');
 
       // as exec is global we need to reset the index each iteration of the loop
@@ -206,7 +205,7 @@ const createMdxNodeDataModel = async (
       dirents.map(async (dirent) => {
         const isCompleted = currentDepth > navigationArticleDepth;
         if (dirent.isDirectory() && !isCompleted) {
-          const directoryPath = resolve(directory, dirent.name);
+          const directoryPath = `${directory}/${dirent.name}`;
           await parseMdx(directoryPath, currentDepth + 1);
         }
       }),

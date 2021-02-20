@@ -95,7 +95,7 @@ const addRelativeImageLinks = async (
       const fileName = imageLinkDirectories[
         imageLinkDirectories.length - 1
       ].toLowerCase();
-      let filePath = resolve(parentDirectoryRelativePath, fileName);
+      let filePath = `${parentDirectoryRelativePath}/${fileName}`;
 
       if (!existsSync(filePath)) {
         // if image is not available in current directory then try to find it

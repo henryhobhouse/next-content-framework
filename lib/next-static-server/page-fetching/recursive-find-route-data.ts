@@ -1,5 +1,4 @@
-import { readdirSync, readFileSync } from 'fs';
-import { resolve } from 'path';
+import { promises } from 'fs';
 
 import matter from 'gray-matter';
 import renderToString from 'next-mdx-remote/render-to-string';
@@ -56,7 +55,7 @@ const recursiveFindRouteData = async ({
   let currentPageTocData: TableOfContents = {};
 
   const recursiveParse = async (directory: string, currentDepth: number) => {
-    const dirents = readdirSync(directory, {
+    const dirents = await promises.readdir(directory, {
       withFileTypes: true,
     });
 
@@ -66,7 +65,7 @@ const recursiveFindRouteData = async ({
     );
 
     if (articleFile) {
-      const markdownPath = resolve(directory, articleFile.name);
+      const markdownPath = `${directory}/${articleFile.name}`;
       const relativePath = markdownPath.replace(`${contentRootPath}/`, '');
 
       // as exec is global we need to reset the index each iteration of the loop
@@ -81,7 +80,7 @@ const recursiveFindRouteData = async ({
         const slug = `/${sectionContentDir}${localPath}`;
 
         if (slug === currentPageSlug) {
-          const markdownData = readFileSync(markdownPath, 'utf8');
+          const markdownData = await promises.readFile(markdownPath, 'utf8');
 
           const { data, content } = matter(markdownData);
 
@@ -117,7 +116,7 @@ const recursiveFindRouteData = async ({
           (currentDepth > navigationArticleDepth && !!pageContent) ||
           currentDepth >= maxDepthToTraverse;
         if (dirent.isDirectory() && !isCompleted) {
-          const directoryPath = resolve(directory, dirent.name);
+          const directoryPath = `${directory}/${dirent.name}`;
           await recursiveParse(directoryPath, currentDepth + 1);
         }
       }),

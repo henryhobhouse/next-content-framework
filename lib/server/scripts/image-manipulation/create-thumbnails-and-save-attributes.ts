@@ -33,7 +33,10 @@ const createThumbnailsAndSaveAttributes = async (
           // get image size metadata and save to file system for use in build. Used to prevent layout shift.
           const imageMetaData = await pipeline.metadata();
 
-          const imageHash = getHashAndUpdateCache(imageMetaData, imageMeta);
+          const imageHash = await getHashAndUpdateCache(
+            imageMetaData,
+            imageMeta,
+          );
 
           if (
             imageProcessingConfig.allowedFormatForThumbnails.includes(

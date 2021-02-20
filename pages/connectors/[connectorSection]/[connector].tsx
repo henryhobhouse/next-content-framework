@@ -66,8 +66,8 @@ const Connector: FC<ConnectorSectionProps> = ({
 /**
  * Create all the slugs (paths) for this page
  */
-export const getStaticPaths = () => {
-  const paths = getConnectorSlugs();
+export const getStaticPaths = async () => {
+  const paths = await getConnectorSlugs();
 
   return {
     paths,
